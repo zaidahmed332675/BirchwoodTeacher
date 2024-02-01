@@ -6,7 +6,7 @@ import OnBoardScreen from '../../Screens/OnBoardScreen';
 import SignIn from '../../Screens/Auth/SignIn';
 import PasswordResetScreens from '../../Screens/Auth/PasswordResetScreens';
 import SignUp from '../../Screens/Auth/SignUp';
-import PersonalInfo from '../../Screens/Auth/PersonalInfo';
+import PersonalInfo from '../../Screens/Profile/EditPersonalInfo';
 import Education from '../../Screens/Auth/Education';
 import ParentContact from '../../Screens/Auth/ParentContact';
 import Experience from '../../Screens/Auth/Experience';

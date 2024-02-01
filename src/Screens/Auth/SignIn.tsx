@@ -1,41 +1,31 @@
 import React, { useState } from 'react';
 import {
   View,
-  //   Text,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
 } from 'react-native';
-import CustomTextInput from '../../Components/InputField';
 import SmallText from '../../Components/SmallText';
 import { colors } from '../../theme/colors';
 import MainLogo from '../../Components/MainLogo';
 import ChildLogo from '../../Components/ChildLogo';
-import CustomButton from '../../Components/Button';
-// import GlroyBold from '../../Components/GlroyBoldText';
 import SocialMediaIcons from '../../Components/SocialMediaIcons';
-// import {useNavigation} from '@react-navigation/native';
-// import routes from '../../Navigation/routes';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParams } from '../../Types/NavigationTypes';
+import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import AppInput from '../../Components/AppInput';
-import { AddButton } from '../../Components/AddButton';
 import AppButton from '../../Components/Button';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 
-const SignIn = ({}: Props) => {
+const SignIn = ({ navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  //   const navigation = useNavigation();
-
   const handleForgotPassword = () => {
-    // Add logic to handle forgot password functionality
     console.log('Forgot Password clicked');
-    // navigation.navigate(routes.navigator.passwordresetscreens);
+    navigation.navigate(EAuthStack.emailVerification);
   };
 
   return (
@@ -72,13 +62,10 @@ const SignIn = ({}: Props) => {
           </View>
         </View>
         <View style={{ alignItems: 'center' }}>
-          <AddButton title={'zaid'} />
           <AppButton
-            bordered
-            title={'zaid'}
-            onPress={() => console.log('Login')}
+            title="Sign In"
+            onPress={() => navigation.navigate(EAuthStack.main)}
           />
-          <AppButton title={'zaid'} onPress={() => console.log('Login')} />
         </View>
         <View style={{ alignItems: 'center', marginVertical: 10 }}>
           <ChildLogo _style={styles.childLogo} />
@@ -97,9 +84,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    //  marginTop:30,
     justifyContent: 'flex-end',
-    // backgroundColor:'red'
   },
   forgotPasswordContainer: {
     marginTop: 10,

@@ -35,50 +35,95 @@ export type AuthStackParams = {
   main: undefined;
 };
 
-// export enum EDrawerStack {
-//   home = 'home',
-//   profileRoutes = 'profileRoutes',
-//   reparationRoutes = 'reparationRoutes',
-//   eventRoutes = 'eventRoutes',
-//   orderRoutes = 'orderRoutes',
-//   newsRoutes = 'newsRoutes',
-//   historyRoutes = 'historyRoutes',
+export enum EMainStack {
+  home = 'home',
+  profileRoutes = 'profileRoutes',
+  activityRoutes = 'activityRoutes',
+  diaryRoutes = 'diaryRoutes',
+  chatRoutes = 'chatRoutes',
 
-//   cart = 'cart',
-//   wishList = 'wishList',
-//   productDetail = 'productDetail',
-//   checkOut = 'checkOut'
-// }
+  //   reparationRoutes = 'reparationRoutes',
+  //   eventRoutes = 'eventRoutes',
+  //   orderRoutes = 'orderRoutes',
+  //   newsRoutes = 'newsRoutes',
+  //   historyRoutes = 'historyRoutes',
 
-// export type DrawerStackParams = {
-//   home: undefined
+  //   cart = 'cart',
+  //   wishList = 'wishList',
+  //   productDetail = 'productDetail',
+  //   checkOut = 'checkOut'
+}
 
-//   profileRoutes: undefined
-//   reparationRoutes: undefined
-//   eventRoutes: undefined
-//   orderRoutes: undefined
-//   newsRoutes: undefined
-//   historyRoutes: undefined
+export type MainStackParams = {
+  home: undefined;
+  profileRoutes: undefined;
+  activityRoutes: undefined;
+  diaryRoutes: undefined;
+  chatRoutes: undefined;
+  //   reparationRoutes: undefined
+  //   eventRoutes: undefined
+  //   orderRoutes: undefined
+  //   newsRoutes: undefined
+  //   historyRoutes: undefined
 
-//   cart: undefined
-//   wishList: undefined
-//   productDetail: {
-//     product: ProductProps
-//   }
-//   checkOut: undefined
-// }
+  //   cart: undefined
+  //   wishList: undefined
+  //   productDetail: {
+  //     product: ProductProps
+  //   }
+  //   checkOut: undefined
+};
 
-// export enum EProfileStack {
-//   profile = 'profile',
-//   editProfile = 'editProfile',
-//   changePassword = 'changePassword'
-// }
+export enum EProfileStack {
+  profile = 'profile',
+  editPersonalInfo = 'editPersonalInfo',
+  editEducation = 'editEducation',
+  editExperience = 'editExperience',
+  // editProfile = 'editProfile',
+  // changePassword = 'changePassword',
+}
 
-// export type ProfileStackParams = {
-//   profile: undefined
-//   editProfile: undefined
-//   changePassword: undefined
-// }
+export type ProfileStackParams = {
+  profile: undefined;
+  editPersonalInfo: undefined;
+  editEducation: undefined;
+  editExperience: undefined;
+  // editProfile: undefined;
+  // changePassword: undefined
+};
+
+export enum EActivityStack {
+  activity = 'activity',
+  createActivity = 'createActivity',
+}
+
+export type ActivityStackParams = {
+  activity: undefined;
+  createActivity: undefined;
+};
+
+export enum EDiaryStack {
+  diary = 'diary',
+  createDiary = 'createDiary',
+}
+
+export type DiaryStackParams = {
+  diary: undefined;
+  createDiary: undefined;
+};
+
+export enum EChatStack {
+  chat = 'chat',
+  createChat = 'createChat',
+}
+
+export type ChatStackParams = {
+  chat: undefined;
+  createChat: {
+    userId: string;
+    userName: string;
+  };
+};
 
 // export enum ENewsStack {
 //   news = 'news',

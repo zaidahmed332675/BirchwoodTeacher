@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
 import AuthNavigator from './AuthNavigator';
+import { NavigationOptions } from '../Utils/options';
+import AppNavigator from './AppNavigator';
 
 const Stack = createStackNavigator<RootStackParams>();
 
@@ -13,13 +15,12 @@ const AppRouting = () => {
     <NavigationContainer>
       {/* {loader && <Loader />} */}
       <Stack.Navigator
-        initialRouteName={ERootStack.auth}
-        // screenOptions={{headerShown: false}}
-      >
+        initialRouteName={ERootStack.main}
+        screenOptions={NavigationOptions}>
         {/* {!token ? ( */}
         <Stack.Screen name={ERootStack.auth} component={AuthNavigator} />
         {/* ) : ( */}
-        {/* <Stack.Screen name={ERootStack.main} component={AppDrawer} /> */}
+        <Stack.Screen name={ERootStack.main} component={AppNavigator} />
         {/* )} */}
       </Stack.Navigator>
     </NavigationContainer>

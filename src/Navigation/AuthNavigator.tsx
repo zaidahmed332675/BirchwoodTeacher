@@ -5,6 +5,7 @@ import ResetPassword from '../Screens/Auth/ResetPassword';
 import SignIn from '../Screens/Auth/SignIn';
 import VerificationCode from '../Screens/Auth/VerificationCode';
 import { AuthStackParams, EAuthStack } from '../Types/NavigationTypes';
+import { NavigationOptions } from '../Utils/options';
 
 const Stack = createStackNavigator<AuthStackParams>();
 
@@ -12,7 +13,7 @@ const AuthNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={EAuthStack.signIn}
-      screenOptions={{ headerShown: false }}>
+      screenOptions={NavigationOptions}>
       <Stack.Screen name={EAuthStack.signIn} component={SignIn} />
       <Stack.Screen
         name={EAuthStack.emailVerification}

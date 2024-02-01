@@ -7,15 +7,17 @@ import GlroyBold from '../GlroyBoldText';
 interface AppButtonProps {
   title: string;
   bordered?: boolean;
-  icon?: string;
-  _style?: object;
+  icon?: boolean;
+  btnStyle?: object;
+  textStyle?: object;
   onPress: () => void;
 }
 
 const AppButton = ({
   title,
   icon,
-  _style,
+  btnStyle,
+  textStyle,
   bordered = false,
   onPress,
 }: AppButtonProps) => {
@@ -23,12 +25,8 @@ const AppButton = ({
     <TouchableOpacity
       style={[
         styles.button,
-        bordered
-          ? styles.borderedButton
-          : {
-              backgroundColor: colors.background.primary,
-            },
-        _style,
+        bordered ? styles.borderedButton : undefined,
+        btnStyle,
       ]}
       onPress={onPress}>
       {icon && (
@@ -40,7 +38,11 @@ const AppButton = ({
         />
       )}
       <GlroyBold
-        _style={{ color: bordered ? colors.text.white : colors.theme.primary }}
+        _style={
+          bordered
+            ? { ...styles.borderedButtonText, ...textStyle }
+            : { ...styles.buttonText, ...textStyle }
+        }
         text={title}
       />
     </TouchableOpacity>
@@ -51,18 +53,30 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
     borderRadius: 20,
     paddingHorizontal: 50,
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: colors.theme.primary,
+    backgroundColor: colors.theme.primary,
     marginVertical: 10,
-  },
-  icon: {
-    marginRight: 5,
   },
   borderedButton: {
     borderColor: colors.text.altGrey,
+    backgroundColor: 'transparent',
+  },
+  buttonText: {
+    color: colors.text.white,
+  },
+  borderedButtonText: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    color: colors.text.altGrey,
+  },
+  icon: {
+    marginRight: 5,
   },
 });
 

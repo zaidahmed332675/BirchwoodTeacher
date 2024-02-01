@@ -12,7 +12,10 @@ function App(): JSX.Element {
     // <Provider store={store}>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar backgroundColor={colors.theme.primary} />
+        <StatusBar
+          backgroundColor={colors.theme.primary}
+          barStyle={'light-content'}
+        />
         {/* <FlashMessage position="top" duration={2000} icon="auto" /> */}
         {/* <MainStack /> */}
         <AppRouting />

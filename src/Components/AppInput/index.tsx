@@ -51,7 +51,7 @@ const AppInput = ({
             },
             inputStyle,
           ]}
-          placeholderTextColor={colors.text.black}
+          placeholderTextColor={colors.text.altGrey}
           value={value}
           secureTextEntry={secureTextEntry}
           onChangeText={onChange}
@@ -78,14 +78,15 @@ const styles = StyleSheet.create({
   textInputField: {
     borderWidth: 1.5,
     borderColor: colors.input.background,
+    color: colors.text.black,
+    backgroundColor: colors.input.background,
     borderRadius: 10,
     paddingHorizontal: 7,
     flex: 1,
-    backgroundColor: colors.input.background,
   },
   labelStyle: {
-    marginBottom: 5,
     fontSize: 12,
+    marginBottom: 5,
     fontWeight: 'bold',
     color: colors.text.altGrey,
   },
