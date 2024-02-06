@@ -27,8 +27,8 @@ type Props = StackScreenProps<MainStackParams, 'home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
   const [profile] = useState({
-    name: 'Allen',
-    year: '2023 - 2024',
+    name: 'Zaid Ahmed',
+    year: '2024 - 2025',
     photo: '',
   });
 
@@ -51,7 +51,26 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.assignment,
       route: 'diaryRoutes',
     },
-    { id: 5, title: 'Time Table', icon: featureIcons.time_table, route: '' },
+    {
+      id: 5,
+      title: 'Chat',
+      icon: featureIcons.time_table,
+      route: 'chatRoutes',
+    },
+    {
+      id: 5,
+      title: 'Attendance',
+      icon: featureIcons.time_table,
+      route: 'attendanceRoutes',
+    },
+    {
+      id: 11,
+      title: 'Change Password',
+      icon: featureIcons.change_password,
+      route: '',
+    },
+    { id: 12, title: 'Logout', icon: featureIcons.logout, route: '' },
+    // { id: 5, title: 'Time Table', icon: featureIcons.time_table, route: '' },
     // { id: 6, title: 'Events', icon: featureIcons.events, route: '' },
     // { id: 7, title: 'Ask Doubts', icon: featureIcons.ask_doubts, route: '' },
     // {
@@ -70,13 +89,6 @@ const HomeScreen = ({ navigation }: Props) => {
     //   id: 10,
     //   title: 'School Holiday',
     //   icon: featureIcons.school_holiday,
-    //   route: '',
-    // },
-    // { id: 11, title: 'Logout', icon: featureIcons.logout, route: '' },
-    // {
-    //   id: 12,
-    //   title: 'Change Password',
-    //   icon: featureIcons.change_password,
     //   route: '',
     // },
   ];
@@ -302,7 +314,6 @@ const styles = StyleSheet.create({
     width: 34,
     borderRadius: 12,
     alignSelf: 'center',
-    // backgroundColor: 'red',
   },
   columnWrapper: {
     justifyContent: 'space-between',

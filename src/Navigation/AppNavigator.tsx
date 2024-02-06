@@ -7,6 +7,7 @@ import ProfileNavigator from './ProfileNavigator';
 import ActivityNavigator from './ActivityNavigator';
 import DiaryNavigator from './DiaryNavigator';
 import ChatNavigator from './ChatNavigator';
+import AttendanceNavigator from './AttendanceNavigator';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -26,8 +27,11 @@ const AppNavigator = () => {
       />
       <Stack.Screen name={EMainStack.diaryRoutes} component={DiaryNavigator} />
       <Stack.Screen name={EMainStack.chatRoutes} component={ChatNavigator} />
-
-      {/* <Stack.Screen
+      <Stack.Screen
+        name={EMainStack.attendanceRoutes}
+        component={AttendanceNavigator}
+      />
+      <Stack.Screen
         name={EAuthStack.emailVerification}
         component={EmailVerification}
       />
@@ -35,7 +39,7 @@ const AppNavigator = () => {
         name={EAuthStack.verificaionCode}
         component={VerificationCode}
       />
-      <Stack.Screen name={EAuthStack.resetPassword} component={ResetPassword} /> */}
+      <Stack.Screen name={EAuthStack.resetPassword} component={ResetPassword} />
     </Stack.Navigator>
   );
 };

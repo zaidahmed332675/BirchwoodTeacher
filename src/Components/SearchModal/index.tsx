@@ -1,14 +1,13 @@
 import React, {
   Dispatch,
-  ForwardedRef,
   SetStateAction,
   forwardRef,
   useImperativeHandle,
   useState,
 } from 'react';
-import { colors } from '../../theme/colors';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import { colors } from '../../theme/colors';
 
 interface SearchModalProps {
   open: boolean;

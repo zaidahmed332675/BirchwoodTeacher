@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import {
   ScrollView,
@@ -10,12 +11,10 @@ import {
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import AppInput from '../../Components/AppInput';
 import AppButton from '../../Components/Button';
-import Layout from '../../Components/Layout';
-import UploadImage from '../../Components/UploadImage';
-import { colors } from '../../theme/colors';
-import { ProfileStackParams } from '../../Types/NavigationTypes';
-import { StackScreenProps } from '@react-navigation/stack';
 import GlroyBold from '../../Components/GlroyBoldText';
+import Layout from '../../Components/Layout';
+import { ProfileStackParams } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editEducation'>;
 
@@ -82,12 +81,12 @@ export default function EditEducation({}: Props) {
             <AppInput
               label="Starting Date"
               onChange={() => {}}
-              placeholder={'end date'}
+              placeholder={'start date'}
               value={''}
               required
             />
             <AppInput
-              label="Subject study"
+              label="Subject Study"
               onChange={() => {}}
               placeholder={'subject study'}
               value={''}
@@ -143,12 +142,12 @@ export default function EditEducation({}: Props) {
                       newFields[index].startingDate = text;
                       setEducationFields(newFields);
                     }}
-                    placeholder={'end date'}
+                    placeholder={'start date'}
                     value={''}
                     required
                   />
                   <AppInput
-                    label="Subject study"
+                    label="Subject Study"
                     onChange={text => {
                       const newFields = [...educationFields];
                       newFields[index].subjectStudy = text;
@@ -158,10 +157,6 @@ export default function EditEducation({}: Props) {
                     value={''}
                     required
                   />
-                  {/* <AppButton
-                    title="Remove Education"
-                    onPress={() => removeEducationField(index)}
-                  /> */}
                 </View>
               ))}
             </View>

@@ -6,7 +6,13 @@ import { colors } from '../../theme/colors';
 import { statusBarHeight } from '../../Utils/units';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Layout = ({ children, customHeader }: any) => {
+interface LayoutProps {
+  children: React.ReactNode;
+  customHeader?: React.ReactNode;
+  _styleSheetView?: object;
+}
+
+const Layout = ({ children, customHeader, _styleSheetView }: LayoutProps) => {
   return (
     <LinearGradient
       colors={[colors.theme.primary, colors.theme.secondary]}
@@ -19,7 +25,9 @@ const Layout = ({ children, customHeader }: any) => {
       />
       <View style={styles.header}>{customHeader}</View>
       <View style={styles.bottomSheet}>
-        <View style={styles.bottomSheetView}>{children}</View>
+        <View style={[styles.bottomSheetView, _styleSheetView]}>
+          {children}
+        </View>
       </View>
       {/* <BottomSheet>{children}</BottomSheet> */}
     </LinearGradient>
@@ -47,7 +55,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     backgroundColor: colors.theme.white,
   },
 });

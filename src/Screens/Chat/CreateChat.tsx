@@ -15,33 +15,58 @@ import {
 } from 'react-native-gifted-chat';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import Layout from '../../Components/Layout';
+import { useNavigation } from '@react-navigation/native';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import { Text } from 'react-native';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
-const HeaderLeft = () => {
+const CustomHeader = ({ title }: { title: string }) => {
+  const navigation = useNavigation();
+
   return (
-    <View style={{ marginLeft: 20 }}>
-      <Image
-        style={{
-          width: 30,
-          height: 30,
-          borderRadius: 50,
-        }}
-        source={{ uri: 'https://picsum.photos/seed/picsum/200/300' }}
-      />
+    <View style={styles.header}>
+      <View style={styles.titlContainer}>
+        <Ionicon
+          onPress={() => navigation.goBack()}
+          name="chevron-back-outline"
+          size={30}
+          color={colors.theme.white}
+        />
+        <View
+          style={{
+            marginLeft: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Image
+            style={{
+              backgroundColor: 'red',
+              width: 40,
+              height: 40,
+              borderRadius: 50,
+            }}
+            source={{ uri: 'https://picsum.photos/seed/picsum/200/300' }}
+          />
+          <Text
+            style={{
+              color: colors.text.white,
+              marginLeft: 10,
+              fontWeight: 'bold',
+              fontSize: 20,
+            }}>
+            {title}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
 
-const CreateChat = ({ navigation, route }: Props) => {
+const CreateChat = ({ route }: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: route.params.userName,
-      headerLeft: HeaderLeft,
-    });
-  }, [navigation, route.params.userName]);
 
   useEffect(() => {
     setMessages([
@@ -83,53 +108,65 @@ const CreateChat = ({ navigation, route }: Props) => {
   }, []);
 
   return (
-    <GiftedChat
-      messagesContainerStyle={styles.messageContainer}
-      renderAvatarOnTop={true}
-      renderAvatar={null}
-      messages={messages}
-      renderInputToolbar={props => (
-        <InputToolbar
-          {...props}
-          renderComposer={composerProps => (
-            <Composer
-              {...composerProps}
-              textInputStyle={{
-                color: colors.theme.black,
+    <Layout
+      _styleSheetView={{
+        paddingHorizontal: 10,
+      }}
+      customHeader={<CustomHeader title={route.params.userName} />}>
+      <GiftedChat
+        messagesContainerStyle={styles.messageContainer}
+        renderAvatarOnTop={true}
+        renderAvatar={null}
+        messages={messages}
+        renderInputToolbar={props => (
+          <InputToolbar
+            {...props}
+            renderComposer={composerProps => (
+              <Composer
+                {...composerProps}
+                textInputStyle={{
+                  color: colors.theme.black,
+                }}
+              />
+            )}
+          />
+        )}
+        showAvatarForEveryMessage={true}
+        onSend={msgs => onSend(msgs)}
+        renderBubble={props => {
+          return (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                left: {
+                  backgroundColor: colors.theme.greyAlt,
+                },
+                right: {
+                  backgroundColor: colors.theme.primary,
+                },
               }}
             />
-          )}
-        />
-      )}
-      showAvatarForEveryMessage={true}
-      onSend={msgs => onSend(msgs)}
-      renderBubble={props => {
-        return (
-          <Bubble
-            {...props}
-            wrapperStyle={{
-              left: {
-                backgroundColor: colors.theme.greyAlt,
-              },
-              right: {
-                backgroundColor: colors.theme.primary,
-              },
-            }}
-          />
-        );
-      }}
-      user={{
-        _id: 2,
-        name: 'Zaid',
-        avatar: 'https://picsum.photos/id/237/200/300',
-      }}
-    />
+          );
+        }}
+        user={{
+          _id: 2,
+          name: 'Zaid',
+          avatar: 'https://picsum.photos/id/237/200/300',
+        }}
+      />
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: 'black',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  titlContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   messageContainer: {},
   imageStyle: {},

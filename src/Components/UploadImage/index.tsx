@@ -14,7 +14,7 @@ interface UploadImageProps {
   image: {
     uri?: string;
   };
-  handleImage?: (param: Asset) => {};
+  handleImage?: (param: Asset) => void;
   style?: object;
 }
 
@@ -22,12 +22,9 @@ const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
   // const [loading, setLoader] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
 
-  console.log('Component IMg >>>', image);
-
   const handleImageUpload = () => {
     const options: CameraOptions = {
       mediaType: 'photo',
-      // cameraType: 'back'
     };
 
     launchCamera(options, response => {
@@ -39,7 +36,7 @@ const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
         console.log('response photo >>', response);
         if (response.assets) {
           setSelectedImage(response.assets[0].uri);
-          handleImage?.(response?.assets?.[0]);
+          // handleImage?.(response?.assets?.[0]);
         }
       }
     });
@@ -67,18 +64,20 @@ const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
 
   const IMG_URL = '';
 
+  console.log(selectedImage, 'selected Image ', image?.uri);
+
   return (
     <View style={[styles.appInput, style]}>
       <View style={styles.profile}>
-        <View>
+        <View
+          style={{
+            borderWidth: 3,
+            borderRadius: 100,
+            backgroundColor: colors.theme.secondary,
+            borderColor: colors.theme.secondary,
+          }}>
           <Image
             loadingIndicatorSource={profile}
-            // onPartialLoad={() => {
-            //   setLoader(true)
-            // }}
-            // onLoadEnd={() => {
-            //   setLoader(false)
-            // }}
             source={
               // !loader &&
               selectedImage || image?.uri

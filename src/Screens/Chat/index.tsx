@@ -4,6 +4,9 @@ import { ChatStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
 import { colors } from '../../theme/colors';
 import { TouchableOpacity } from 'react-native';
+import Layout from '../../Components/Layout';
+import { useNavigation } from '@react-navigation/native';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 
@@ -94,6 +97,32 @@ const chatList = [
   },
 ];
 
+const CustomHeader = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.header}>
+      <View style={styles.titlContainer}>
+        <Ionicon
+          onPress={() => navigation.goBack()}
+          name="chevron-back-outline"
+          size={30}
+          color={colors.theme.white}
+        />
+        <Text
+          style={{
+            color: colors.text.white,
+            marginLeft: 10,
+            fontWeight: 'bold',
+            fontSize: 18,
+          }}>
+          Chat List
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const Chat = ({ navigation }: Props) => {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -121,19 +150,34 @@ const Chat = ({ navigation }: Props) => {
   };
 
   return (
-    <FlatList
-      data={chatList}
-      renderItem={renderItem}
-      keyExtractor={item => item._id.toString()}
-    />
+    <Layout
+      _styleSheetView={{
+        paddingHorizontal: 10,
+      }}
+      customHeader={<CustomHeader />}>
+      <View style={styles.container}>
+        <FlatList
+          data={chatList}
+          renderItem={renderItem}
+          keyExtractor={item => item._id.toString()}
+        />
+      </View>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  titlContainer: { flexDirection: 'row', alignItems: 'center' },
+  container: {},
   item: {
     flexDirection: 'row',
-    borderTopWidth: 0.4,
-    borderColor: colors.theme.secondary,
+    borderTopWidth: 0.3,
+    borderBottomWidth: 0.3,
+    borderColor: colors.theme.greyAlt,
     padding: 10,
   },
   avatar: {

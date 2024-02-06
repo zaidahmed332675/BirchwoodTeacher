@@ -41,6 +41,7 @@ export enum EMainStack {
   activityRoutes = 'activityRoutes',
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
+  attendanceRoutes = 'attendanceRoutes',
 
   //   reparationRoutes = 'reparationRoutes',
   //   eventRoutes = 'eventRoutes',
@@ -60,6 +61,8 @@ export type MainStackParams = {
   activityRoutes: undefined;
   diaryRoutes: undefined;
   chatRoutes: undefined;
+  attendanceRoutes: undefined;
+
   //   reparationRoutes: undefined
   //   eventRoutes: undefined
   //   orderRoutes: undefined
@@ -123,6 +126,14 @@ export type ChatStackParams = {
     userId: string;
     userName: string;
   };
+};
+
+export enum EAttendanceStack {
+  attendance = 'attendance',
+}
+
+export type AttendanceStackParams = {
+  attendance: undefined;
 };
 
 // export enum ENewsStack {

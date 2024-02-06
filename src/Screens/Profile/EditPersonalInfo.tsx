@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import AppInput from '../../Components/AppInput';
@@ -9,6 +9,7 @@ import UploadImage from '../../Components/UploadImage';
 import { colors } from '../../theme/colors';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
+import { Asset } from 'react-native-image-picker';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 
@@ -39,6 +40,10 @@ const CustomHeader = () => {
 };
 
 export default function EditPersonalInfo({}: Props) {
+  const [image, setImage] = useState<Asset>({
+    uri: undefined,
+  });
+
   return (
     <Layout customHeader={<CustomHeader />}>
       <ScrollView>
@@ -46,20 +51,17 @@ export default function EditPersonalInfo({}: Props) {
           <ScrollView>
             <View style={styles.profileGrid}>
               <View style={styles.profile}>
-                <UploadImage image={{ uri: undefined }} id={-1} />
+                <UploadImage
+                  id={1}
+                  image={{ uri: image?.uri }}
+                  handleImage={setImage}
+                />
               </View>
             </View>
             <AppInput
               label="Date Of Birth"
               onChange={() => {}}
-              placeholder={'date of birt'}
-              value={''}
-              required
-            />
-            <AppInput
-              label="Age"
-              onChange={() => {}}
-              placeholder={'12-12-1995'}
+              placeholder={'date of birth'}
               value={''}
               required
             />

@@ -1,22 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { CheckBox } from '@rneui/themed';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import profile from '../../Assets/images/profile_bg.png';
+import BottomSheet from '../../Components/BottomSheet';
+import AppButton from '../../Components/Button';
+import Layout from '../../Components/Layout';
+import { RichTextEditor } from '../../Components/RichTextEditor';
+import { SearchModal } from '../../Components/SearchModal';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import Layout from '../../Components/Layout';
-import { Text } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import { vh } from '../../Utils/units';
-import { useNavigation } from '@react-navigation/native';
-import { RichTextEditor } from '../../Components/RichTextEditor';
-import { Image } from 'react-native';
-import profile from '../../Assets/images/profile_bg.png';
-import AppButton from '../../Components/Button';
-import BottomSheet from '../../Components/BottomSheet';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { CheckBox } from '@rneui/themed';
-// import DropDownPicker from 'react-native-dropdown-picker';
-import { SearchModal } from '../../Components/SearchModal';
 
 type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
 
