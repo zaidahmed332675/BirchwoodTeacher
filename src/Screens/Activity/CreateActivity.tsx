@@ -13,6 +13,7 @@ import { SearchModal } from '../../Components/SearchModal';
 import VIcon from '../../Components/VIcon';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { dummyRecords } from '../../Utils/options';
 
 type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
 
@@ -50,17 +51,7 @@ const CreateActivityModalContent = () => {
   const [open, setOpen] = useState(false);
   const [student, setStudent] = useState();
 
-  const [items] = useState([
-    { label: 'Waqas', value: 'waqas' },
-    { label: 'Ali', value: 'ali' },
-    { label: 'Zaid', value: 'zaid' },
-    { label: 'Waqas1', value: 'waqas1' },
-    { label: 'Ali1', value: 'ali1' },
-    { label: 'Zaid1', value: 'zaid1' },
-    { label: 'Waqas2', value: 'waqas2' },
-    { label: 'Ali2', value: 'ali2' },
-    { label: 'Zaid2', value: 'zaid2' },
-  ]);
+  const [items] = useState([...dummyRecords]);
 
   useEffect(() => {
     let name = searchModalRef.current?.getValue?.();
