@@ -2,10 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import AppDatePicker from '../../Components/DatePicker/DatePicker';
 import Layout from '../../Components/Layout';
 import { CustomSwitch } from '../../Components/Switch';
+import VIcon from '../../Components/VIcon';
 import { AttendanceStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
@@ -16,7 +16,8 @@ const CustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

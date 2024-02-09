@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
@@ -7,18 +9,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
+import dp1 from '../../Assets/icons/dp1.png';
 import { DiaryCard } from '../../Components/DiaryCard';
-import Layout from '../../Components/Layout';
-import { CustomSwitch } from '../../Components/Switch';
-import { colors } from '../../theme/colors';
 import GlroyBold from '../../Components/GlroyBoldText';
 import GrayMediumText from '../../Components/GrayMediumText';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import dp1 from '../../Assets/icons/dp1.png';
-import { useNavigation } from '@react-navigation/native';
+import Layout from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
+import { CustomSwitch } from '../../Components/Switch';
+import VIcon from '../../Components/VIcon';
+import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
@@ -27,7 +27,8 @@ const DiaryCustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}
@@ -48,7 +49,8 @@ const DiaryCustomHeader = () => {
         onPress={() => {
           navigation.navigate(EDiaryStack.createDiary);
         }}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           name="add-outline"
           size={15}
           color={colors.theme.white}

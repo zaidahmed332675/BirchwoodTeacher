@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
-// import perfectSize from '../../Utils/responsiveSize';
-// import {colors, fonts} from '../../Utils/theme';
-// import {elevation} from '../../Utils/elevation';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import VIcon from '../VIcon';
 
 interface AppDatePickerProps {
   style?: object;
@@ -13,7 +10,8 @@ interface AppDatePickerProps {
 
 const perfectSize = (val: any) => val;
 const PrevIcon = () => (
-  <Ionicon
+  <VIcon
+    type="Ionicons"
     // onPress={() => navigation.goBack()}
     name="chevron-back-outline"
     size={22}
@@ -25,7 +23,8 @@ const PrevIcon = () => (
 );
 
 const NextIcon = () => (
-  <Ionicon
+  <VIcon
+    type="Ionicons"
     // onPress={() => navigation.goBack()}
     name="chevron-forward-outline"
     size={22}

@@ -1,11 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import {
   Bubble,
   Composer,
@@ -13,12 +9,10 @@ import {
   IMessage,
   InputToolbar,
 } from 'react-native-gifted-chat';
+import Layout from '../../Components/Layout';
+import VIcon from '../../Components/VIcon';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import Layout from '../../Components/Layout';
-import { useNavigation } from '@react-navigation/native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import { Text } from 'react-native';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
@@ -28,7 +22,8 @@ const CustomHeader = ({ title }: { title: string }) => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

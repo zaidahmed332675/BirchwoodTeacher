@@ -10,10 +10,10 @@ import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 // import { ProfileStackParams } from '../../Types/NavigationType';
 // import { colors, fonts } from '../../Utils/theme';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import GlroyBold from '../../Components/GlroyBoldText';
 import GrayMediumText from '../../Components/GrayMediumText';
 import UploadImage from '../../Components/UploadImage';
+import VIcon from '../../Components/VIcon';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
 
@@ -23,7 +23,8 @@ const ProfileCustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

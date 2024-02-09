@@ -1,0 +1,18 @@
+import React from 'react';
+import { vectorIcons } from '../../Utils/vectorIcons';
+
+interface VIconProps {
+  type: string;
+  name: string;
+  size: number;
+  color?: string;
+  style?: object;
+  onPress?: () => void;
+}
+
+const VIcon = ({ type = '', name, color, size, style }: VIconProps) => {
+  const Icon = vectorIcons?.[type] ?? 'Feather';
+  return <Icon name={name} color={color} style={style} size={size} />;
+};
+
+export default VIcon;

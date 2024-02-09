@@ -1,16 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import {
-  StyleSheet,
-  View,
-  Modal,
-  // ActivityIndicator,
-  // TouchableOpacity,
-  // Text,
-} from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
+import VIcon from '../VIcon';
 
 interface AppModalProps {
   isModalVisible: boolean;
@@ -37,7 +28,8 @@ const AppModal = ({
         <View style={[styles.modalContent, _styleContent]}>
           <View style={styles.header}>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <Ionicon
+              <VIcon
+                type="Ionicons"
                 name="close-circle-outline"
                 size={26}
                 color={colors.theme.white}

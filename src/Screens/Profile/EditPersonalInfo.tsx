@@ -1,15 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import { Asset } from 'react-native-image-picker';
 import AppInput from '../../Components/AppInput';
 import AppButton from '../../Components/Button';
 import Layout from '../../Components/Layout';
 import UploadImage from '../../Components/UploadImage';
-import { colors } from '../../theme/colors';
+import VIcon from '../../Components/VIcon';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
-import { StackScreenProps } from '@react-navigation/stack';
-import { Asset } from 'react-native-image-picker';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 
@@ -19,7 +19,8 @@ const CustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

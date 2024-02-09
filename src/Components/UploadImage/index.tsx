@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Asset, CameraOptions, launchCamera } from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/Feather';
-// import profile from '../../Assets/icons/ic_profile.png';
 import profile from '../../Assets/images/profile_bg.png';
 import { colors } from '../../theme/colors';
-// import { } from '../../Utils/dynamicSize';
-// import { colors } from '../../Utils/theme';
-// import { IMG_URL } from '../../services/axios';
+import VIcon from '../VIcon';
 
 interface UploadImageProps {
   id?: number;
@@ -94,7 +90,12 @@ const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
             <TouchableOpacity
               style={styles.editBtn}
               onPress={handleImageUpload}>
-              <Icon name="edit" color={colors.theme.primary} size={24} />
+              <VIcon
+                type="Feather"
+                name="edit"
+                color={colors.theme.primary}
+                size={24}
+              />
             </TouchableOpacity>
           )}
         </View>

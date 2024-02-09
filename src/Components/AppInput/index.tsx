@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // You may need to install this package
 import { colors } from '../../theme/colors';
 import { vh } from '../../Utils/units';
+import VIcon from '../VIcon';
 
 interface AppInputProps {
   label: string;
@@ -60,7 +60,8 @@ const AppInput = ({
           <TouchableOpacity
             onPress={() => setSecureTextEntry(prev => !prev)}
             style={{ position: 'absolute', right: 10 }}>
-            <Icon
+            <VIcon
+              type="FontAwesome"
               name={secureTextEntry ? 'eye' : 'eye-slash'}
               size={20}
               color="gray"

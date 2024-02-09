@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import AppInput from '../../Components/AppInput';
 import AppButton from '../../Components/Button';
 import GlroyBold from '../../Components/GlroyBoldText';
 import Layout from '../../Components/Layout';
+import VIcon from '../../Components/VIcon';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
@@ -24,7 +24,8 @@ const CustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}
@@ -117,7 +118,8 @@ export default function EditEducation({}: Props) {
                         borderRadius: 8,
                         padding: 4,
                       }}>
-                      <Ionicon
+                      <VIcon
+                        type="Ionicons"
                         name="close"
                         size={20}
                         color={colors.theme.white}

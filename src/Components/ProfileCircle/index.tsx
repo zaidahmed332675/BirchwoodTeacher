@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme/colors';
+import VIcon from '../VIcon';
 
 type UserProfileCircleProps = {
   onPress?: () => void;
@@ -27,7 +27,12 @@ const UserProfileCircle = ({
         {profileUri ? (
           <Image source={profileUri} style={styles.image} />
         ) : (
-          <IonIcon name={name} size={40} color={colors.text.greyAlt2} />
+          <VIcon
+            type="Ionicons"
+            name={name}
+            size={40}
+            color={colors.text.greyAlt2}
+          />
         )}
       </View>
     </TouchableOpacity>

@@ -6,8 +6,8 @@ import React, {
   useState,
 } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme/colors';
+import VIcon from '../VIcon';
 
 interface SearchModalProps {
   open: boolean;
@@ -58,10 +58,10 @@ const SearchModal = forwardRef(
           color: colors.text.white,
         }}
         CloseIconComponent={() => (
-          <Ionicon name="close-circle-outline" size={36} />
+          <VIcon type="Ionicons" name="close-circle-outline" size={36} />
         )}
         TickIconComponent={() => (
-          <Ionicon name="checkmark-done-outline" size={30} />
+          <VIcon type="Ionicons" name="checkmark-done-outline" size={30} />
         )}
         searchContainerStyle={{
           backgroundColor: colors.theme.secondary,

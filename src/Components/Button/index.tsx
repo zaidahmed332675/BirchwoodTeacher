@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import IonicIcon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme/colors';
 import GlroyBold from '../GlroyBoldText';
+import VIcon from '../VIcon';
 
 interface AppButtonProps {
   title: string;
@@ -30,11 +30,12 @@ const AppButton = ({
       ]}
       onPress={onPress}>
       {icon && (
-        <IonicIcon
-          style={styles.icon}
+        <VIcon
+          type="Ionicons"
           name="add"
           size={15}
           color={colors.text.altGrey}
+          style={styles.icon}
         />
       )}
       <GlroyBold

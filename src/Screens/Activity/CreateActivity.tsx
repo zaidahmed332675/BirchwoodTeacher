@@ -4,13 +4,13 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { CheckBox } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import profile from '../../Assets/images/profile_bg.png';
 import BottomSheet from '../../Components/BottomSheet';
 import AppButton from '../../Components/Button';
 import Layout from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
+import VIcon from '../../Components/VIcon';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
@@ -22,7 +22,8 @@ const CreateActivityCustomHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.titleContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

@@ -11,7 +11,6 @@ import {
   View,
 } from 'react-native';
 // import { RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 import {
   insertImageFromCamera,
@@ -21,6 +20,7 @@ import {
 } from '../../Utils/cameraOptions';
 import { colors } from '../../theme/colors';
 import { AppModal } from '../Modal';
+import VIcon from '../VIcon';
 
 export const RichTextEditor = ({ enableToolbar = true }) => {
   // const RichText = useRef(null);
@@ -141,7 +141,8 @@ export const RichTextEditor = ({ enableToolbar = true }) => {
               setModalVisible(true);
               setMediaType('video');
             }}>
-            <Ionicon
+            <VIcon
+              type="Ionicons"
               name="videocam-outline"
               size={30}
               color={colors.theme.primary}
@@ -152,7 +153,8 @@ export const RichTextEditor = ({ enableToolbar = true }) => {
               setModalVisible(true);
               setMediaType('image');
             }}>
-            <Ionicon
+            <VIcon
+              type="Ionicons"
               name="image-outline"
               size={30}
               color={colors.theme.primary}

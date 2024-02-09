@@ -1,12 +1,18 @@
-import React from 'react';
-import { FlatList, View, Text, StyleSheet, Image } from 'react-native';
-import { ChatStackParams } from '../../Types/NavigationTypes';
-import { StackScreenProps } from '@react-navigation/stack';
-import { colors } from '../../theme/colors';
-import { TouchableOpacity } from 'react-native';
-import Layout from '../../Components/Layout';
 import { useNavigation } from '@react-navigation/native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import { StackScreenProps } from '@react-navigation/stack';
+import React from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Layout from '../../Components/Layout';
+import VIcon from '../../Components/VIcon';
+import { ChatStackParams } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 
@@ -103,7 +109,8 @@ const CustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}

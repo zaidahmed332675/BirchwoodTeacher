@@ -1,25 +1,24 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
+import dp1 from '../../Assets/icons/dp1.png';
 import ActivityPost from '../../Components/ActivityPost';
+import GlroyBold from '../../Components/GlroyBoldText';
+import GrayMediumText from '../../Components/GrayMediumText';
+import Layout from '../../Components/Layout';
+import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
+import VIcon from '../../Components/VIcon';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import Layout from '../../Components/Layout';
-import { Text } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import { vh } from '../../Utils/units';
-import GrayMediumText from '../../Components/GrayMediumText';
-import GlroyBold from '../../Components/GlroyBoldText';
-import dp1 from '../../Assets/icons/dp1.png';
-import { useNavigation } from '@react-navigation/native';
-import { SearchModal } from '../../Components/SearchModal';
 
 type Props = StackScreenProps<ActivityStackParams, 'activity'>;
 
@@ -29,7 +28,8 @@ const ActivityCustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           onPress={() => navigation.goBack()}
           name="chevron-back-outline"
           size={30}
@@ -50,7 +50,8 @@ const ActivityCustomHeader = () => {
         onPress={() => {
           navigation.navigate('createActivity');
         }}>
-        <Ionicon
+        <VIcon
+          type="Ionicons"
           name="add-outline"
           size={15}
           color={colors.theme.white}
