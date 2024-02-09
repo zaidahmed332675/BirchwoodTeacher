@@ -31,15 +31,6 @@ const AppNavigator = () => {
         name={EMainStack.attendanceRoutes}
         component={AttendanceNavigator}
       />
-      <Stack.Screen
-        name={EAuthStack.emailVerification}
-        component={EmailVerification}
-      />
-      <Stack.Screen
-        name={EAuthStack.verificaionCode}
-        component={VerificationCode}
-      />
-      <Stack.Screen name={EAuthStack.resetPassword} component={ResetPassword} />
     </Stack.Navigator>
   );
 };
