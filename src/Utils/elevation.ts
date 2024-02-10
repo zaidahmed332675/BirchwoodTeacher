@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { colors } from '../theme/colors';
 
 type StyleObject = {
   [key: string]: string | number | Record<string, string | number>;
@@ -6,6 +7,7 @@ type StyleObject = {
 
 export function elevation(elv: number) {
   const iosShadowElevation: StyleObject = {
+    shadowColor: colors.theme.black,
     shadowOpacity: 0.0015 * elv + 0.18,
     shadowRadius: 0.5 * elv,
     shadowOffset: {

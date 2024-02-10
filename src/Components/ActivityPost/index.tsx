@@ -3,6 +3,9 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import profile from '../../Assets/images/profile_bg.png';
 import postImage from '../../Assets/images/forgot_child.png';
 import { colors } from '../../theme/colors';
+import Comment from '../Comment';
+import GrayMediumText from '../GrayMediumText';
+import Reaction from '../Reaction';
 
 const ActivityPost = () => {
   return (
@@ -10,8 +13,8 @@ const ActivityPost = () => {
       <View style={styles.header}>
         <Image style={styles.profilePic} source={profile} />
         <View>
-          <Text style={styles.userName}>Anna Mary</Text>
-          <Text style={styles.timeStamp}>2 hours ago</Text>
+          <GrayMediumText _style={styles.userName} text="Anna Mary" />
+          <GrayMediumText _style={styles.timeStamp} text="2 hours ago" />
         </View>
       </View>
       <Text style={styles.postText}>
@@ -20,10 +23,11 @@ const ActivityPost = () => {
       </Text>
       <Image style={styles.postImage} source={postImage} />
       <View style={styles.reactions}>
-        {/* Add your reaction components here */}
+        <Reaction />
       </View>
       <View style={styles.comments}>
-        {/* Add your comments components here */}
+        <Comment />
+        <Comment />
       </View>
     </View>
   );
@@ -31,7 +35,8 @@ const ActivityPost = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    borderTopWidth: 0.5,
+    borderColor: colors.theme.greyAlt,
     padding: 15,
     backgroundColor: colors.theme.white,
   },
@@ -47,11 +52,11 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: colors.text.dimBlack,
   },
   timeStamp: {
     fontSize: 12,
+    fontWeight: 'normal',
     color: '#888',
   },
   postText: {
@@ -66,13 +71,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
   },
-  reactions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
+  reactions: {},
   comments: {
-    // Style your comments section
+    borderTopWidth: 0.5,
+    borderColor: colors.theme.greyAlt,
+    paddingTop: 20,
+    gap: 10,
   },
 });
 

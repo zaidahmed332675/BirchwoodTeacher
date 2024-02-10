@@ -11,6 +11,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Zocial from 'react-native-vector-icons/Zocial';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const vectorIcons: any = {
@@ -27,6 +28,7 @@ const vectorIcons: any = {
   Zocial,
   Fontisto,
   FontAwesome5,
+  FontAwesome6,
   AntDesign,
 };
 
