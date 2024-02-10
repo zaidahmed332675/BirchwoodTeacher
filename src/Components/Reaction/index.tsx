@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../theme/colors';
 import GrayMediumText from '../GrayMediumText';
 import VIcon from '../VIcon';
@@ -14,14 +14,7 @@ const Reaction = () => {
         }}
       />
       <View style={styles.reactionActions}>
-        <View
-          style={{
-            backgroundColor: colors.theme.primary,
-            width: 40,
-            height: 40,
-            borderRadius: 50,
-            justifyContent: 'center',
-          }}>
+        <TouchableOpacity style={[styles.action, styles.actionSelected]}>
           <VIcon
             type="FontAwesome6"
             name="thumbs-up"
@@ -29,15 +22,8 @@ const Reaction = () => {
             color={colors.theme.white}
             style={styles.moreAction}
           />
-        </View>
-        <View
-          style={{
-            backgroundColor: colors.theme.primary,
-            width: 40,
-            height: 40,
-            borderRadius: 50,
-            justifyContent: 'center',
-          }}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.action}>
           <VIcon
             type="Ionicons"
             name="chatbubble-ellipses"
@@ -45,15 +31,8 @@ const Reaction = () => {
             color={colors.theme.white}
             style={styles.moreAction}
           />
-        </View>
-        <View
-          style={{
-            backgroundColor: colors.theme.primary,
-            width: 40,
-            height: 40,
-            borderRadius: 50,
-            justifyContent: 'center',
-          }}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.action}>
           <VIcon
             type="FontAwesome6"
             name="share"
@@ -61,7 +40,7 @@ const Reaction = () => {
             color={colors.theme.white}
             style={styles.moreAction}
           />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -69,12 +48,22 @@ const Reaction = () => {
 
 const styles = StyleSheet.create({
   reaction: {
-    marginVertical: 10,
+    marginVertical: 20,
   },
   reactionActions: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginTop: 10,
     gap: 10,
+  },
+  action: {
+    backgroundColor: colors.theme.secondary,
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    justifyContent: 'center',
+  },
+  actionSelected: {
+    backgroundColor: colors.theme.primary,
   },
   moreAction: {
     alignSelf: 'center',

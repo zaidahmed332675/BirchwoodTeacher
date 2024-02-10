@@ -22,9 +22,7 @@ const ActivityPost = () => {
         mind-blowing 3D wallpapers, drenched in the coolest of cool colors! 🎨
       </Text>
       <Image style={styles.postImage} source={postImage} />
-      <View style={styles.reactions}>
-        <Reaction />
-      </View>
+      <Reaction />
       <View style={styles.comments}>
         <Comment />
         <Comment />
@@ -37,8 +35,8 @@ const styles = StyleSheet.create({
   container: {
     borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
-    padding: 15,
-    backgroundColor: colors.theme.white,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
   },
   header: {
     flexDirection: 'row',
@@ -71,12 +69,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
   },
-  reactions: {},
   comments: {
     borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
-    paddingTop: 20,
-    gap: 10,
   },
 });
 

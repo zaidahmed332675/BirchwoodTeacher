@@ -37,7 +37,7 @@ const Comment = () => {
 const styles = StyleSheet.create({
   comment: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginTop: 20,
   },
   commentPic: {
     width: 30,

@@ -167,8 +167,6 @@ const Activity = ({}: Props) => {
         showsHorizontalScrollIndicator={false}>
         <ActivityPost />
         <ActivityPost />
-        <ActivityPost />
-        <ActivityPost />
       </ScrollView>
     </Layout>
   );
