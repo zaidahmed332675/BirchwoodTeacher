@@ -23,19 +23,20 @@ import { dummyRecords } from '../../Utils/options';
 
 type Props = StackScreenProps<ActivityStackParams, 'activity'>;
 
-const ActivityCustomHeader = () => {
+const CustomHeader = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <VIcon
-          type="Ionicons"
-          onPress={() => navigation.goBack()}
-          name="chevron-back-outline"
-          size={30}
-          color={colors.theme.white}
-        />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <VIcon
+            type="Ionicons"
+            name="chevron-back-outline"
+            size={30}
+            color={colors.theme.white}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             color: colors.text.white,
@@ -95,7 +96,7 @@ const Activity = ({}: Props) => {
   }, [open]);
 
   return (
-    <Layout customHeader={<ActivityCustomHeader />}>
+    <Layout customHeader={<CustomHeader />}>
       <View style={styles.customSwitch}>
         <CustomSwitch
           selectionMode={tabIndex}

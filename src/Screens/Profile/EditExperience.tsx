@@ -19,13 +19,14 @@ const CustomHeader = () => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <VIcon
-          type="Ionicons"
-          onPress={() => navigation.goBack()}
-          name="chevron-back-outline"
-          size={30}
-          color={colors.theme.white}
-        />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <VIcon
+            type="Ionicons"
+            name="chevron-back-outline"
+            size={30}
+            color={colors.theme.white}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             color: colors.text.white,

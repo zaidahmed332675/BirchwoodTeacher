@@ -13,6 +13,7 @@ import Layout from '../../Components/Layout';
 import VIcon from '../../Components/VIcon';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { TouchableOpacity } from 'react-native';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
@@ -22,13 +23,14 @@ const CustomHeader = ({ title }: { title: string }) => {
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <VIcon
-          type="Ionicons"
-          onPress={() => navigation.goBack()}
-          name="chevron-back-outline"
-          size={30}
-          color={colors.theme.white}
-        />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <VIcon
+            type="Ionicons"
+            name="chevron-back-outline"
+            size={30}
+            color={colors.theme.white}
+          />
+        </TouchableOpacity>
         <View
           style={{
             marginLeft: 5,

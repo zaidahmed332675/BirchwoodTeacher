@@ -1,35 +1,38 @@
+import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AppButton from '../../Components/Button';
-// import UploadImage from '../../Components/UploadImage';
-import { useNavigation } from '@react-navigation/native';
-import { Text } from 'react-native';
-import Layout from '../../Components/Layout';
-import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
-// import { ProfileStackParams } from '../../Types/NavigationType';
-// import { colors, fonts } from '../../Utils/theme';
 import GlroyBold from '../../Components/GlroyBoldText';
 import GrayMediumText from '../../Components/GrayMediumText';
+import Layout from '../../Components/Layout';
 import UploadImage from '../../Components/UploadImage';
 import VIcon from '../../Components/VIcon';
+import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
 
-const ProfileCustomHeader = () => {
+const CustomHeader = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
       <View style={styles.titlContainer}>
-        <VIcon
-          type="Ionicons"
-          onPress={() => navigation.goBack()}
-          name="chevron-back-outline"
-          size={30}
-          color={colors.theme.white}
-        />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <VIcon
+            type="Ionicons"
+            name="chevron-back-outline"
+            size={30}
+            color={colors.theme.white}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             color: colors.text.white,
@@ -70,7 +73,7 @@ const Profile = ({ navigation }: Props) => {
   };
 
   return (
-    <Layout customHeader={<ProfileCustomHeader />}>
+    <Layout customHeader={<CustomHeader />}>
       <ScrollView
         style={styles.content}
         contentInsetAdjustmentBehavior="automatic">
@@ -432,24 +435,6 @@ const Profile = ({ navigation }: Props) => {
             />
           </View>
         </View>
-
-        {/* <View style={styles.actionsBtnView}>
-            <AppButton
-              style={styles.actionBtn}
-              title="Edit Personal Info"
-              onPress={() => navigation.navigate('editProfile')}
-            />
-            <AppButton
-              style={styles.actionBtn}
-              title="Edit Education"
-              onPress={() => navigation.navigate('changePassword')}
-            />
-            <AppButton
-              style={styles.actionBtn}
-              title="Edit Experience"
-              onPress={() => navigation.navigate('changePassword')}
-            />
-          </View> */}
       </ScrollView>
     </Layout>
   );

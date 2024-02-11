@@ -16,6 +16,13 @@ interface SearchModalProps {
   _style?: object;
 }
 
+const CloseIconComponent = () => (
+  <VIcon type="Ionicons" name="close-circle-outline" size={36} />
+);
+const TickIconComponent = () => (
+  <VIcon type="Ionicons" name="checkmark-done-outline" size={30} />
+);
+
 const SearchModal = forwardRef(
   ({ open, setOpen, items, _style }: SearchModalProps, ref) => {
     const [value, setValue] = useState(null);
@@ -36,6 +43,7 @@ const SearchModal = forwardRef(
         placeholder="Select Kid"
         searchPlaceholder="Type Name ..."
         open={open}
+        closeOnBackPressed={false}
         value={value}
         items={items}
         setOpen={setOpen}
@@ -57,12 +65,8 @@ const SearchModal = forwardRef(
         selectedItemLabelStyle={{
           color: colors.text.white,
         }}
-        CloseIconComponent={() => (
-          <VIcon type="Ionicons" name="close-circle-outline" size={36} />
-        )}
-        TickIconComponent={() => (
-          <VIcon type="Ionicons" name="checkmark-done-outline" size={30} />
-        )}
+        CloseIconComponent={CloseIconComponent}
+        TickIconComponent={TickIconComponent}
         searchContainerStyle={{
           backgroundColor: colors.theme.secondary,
           borderBottomColor: colors.theme.white,

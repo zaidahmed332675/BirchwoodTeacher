@@ -10,9 +10,24 @@ interface VIconProps {
   onPress?: () => void;
 }
 
-const VIcon = ({ type = '', name, color, size, style }: VIconProps) => {
+const VIcon = ({
+  type = '',
+  name,
+  color,
+  size,
+  style,
+  onPress,
+}: VIconProps) => {
   const Icon = vectorIcons?.[type] ?? 'Feather';
-  return <Icon name={name} color={color} style={style} size={size} />;
+  return (
+    <Icon
+      name={name}
+      color={color}
+      style={style}
+      size={size}
+      onPress={onPress}
+    />
+  );
 };
 
 export default VIcon;

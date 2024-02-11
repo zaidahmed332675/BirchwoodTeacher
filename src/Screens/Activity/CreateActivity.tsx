@@ -14,22 +14,24 @@ import VIcon from '../../Components/VIcon';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { dummyRecords } from '../../Utils/options';
+import { TouchableOpacity } from 'react-native';
 
 type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
 
-const CreateActivityCustomHeader = () => {
+const CustomHeader = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.headerContainer}>
-      <View style={styles.titleContainer}>
-        <VIcon
-          type="Ionicons"
-          onPress={() => navigation.goBack()}
-          name="chevron-back-outline"
-          size={30}
-          color={colors.theme.white}
-        />
+    <View style={styles.header}>
+      <View style={styles.titlContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <VIcon
+            type="Ionicons"
+            name="chevron-back-outline"
+            size={30}
+            color={colors.theme.white}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             color: colors.text.white,
@@ -126,7 +128,7 @@ const CreateActivity = ({}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Layout customHeader={<CreateActivityCustomHeader />}>
+    <Layout customHeader={<CustomHeader />}>
       <View style={styles.container}>
         <Image style={styles.profilePic} source={profile} />
         <View>
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-  headerContainer: {
+  header: {
     // not needed because of bottom sheet removed
     // marginHorizontal: 10,
     // marginRight: 20,
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  titleContainer: { flexDirection: 'row', alignItems: 'center' },
+  titlContainer: { flexDirection: 'row', alignItems: 'center' },
   contentContainer: {
     backgroundColor: 'transparent',
   },
