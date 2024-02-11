@@ -40,7 +40,6 @@ const CustomHeader = ({ title }: { title: string }) => {
           }}>
           <Image
             style={{
-              backgroundColor: 'red',
               width: 40,
               height: 40,
               borderRadius: 50,
