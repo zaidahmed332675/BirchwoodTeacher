@@ -32,6 +32,7 @@ export const DiaryCard = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    backgroundColor: colors.theme.white,
   },
   card: {
     flexDirection: 'row',

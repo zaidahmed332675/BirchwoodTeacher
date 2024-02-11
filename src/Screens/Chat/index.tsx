@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.3,
     borderBottomWidth: 0.3,
     borderColor: colors.theme.greyAlt,
+    backgroundColor: colors.theme.white,
     padding: 10,
   },
   avatar: {

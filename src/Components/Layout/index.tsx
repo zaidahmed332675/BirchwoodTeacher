@@ -5,14 +5,21 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { statusBarHeight } from '../../Utils/units';
 import LinearGradient from 'react-native-linear-gradient';
+import { BottomBackground } from '../BottomBackground';
 
 interface LayoutProps {
   children: React.ReactNode;
   customHeader?: React.ReactNode;
   _styleSheetView?: object;
+  showBottom?: boolean;
 }
 
-const Layout = ({ children, customHeader, _styleSheetView }: LayoutProps) => {
+const Layout = ({
+  children,
+  customHeader,
+  _styleSheetView,
+  showBottom = true,
+}: LayoutProps) => {
   return (
     <LinearGradient
       colors={[colors.theme.primary, colors.theme.secondary]}
@@ -27,6 +34,7 @@ const Layout = ({ children, customHeader, _styleSheetView }: LayoutProps) => {
       <View style={styles.bottomSheet}>
         <View style={[styles.bottomSheetView, _styleSheetView]}>
           {children}
+          {showBottom && <BottomBackground />}
         </View>
       </View>
       {/* <BottomSheet>{children}</BottomSheet> */}

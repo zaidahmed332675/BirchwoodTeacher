@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { BottomBackground } from '../../Components/BottomBackground';
 import AppDatePicker from '../../Components/DatePicker/DatePicker';
 import Layout from '../../Components/Layout';
+import { MarkAttendance } from '../../Components/MarkAttendance';
 import { CustomSwitch } from '../../Components/Switch';
 import VIcon from '../../Components/VIcon';
 import { AttendanceStackParams } from '../../Types/NavigationTypes';
@@ -66,7 +68,9 @@ const Attendance = ({}: Props) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         <AppDatePicker />
+        <MarkAttendance />
       </ScrollView>
+      <BottomBackground />
     </Layout>
   );
 };

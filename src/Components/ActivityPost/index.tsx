@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   container: {
     borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
+    backgroundColor: colors.theme.white,
     paddingVertical: 20,
     paddingHorizontal: 15,
   },
