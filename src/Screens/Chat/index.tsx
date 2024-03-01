@@ -13,6 +13,7 @@ import Layout from '../../Components/Layout';
 import VIcon from '../../Components/VIcon';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { ImageBox } from '../../Components/UploadImage';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 
@@ -22,84 +23,84 @@ const chatList = [
     name: 'John Doe',
     lastMessage: 'Hey, how are you?',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/50/50', // Sample avatar URL
+    avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Men's avatar URL
   },
   {
     _id: 2,
     name: 'Jane Smith',
     lastMessage: "I'm doing great, thanks!",
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/51/51', // Another sample avatar URL
+    avatar: 'https://randomuser.me/api/portraits/women/1.jpg', // Women's avatar URL
   },
   {
     _id: 3,
     name: 'Alice Johnson',
     lastMessage: "What's up?",
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/52/52',
+    avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
   },
   {
     _id: 4,
     name: 'Bob Williams',
     lastMessage: 'Not much, just chilling, watching TV, playing with my cat',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/53/53',
+    avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
   },
   {
     _id: 5,
     name: 'Eva Brown',
     lastMessage: 'Any plans for the weekend?',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/54/54',
+    avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
   },
   {
     _id: 6,
     name: 'Michael Davis',
     lastMessage: 'Thinking of going to the movies.',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/55/55',
+    avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
   },
   {
     _id: 7,
     name: 'Olivia Smith',
     lastMessage: 'Sounds fun! Which movie?',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/56/56',
+    avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
   },
   {
     _id: 8,
     name: 'Daniel White',
     lastMessage: 'Maybe something action-packed.',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/57/57',
+    avatar: 'https://randomuser.me/api/portraits/men/4.jpg',
   },
   {
     _id: 9,
     name: 'Sophia Jones',
     lastMessage: 'Cool! Let me know the showtime.',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/58/58',
+    avatar: 'https://randomuser.me/api/portraits/women/5.jpg',
   },
   {
     _id: 10,
     name: 'William Taylor',
     lastMessage: 'Sure thing!',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/59/59',
+    avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
   },
   {
     _id: 11,
     name: 'William Su',
     lastMessage: 'Sure thing!',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/59/59',
+    avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
   },
   {
     _id: 12,
     name: 'Taylor Tie',
     lastMessage: 'Sure thing!',
     timestamp: new Date(),
-    avatar: 'https://placekitten.com/59/59',
+    avatar: 'https://randomuser.me/api/portraits/men/7.jpg',
   },
 ];
 
@@ -141,7 +142,11 @@ const Chat = ({ navigation }: Props) => {
           userName: item.name,
         });
       }}>
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
+      <ImageBox
+        image={{ uri: item.avatar }}
+        _imageStyle={styles.avatar}
+        _indicatorStyle={styles.avatar}
+      />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.message} ellipsizeMode="tail" numberOfLines={1}>

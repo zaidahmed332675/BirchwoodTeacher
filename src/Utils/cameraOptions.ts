@@ -11,6 +11,7 @@ const ImageOptions: CameraOptions | ImageLibraryOptions = {
   quality: 1,
   maxWidth: 800,
   maxHeight: 800,
+  includeBase64: false,
 };
 
 const VideoOptions: CameraOptions | ImageLibraryOptions = {
@@ -20,54 +21,33 @@ const VideoOptions: CameraOptions | ImageLibraryOptions = {
 
 export const insertImageFromCamera = async () => {
   const response: ImagePickerResponse = await launchCamera(ImageOptions);
-
-  if (response.didCancel) {
-    return { status: false, message: 'Image cancelled' };
-  } else if (response.errorCode) {
-    return { status: false, message: 'Error Occured' + response.errorMessage };
-  } else {
-    if (response.assets) {
-      return { status: true, ...response.assets?.[0] };
-    }
-    return { status: false, message: 'Something went wrong' };
-  }
+  return cameraResponseCallback(response, true);
 };
 
 export const insertImageFromGallery = async () => {
   const response: ImagePickerResponse = await launchImageLibrary(ImageOptions);
-
-  if (response.didCancel) {
-    return { status: false, message: 'Image cancelled' };
-  } else if (response.errorCode) {
-    return { status: false, message: 'Error Occured' + response.errorMessage };
-  } else {
-    if (response.assets) {
-      return { status: true, ...response.assets?.[0] };
-    }
-    return { status: false, message: 'Something went wrong' };
-  }
+  return cameraResponseCallback(response, true);
 };
 
 export const insertVideoFromCamera = async () => {
   const response: ImagePickerResponse = await launchCamera(VideoOptions);
-
-  if (response.didCancel) {
-    return { status: false, message: 'Video cancelled' };
-  } else if (response.errorCode) {
-    return { status: false, message: 'Error Occured' + response.errorMessage };
-  } else {
-    if (response.assets) {
-      return { status: true, ...response.assets?.[0] };
-    }
-    return { status: false, message: 'Something went wrong' };
-  }
+  return cameraResponseCallback(response, false);
 };
 
 export const insertVideoFromGallery = async () => {
   const response: ImagePickerResponse = await launchImageLibrary(VideoOptions);
+  return cameraResponseCallback(response, false);
+};
 
+const cameraResponseCallback = (
+  response: ImagePickerResponse,
+  isImage: boolean
+) => {
   if (response.didCancel) {
-    return { status: false, message: 'Video cancelled' };
+    return {
+      status: false,
+      message: `${isImage ? 'Image' : 'Video'} cancelled`,
+    };
   } else if (response.errorCode) {
     return { status: false, message: 'Error Occured' + response.errorMessage };
   } else {

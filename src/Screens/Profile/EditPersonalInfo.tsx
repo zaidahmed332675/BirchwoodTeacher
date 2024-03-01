@@ -55,8 +55,9 @@ export default function EditPersonalInfo({}: Props) {
             <View style={styles.profileGrid}>
               <View style={styles.profile}>
                 <UploadImage
-                  id={1}
-                  image={{ uri: image?.uri }}
+                  isEditable={true}
+                  image={image}
+                  originalImage={undefined}
                   handleImage={setImage}
                 />
               </View>

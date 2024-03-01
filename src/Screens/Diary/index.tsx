@@ -76,7 +76,7 @@ const Diary = ({}: Props) => {
 
   const searchModalRef = useRef();
   const [open, setOpen] = useState(false);
-  const [student, setStudent] = useState();
+  const [student, setStudent] = useState<Record<string, any>>();
 
   const [items] = useState([...dummyRecords]);
 
@@ -88,9 +88,9 @@ const Diary = ({}: Props) => {
   };
 
   useEffect(() => {
-    let name = searchModalRef.current?.getValue?.();
-    if (name) {
-      setStudent(name);
+    let item = searchModalRef.current?.selectedItem;
+    if (item?.value) {
+      setStudent(item);
     }
   }, [open]);
 
@@ -101,7 +101,7 @@ const Diary = ({}: Props) => {
           selectionMode={1}
           roundCorner={true}
           option1={'Class'}
-          option2={'Kid'}
+          option2={'Child'}
           onSelectSwitch={onSelectSwitch}
           selectionColor={colors.theme.primary}
         />
@@ -126,9 +126,12 @@ const Diary = ({}: Props) => {
             }}
           />
           <View style={{ marginLeft: 10, flex: 1 }}>
-            <GlroyBold text={student} _style={{ color: colors.text.black }} />
+            <GlroyBold
+              text={student?.label}
+              _style={{ color: colors.text.black }}
+            />
             <GrayMediumText
-              text={`Class ${'X1-B'} | Roll no: ${'04'}`}
+              text={`Class ${'X1-B'} | Roll no: ${student?.rollNumber}`}
               _style={{ fontSize: 12 }}
             />
           </View>
@@ -204,10 +207,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   header: {
-    // not needed because of bottom sheet removed
-    // marginHorizontal: 10,
-    // marginRight: 20,
-    // top: vh * 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

@@ -51,18 +51,16 @@ const CreateActivityModalContent = () => {
 
   const searchModalRef = useRef();
   const [open, setOpen] = useState(false);
-  const [student, setStudent] = useState();
+  const [_, setStudent] = useState<Record<string, any>>();
 
   const [items] = useState([...dummyRecords]);
 
   useEffect(() => {
-    let name = searchModalRef.current?.getValue?.();
-    if (name) {
-      setStudent(name);
+    let item = searchModalRef.current?.selectedItem;
+    if (item?.value) {
+      setStudent(item);
     }
   }, [open]);
-
-  console.log(student);
 
   return (
     <View style={styles.contentContainer}>
@@ -95,7 +93,7 @@ const CreateActivityModalContent = () => {
         />
         <CheckBox
           checked={audience === 1}
-          title="Kid"
+          title="Child"
           textStyle={{
             fontSize: 16,
             color: colors.text.white,
@@ -193,10 +191,6 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   header: {
-    // not needed because of bottom sheet removed
-    // marginHorizontal: 10,
-    // marginRight: 20,
-    // top: vh * 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

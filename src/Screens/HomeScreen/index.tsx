@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageBackground,
   StatusBar,
   Image,
   FlatList,
@@ -10,18 +9,18 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { vh, vw } from '../../Utils/units';
-import main_bg_img from '../../Assets/images/animated_bg.png';
 import GlroyBold from '../../Components/GlroyBoldText';
-import profile_icon from '../../Assets/images/profile_bg.png';
 import { colors } from '../../theme/colors';
-import UserProfileCircle from '../../Components/ProfileCircle';
 import student from '../../Assets/icons/student.png';
 import { appShadow } from '../../theme/colors';
 import { featureIcons } from '../../Assets';
 import { icons } from '../../Assets/icons';
 import GrayMediumText from '../../Components/GrayMediumText';
-import { MainStackParams } from '../../Types/NavigationTypes';
+import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
+import LinearGradient from 'react-native-linear-gradient';
+import { ImageBox } from '../../Components/UploadImage';
+import profile_icon from '../../Assets/images/profile_bg.png';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -37,31 +36,31 @@ const HomeScreen = ({ navigation }: Props) => {
       id: 1,
       title: 'Profile',
       icon: featureIcons.profile,
-      route: 'profileRoutes',
+      route: EMainStack.profileRoutes,
     },
     {
       id: 2,
       title: 'Activity',
       icon: featureIcons.activity,
-      route: 'activityRoutes',
+      route: EMainStack.activityRoutes,
     },
     {
       id: 3,
       title: 'Assignment',
       icon: featureIcons.assignment,
-      route: 'diaryRoutes',
+      route: EMainStack.diaryRoutes,
     },
     {
       id: 5,
       title: 'Chat',
       icon: featureIcons.time_table,
-      route: 'chatRoutes',
+      route: EMainStack.chatRoutes,
     },
     {
       id: 5,
       title: 'Attendance',
       icon: featureIcons.time_table,
-      route: 'attendanceRoutes',
+      route: EMainStack.attendanceRoutes,
     },
     {
       id: 11,
@@ -109,7 +108,7 @@ const HomeScreen = ({ navigation }: Props) => {
   }) => {
     return (
       <TouchableOpacity
-        style={[styles.card]}
+        style={styles.card}
         onPress={() => handleNavigate(item.route)}>
         <View style={styles.iconContainer}>
           <Image source={item.icon} style={styles.featureIcons} />
@@ -177,10 +176,10 @@ const HomeScreen = ({ navigation }: Props) => {
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      <ImageBackground
-        source={main_bg_img}
-        style={[styles.bg_img]}
-        resizeMode="cover">
+      <LinearGradient
+        colors={[colors.theme.primary, colors.theme.secondary]}
+        locations={[0, 1]}
+        style={styles.header}>
         <View style={styles.profile_container}>
           <View>
             <GlroyBold
@@ -194,7 +193,9 @@ const HomeScreen = ({ navigation }: Props) => {
                 marginTop: 3,
               }}>
               <View style={styles.student_year}>
-                <Text style={{ fontSize: 12 }}>{profile.year}</Text>
+                <Text style={{ fontSize: 12, color: colors.theme.black }}>
+                  {profile.year}
+                </Text>
               </View>
               <View style={styles.student_icon}>
                 <Image
@@ -206,12 +207,12 @@ const HomeScreen = ({ navigation }: Props) => {
               </View>
             </View>
           </View>
-          <UserProfileCircle
-            profileUri={profile_icon}
-            _style={styles.profilePhoto}
+          <ImageBox
+            image={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
+            _imageStyle={styles.profilePhoto}
           />
         </View>
-      </ImageBackground>
+      </LinearGradient>
 
       <FlatList
         data={data}
@@ -226,13 +227,6 @@ const HomeScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  bg_img: {
-    height: vh * 30,
-    position: 'relative',
-    overflow: 'hidden',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-  },
   topCardIcon: {
     height: 35,
     width: 35,
@@ -264,7 +258,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     alignItems: 'center',
   },
-
   profile_text: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -297,6 +290,8 @@ const styles = StyleSheet.create({
     width: 15,
   },
   profilePhoto: {
+    width: 60,
+    height: 60,
     borderWidth: 2,
     borderColor: colors.theme.white,
   },
@@ -315,12 +310,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignSelf: 'center',
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
   flatListContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    borderColor: colors.theme.primary,
+    backgroundColor: colors.theme.primary,
+    borderBottomLeftRadius: 38,
+    borderBottomRightRadius: 38,
   },
 });
 

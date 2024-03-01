@@ -8,7 +8,6 @@ interface AppDatePickerProps {
   style?: object;
 }
 
-const perfectSize = (val: any) => val;
 const PrevIcon = () => (
   <VIcon
     type="Ionicons"
@@ -93,29 +92,29 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     overflow: 'hidden',
-    paddingVertical: perfectSize(6),
+    paddingVertical: 6,
     width: '100%',
   },
   selectedRangeStartStyle: {
     backgroundColor: colors.theme.primary,
-    borderTopLeftRadius: perfectSize(6),
-    borderBottomLeftRadius: perfectSize(6),
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
   },
   selectedRangeEndStyle: {
     backgroundColor: colors.theme.primary,
-    borderTopRightRadius: perfectSize(6),
-    borderBottomRightRadius: perfectSize(6),
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
   },
   selectedRangeStyle: {
     backgroundColor: colors.theme.primary,
   },
   nextTitleStyle: {
     color: colors.theme.greyAlt,
-    fontSize: perfectSize(12),
+    fontSize: 12,
   },
   previousTitleStyle: {
     color: colors.theme.greyAlt,
-    fontSize: perfectSize(12),
+    fontSize: 12,
   },
   monthYearHeaderWrapperStyle: {
     flexDirection: 'row',
@@ -127,8 +126,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   daysStyle: {
-    fontSize: perfectSize(13),
-    lineHeight: perfectSize(18),
+    fontSize: 13,
+    lineHeight: 18,
     color: '#94A3B8',
   },
 });

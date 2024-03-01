@@ -1,95 +1,94 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Asset, CameraOptions, launchCamera } from 'react-native-image-picker';
-import profile from '../../Assets/images/profile_bg.png';
-import { colors } from '../../theme/colors';
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Alert,
+  ActivityIndicator,
+  ImageProps,
+} from 'react-native';
+import { Asset } from 'react-native-image-picker';
 import VIcon from '../VIcon';
+import profile from '../../Assets/images/avatar.jpg';
+import { colors } from '../../theme/colors';
+import {
+  insertImageFromCamera,
+  insertImageFromGallery,
+} from '../../Utils/cameraOptions';
 
 interface UploadImageProps {
-  id?: number;
-  image: {
-    uri?: string;
-  };
-  handleImage?: (param: Asset) => void;
+  isEditable?: boolean;
+  image: Asset;
+  originalImage: string | undefined;
+  handleImage?: (param: Asset & { status?: boolean; message?: string }) => void;
   style?: object;
 }
 
-const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
-  // const [loading, setLoader] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<string | undefined>();
+const IMG_URL = '';
 
-  const handleImageUpload = () => {
-    const options: CameraOptions = {
-      mediaType: 'photo',
-    };
-
-    launchCamera(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else {
-        console.log('response photo >>', response);
-        if (response.assets) {
-          setSelectedImage(response.assets[0].uri);
-          // handleImage?.(response?.assets?.[0]);
-        }
-      }
-    });
-
-    // const options: CameraOptions = {
-    //   mediaType: 'photo',
-    //   includeBase64: false,
-    //   maxHeight: 600,
-    //   maxWidth: 800
-    // }
-
-    //   launchImageLibrary(options, response => {
-    //     if (response.didCancel) {
-    //       console.log('User cancelled image picker')
-    //     } else if (response.errorCode) {
-    //       console.log('ImagePicker Error: ', response.errorMessage)
-    //     } else {
-    //       if (response.assets) {
-    //         setSelectedImage(response.assets[0].uri)
-    //         handleImage?.(response?.assets?.[0])
-    //       }
-    //     }
-    //   })
+const UploadImage = ({
+  isEditable,
+  style,
+  image,
+  originalImage,
+  handleImage,
+}: UploadImageProps) => {
+  const selectOptionIMG = () => {
+    Alert.alert(
+      'Select Image',
+      'Choose an option for image upload',
+      [
+        { text: 'Camera', onPress: () => handleImageUpload('camera') },
+        { text: 'Gallery', onPress: () => handleImageUpload('gallery') },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => console.log('cancel'),
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
-  const IMG_URL = '';
+  const handleImageUpload = async (mediaType: String) => {
+    let method =
+      mediaType === 'camera' ? insertImageFromCamera : insertImageFromGallery;
+    let media = await method();
 
-  console.log(selectedImage, 'selected Image ', image?.uri);
+    if (media.status) {
+      handleImage?.(media);
+    }
+  };
 
   return (
-    <View style={[styles.appInput, style]}>
-      <View style={styles.profile}>
-        <View
-          style={{
-            borderWidth: 3,
-            borderRadius: 100,
-            backgroundColor: colors.theme.secondary,
-            borderColor: colors.theme.secondary,
-          }}>
-          <Image
-            loadingIndicatorSource={profile}
-            source={
-              // !loader &&
-              selectedImage || image?.uri
-                ? {
-                    uri:
-                      selectedImage || id ? image?.uri : IMG_URL + image?.uri,
-                  }
-                : profile
-            }
-            alt="User Profile Image"
-            style={styles.userImage}
-          />
-          {id && (
+    <View style={[style]}>
+      <View
+        style={{
+          borderWidth: 3,
+          borderRadius: 100,
+          backgroundColor: colors.theme.secondary,
+          borderColor: colors.theme.secondary,
+        }}>
+        <ImageBox image={image} />
+        {isEditable &&
+          (image?.fileName ? (
             <TouchableOpacity
               style={styles.editBtn}
-              onPress={handleImageUpload}>
+              onPress={() =>
+                handleImage?.({
+                  uri: originalImage ? IMG_URL + originalImage : originalImage,
+                })
+              }>
+              <VIcon
+                type="Feather"
+                name="x"
+                color={colors.theme.primary}
+                size={24}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.editBtn} onPress={selectOptionIMG}>
               <VIcon
                 type="Feather"
                 name="edit"
@@ -97,21 +96,60 @@ const UploadImage = ({ id, style, image, handleImage }: UploadImageProps) => {
                 size={24}
               />
             </TouchableOpacity>
-          )}
-        </View>
+          ))}
+      </View>
+    </View>
+  );
+};
+
+export const ImageBox = ({
+  image,
+  imagePlaceholder,
+  _imageStyle = {},
+  _indicatorStyle = {},
+}: {
+  image: Asset;
+  imagePlaceholder?: ImageProps;
+  _imageStyle?: object;
+  _indicatorStyle?: object;
+}) => {
+  const [imageLoader, setImageLoader] = useState(false);
+
+  return (
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <Image
+        onLoadStart={() => {
+          setImageLoader(true);
+        }}
+        onLoadEnd={() => {
+          setImageLoader(false);
+        }}
+        source={
+          image?.uri
+            ? { uri: image?.fileName ? image?.uri : IMG_URL + image?.uri }
+            : imagePlaceholder || profile
+        }
+        alt="User Profile Image"
+        style={[styles.userImage, _imageStyle]}
+        resizeMode="cover"
+      />
+      <View
+        style={[
+          styles.userImage,
+          _indicatorStyle,
+          { position: 'absolute', justifyContent: 'center' },
+        ]}>
+        <ActivityIndicator
+          animating={imageLoader}
+          size="large"
+          color={colors.theme.primary}
+        />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  appInput: {},
-  profile: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 13,
-    width: '100%',
-  },
   userImage: {
     height: 120,
     width: 120,
