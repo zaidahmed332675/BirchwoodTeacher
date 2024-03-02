@@ -32,7 +32,7 @@ const AppModal = ({
                 type="Ionicons"
                 name="close-circle-outline"
                 size={26}
-                color={colors.theme.white}
+                color={colors.theme.primary}
               />
             </TouchableOpacity>
           </View>
@@ -57,15 +57,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#rgba(0, 0, 0, 0.7)',
+    backgroundColor: '#rgba(0, 0, 0, 0.25)',
     zIndex: 1000,
   },
-  modalContent: {},
+  modalContent: {
+    width: '90%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 20,
+    backgroundColor: colors.theme.white,
+  },
   header: {
-    backgroundColor: colors.theme.primary,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    padding: 8,
+    width: '100%',
   },
   // activityIndicatorWrapper: {
   //   borderRadius: 10,

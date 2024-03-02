@@ -138,8 +138,8 @@ const Chat = ({ navigation }: Props) => {
       style={styles.item}
       onPress={() => {
         navigation.navigate('createChat', {
-          userId: item._id,
-          userName: item.name,
+          parentId: item._id,
+          parentName: item.name,
         });
       }}>
       <ImageBox

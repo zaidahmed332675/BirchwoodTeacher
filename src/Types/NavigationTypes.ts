@@ -96,12 +96,17 @@ export type ProfileStackParams = {
 };
 
 export enum EActivityStack {
+  activities = 'activities',
   activity = 'activity',
   createActivity = 'createActivity',
 }
 
 export type ActivityStackParams = {
-  activity: undefined;
+  activities: undefined;
+  activity: {
+    activityId: string;
+    activityName: string;
+  };
   createActivity: undefined;
 };
 
@@ -123,8 +128,8 @@ export enum EChatStack {
 export type ChatStackParams = {
   chat: undefined;
   createChat: {
-    userId: string;
-    userName: string;
+    parentId: string;
+    parentName: string;
   };
 };
 

@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     {
       id: 2,
-      title: 'Activity',
+      title: 'Activities',
       icon: featureIcons.activity,
       route: EMainStack.activityRoutes,
     },
