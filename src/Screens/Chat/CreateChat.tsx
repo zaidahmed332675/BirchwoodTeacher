@@ -9,8 +9,8 @@ import {
   IMessage,
   InputToolbar,
 } from 'react-native-gifted-chat';
-import Layout from '../../Components/Layout';
-import VIcon from '../../Components/VIcon';
+import { Layout } from '../../Components/Layout';
+import { VIcon } from '../../Components/VIcon';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { TouchableOpacity } from 'react-native';

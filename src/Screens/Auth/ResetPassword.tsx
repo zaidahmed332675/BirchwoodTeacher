@@ -1,14 +1,14 @@
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { colors } from '../../theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import AppInput from '../../Components/AppInput';
-import AppButton from '../../Components/Button';
+import { AppInput } from '../../Components/AppInput';
+import { AppButton } from '../../Components/Button';
 import reset_pass_child from '../../Assets/images/reset_pass_child.png';
-import AnimatedBackgroundImage from '../../Components/AnimatedBackgroundImage';
+import { AnimatedBackgroundImage } from '../../Components/AnimatedBackgroundImage';
 import { vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'resetPassword'>;
@@ -37,7 +37,7 @@ export default function ResetPassword({ navigation }: Props) {
           <View>
             <AppInput
               label="Password"
-              placeholder={'password'}
+              placeholder={'Password'}
               value={password}
               required
               onChange={setPassword}
@@ -45,7 +45,7 @@ export default function ResetPassword({ navigation }: Props) {
             />
             <AppInput
               label="Confirm New Password"
-              placeholder={'confirm new password'}
+              placeholder={'Confirm new password'}
               value={confirmPassword}
               required
               onChange={setConfirmPassword}

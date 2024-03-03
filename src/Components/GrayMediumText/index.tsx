@@ -11,7 +11,7 @@ const GrayMediumText = ({ text, _style }: GrayMediumTextProps) => {
   return <Text style={{ ...styles.text, ..._style }}>{text}</Text>;
 };
 
-export default GrayMediumText;
+export { GrayMediumText };
 
 const styles = StyleSheet.create({
   text: {

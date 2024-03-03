@@ -1,7 +1,5 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-
-// import MainStack from './MainStack';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
 import AuthNavigator from './AuthNavigator';

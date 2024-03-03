@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../theme/colors';
-import GrayMediumText from '../GrayMediumText';
-import VIcon from '../VIcon';
+import { GrayMediumText } from '../GrayMediumText';
+import { VIcon } from '../VIcon';
 
 const Reaction = () => {
   return (
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Reaction;
+export { Reaction };

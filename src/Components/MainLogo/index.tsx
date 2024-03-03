@@ -16,7 +16,7 @@ const MainLogo = ({ _style }: MainLogoProps) => {
   );
 };
 
-export default MainLogo;
+export { MainLogo };
 
 const styles = StyleSheet.create({
   img: {

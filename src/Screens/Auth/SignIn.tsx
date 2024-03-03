@@ -1,21 +1,22 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
+  Image,
   KeyboardAvoidingView,
-  ScrollView,
   Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import SmallText from '../../Components/SmallText';
-import { colors } from '../../theme/colors';
-import MainLogo from '../../Components/MainLogo';
-import ChildLogo from '../../Components/ChildLogo';
-import SocialMediaIcons from '../../Components/SocialMediaIcons';
-import { StackScreenProps } from '@react-navigation/stack';
+import chil_logo from '../../Assets/images/logo/child_logo.png';
+import { AppInput } from '../../Components/AppInput';
+import { AppButton } from '../../Components/Button';
+import { MainLogo } from '../../Components/MainLogo';
+import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
-import AppInput from '../../Components/AppInput';
-import AppButton from '../../Components/Button';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 
@@ -53,10 +54,7 @@ const SignIn = ({ navigation }: Props) => {
           />
           <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity onPress={handleForgotPassword}>
-              <SmallText
-                text={'Forgot Password?'}
-                _style={styles.forgotPasswordText}
-              />
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -67,7 +65,11 @@ const SignIn = ({ navigation }: Props) => {
           />
         </View>
         <View style={{ alignItems: 'center', marginVertical: 10 }}>
-          <ChildLogo _style={styles.childLogo} />
+          <Image
+            source={chil_logo}
+            resizeMode="contain"
+            style={styles.childLogo}
+          />
         </View>
         <SocialMediaIcons />
       </ScrollView>

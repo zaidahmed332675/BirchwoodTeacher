@@ -4,9 +4,9 @@ import { CheckBox } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import profile from '../../Assets/images/profile_bg.png';
-import BottomSheet from '../../Components/BottomSheet';
-import AppButton from '../../Components/Button';
-import Layout from '../../Components/Layout';
+import { AppBottomSheet } from '../../Components/BottomSheet';
+import { AppButton } from '../../Components/Button';
+import { Layout } from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
 import { DiaryStackParams } from '../../Types/NavigationTypes';
@@ -105,7 +105,7 @@ const CreateDiary = ({}: Props) => {
         </View>
       </View>
       <RichTextEditor enableToolbar={false} />
-      <BottomSheet
+      <AppBottomSheet
         ref={sheetRef}
         enableDismissOnClose
         onDismiss={() => {
@@ -118,7 +118,7 @@ const CreateDiary = ({}: Props) => {
           backgroundColor: colors.theme.primary,
         }}>
         <CreateDiaryModalContent />
-      </BottomSheet>
+      </AppBottomSheet>
 
       <AppButton
         title={isOpen ? 'Done' : 'Post Now'}

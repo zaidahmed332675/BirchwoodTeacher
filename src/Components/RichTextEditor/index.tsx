@@ -20,7 +20,7 @@ import {
 } from '../../Utils/cameraOptions';
 import { colors } from '../../theme/colors';
 import { AppModal } from '../Modal';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 
 export const RichTextEditor = ({ enableToolbar = true }) => {
   // const RichText = useRef(null);

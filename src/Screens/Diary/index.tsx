@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import dp1 from '../../Assets/icons/dp1.png';
 import { DiaryCard } from '../../Components/DiaryCard';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
-import Layout from '../../Components/Layout';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
+import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';

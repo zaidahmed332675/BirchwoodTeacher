@@ -2,25 +2,24 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar,
   Image,
   FlatList,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import React, { useState } from 'react';
 import { vh, vw } from '../../Utils/units';
-import GlroyBold from '../../Components/GlroyBoldText';
+import { GlroyBold } from '../../Components/GlroyBoldText';
 import { colors } from '../../theme/colors';
 import student from '../../Assets/icons/student.png';
 import { appShadow } from '../../theme/colors';
 import { featureIcons } from '../../Assets';
 import { icons } from '../../Assets/icons';
-import GrayMediumText from '../../Components/GrayMediumText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
 import LinearGradient from 'react-native-linear-gradient';
 import { ImageBox } from '../../Components/UploadImage';
-import profile_icon from '../../Assets/images/profile_bg.png';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -46,7 +45,7 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     {
       id: 3,
-      title: 'Assignment',
+      title: 'Work Diary',
       icon: featureIcons.assignment,
       route: EMainStack.diaryRoutes,
     },
@@ -171,6 +170,11 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <LinearGradient
         colors={[colors.theme.primary, colors.theme.secondary]}
         locations={[0, 1]}

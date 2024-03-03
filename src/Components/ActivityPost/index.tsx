@@ -3,9 +3,9 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import profile from '../../Assets/images/profile_bg.png';
 import postImage from '../../Assets/images/forgot_child.png';
 import { colors } from '../../theme/colors';
-import Comment from '../Comment';
-import GrayMediumText from '../GrayMediumText';
-import Reaction from '../Reaction';
+import { Comment } from '../Comment';
+import { GrayMediumText } from '../GrayMediumText';
+import { Reaction } from '../Reaction';
 
 const ActivityPost = () => {
   return (
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActivityPost;
+export { ActivityPost };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 
 interface AppModalProps {
   isModalVisible: boolean;

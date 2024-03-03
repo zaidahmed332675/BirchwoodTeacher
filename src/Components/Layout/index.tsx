@@ -1,11 +1,11 @@
 import React from 'react';
-// import BottomSheet from '../../Components/BottomSheet';
 import { StatusBar, View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { statusBarHeight } from '../../Utils/units';
 import LinearGradient from 'react-native-linear-gradient';
 import { BottomBackground } from '../BottomBackground';
+// import { AppBottomSheet } from '../../Components/AppBottomSheet';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -25,6 +25,11 @@ const Layout = ({
       colors={[colors.theme.primary, colors.theme.secondary]}
       locations={[0.02, 0.2]}
       style={styles.container}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <View style={styles.header}>{customHeader}</View>
       <View style={styles.bottomSheet}>
         <View style={[styles.bottomSheetView, _styleSheetView]}>
@@ -63,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Layout;
+export { Layout };

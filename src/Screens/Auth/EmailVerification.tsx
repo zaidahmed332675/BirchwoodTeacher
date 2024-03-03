@@ -1,13 +1,13 @@
 import { StatusBar, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { colors } from '../../theme/colors';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
-import AnimatedBackgroundImage from '../../Components/AnimatedBackgroundImage';
-import AppButton from '../../Components/Button';
-import AppInput from '../../Components/AppInput';
+import { AnimatedBackgroundImage } from '../../Components/AnimatedBackgroundImage';
+import { AppButton } from '../../Components/Button';
+import { AppInput } from '../../Components/AppInput';
 import forgot_child from '../../Assets/images/forgot_child.png';
 import { vw } from '../../Utils/units';
 

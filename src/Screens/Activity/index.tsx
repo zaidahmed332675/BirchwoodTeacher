@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Layout from '../../Components/Layout';
+import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
-import VIcon from '../../Components/VIcon';
+import { VIcon } from '../../Components/VIcon';
 import {
   ActivityStackParams,
   EActivityStack,

@@ -9,7 +9,7 @@ import {
   ImageProps,
 } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 import profile from '../../Assets/images/avatar.jpg';
 import { colors } from '../../theme/colors';
 import {
@@ -177,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UploadImage;
+export { UploadImage };

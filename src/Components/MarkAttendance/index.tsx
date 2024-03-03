@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
-import GrayMediumText from '../GrayMediumText';
+import { GrayMediumText } from '../GrayMediumText';
 import { MarkAttendanceBtn } from '../MarkAttendanceBtn';
 
 const MarkAttendance = () => {

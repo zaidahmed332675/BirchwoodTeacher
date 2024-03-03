@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     borderWidth: 0.5,
     borderColor: colors.theme.primary,
-    // backgroundColor: colors.theme.primary,
     marginRight: 4,
     padding: 10,
     borderRadius: 8,

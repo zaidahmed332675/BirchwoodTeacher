@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 import { vh } from '../../Utils/units';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 
 interface AppInputProps {
   label: string;
@@ -73,7 +73,7 @@ const AppInput = ({
   );
 };
 
-export default AppInput;
+export { AppInput };
 
 const styles = StyleSheet.create({
   textInputField: {

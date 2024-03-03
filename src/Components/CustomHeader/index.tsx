@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import VIcon from '../../Components/VIcon';
+import { VIcon } from '../../Components/VIcon';
 import { colors } from '../../theme/colors';
 
 const CustomHeader = ({

@@ -7,10 +7,10 @@ import React, {
 } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { colors } from '../../theme/colors';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 import { Image, TouchableOpacity, View } from 'react-native';
-import GlroyBold from '../GlroyBoldText';
-import GrayMediumText from '../GrayMediumText';
+import { GlroyBold } from '../GlroyBoldText';
+import { GrayMediumText } from '../GrayMediumText';
 import dp1 from '../../Assets/icons/dp1.png';
 
 interface SearchModalProps {

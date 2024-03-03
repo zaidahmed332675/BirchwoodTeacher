@@ -11,7 +11,7 @@ const GlroyBold = ({ text, _style }: GlroyBoldTextProps) => {
   return <Text style={{ ...styles.text, ..._style }}>{text}</Text>;
 };
 
-export default GlroyBold;
+export { GlroyBold };
 
 const styles = StyleSheet.create({
   text: {

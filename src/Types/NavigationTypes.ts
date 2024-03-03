@@ -1,9 +1,3 @@
-// import {EventProps} from './EventType'
-// import {HistoryProps} from './HistoryType'
-// import {NewsProps} from './NewsType'
-// import {OrderProps} from './OrderType'
-// import {ProductProps} from './ProductType'
-
 export enum ERootStack {
   auth = 'auth',
   main = 'main',
@@ -42,17 +36,6 @@ export enum EMainStack {
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
-
-  //   reparationRoutes = 'reparationRoutes',
-  //   eventRoutes = 'eventRoutes',
-  //   orderRoutes = 'orderRoutes',
-  //   newsRoutes = 'newsRoutes',
-  //   historyRoutes = 'historyRoutes',
-
-  //   cart = 'cart',
-  //   wishList = 'wishList',
-  //   productDetail = 'productDetail',
-  //   checkOut = 'checkOut'
 }
 
 export type MainStackParams = {
@@ -62,19 +45,6 @@ export type MainStackParams = {
   diaryRoutes: undefined;
   chatRoutes: undefined;
   attendanceRoutes: undefined;
-
-  //   reparationRoutes: undefined
-  //   eventRoutes: undefined
-  //   orderRoutes: undefined
-  //   newsRoutes: undefined
-  //   historyRoutes: undefined
-
-  //   cart: undefined
-  //   wishList: undefined
-  //   productDetail: {
-  //     product: ProductProps
-  //   }
-  //   checkOut: undefined
 };
 
 export enum EProfileStack {
@@ -82,8 +52,6 @@ export enum EProfileStack {
   editPersonalInfo = 'editPersonalInfo',
   editEducation = 'editEducation',
   editExperience = 'editExperience',
-  // editProfile = 'editProfile',
-  // changePassword = 'changePassword',
 }
 
 export type ProfileStackParams = {
@@ -91,8 +59,6 @@ export type ProfileStackParams = {
   editPersonalInfo: undefined;
   editEducation: undefined;
   editExperience: undefined;
-  // editProfile: undefined;
-  // changePassword: undefined
 };
 
 export enum EActivityStack {
@@ -140,71 +106,3 @@ export enum EAttendanceStack {
 export type AttendanceStackParams = {
   attendance: undefined;
 };
-
-// export enum ENewsStack {
-//   news = 'news',
-//   newsDetails = 'newsDetails'
-// }
-
-// export type NewsStackParams = {
-//   news: undefined
-//   newsDetails: {
-//     news: NewsProps
-//   }
-// }
-
-// export enum EHistoryStack {
-//   history = 'history',
-//   historyDetails = 'historyDetails'
-// }
-
-// export type HistoryStackParams = {
-//   history: undefined
-//   historyDetails: {
-//     history: HistoryProps
-//   }
-// }
-
-// export enum EReparationStack {
-//   state = 'state',
-//   position = 'position',
-//   representative = 'representative'
-// }
-
-// export type ReparationStackParams = {
-//   state: undefined
-//   position: {
-//     stateId: string
-//     stateName: string
-//   }
-//   representative: {
-//     stateId: string
-//     stateName: string
-//     positionId: string
-//     positionName: string
-//   }
-// }
-
-// export enum EEventStack {
-//   event = 'event',
-//   eventDetail = 'eventDetail'
-// }
-
-// export type EventStackParams = {
-//   event: undefined
-//   eventDetail: {
-//     event: EventProps
-//   }
-// }
-
-// export enum EOrderStack {
-//   order = 'order',
-//   orderDetail = 'orderDetail'
-// }
-
-// export type OrderStackParams = {
-//   order: undefined
-//   orderDetail: {
-//     order: OrderProps
-//   }
-// }

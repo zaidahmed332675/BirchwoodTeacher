@@ -1,11 +1,11 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import AppButton from '../../Components/Button';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
-import Layout from '../../Components/Layout';
-import UploadImage from '../../Components/UploadImage';
+import { AppButton } from '../../Components/Button';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
+import { Layout } from '../../Components/Layout';
+import { UploadImage } from '../../Components/UploadImage';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { CustomHeader } from '../../Components/CustomHeader';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../theme/colors';
-import GlroyBold from '../GlroyBoldText';
-import VIcon from '../VIcon';
+import { GlroyBold } from '../GlroyBoldText';
+import { VIcon } from '../VIcon';
 
 interface AppButtonProps {
   title: string;
@@ -81,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppButton;
+export { AppButton };

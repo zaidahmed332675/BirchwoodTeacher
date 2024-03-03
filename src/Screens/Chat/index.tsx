@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Layout from '../../Components/Layout';
+import { Layout } from '../../Components/Layout';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { ImageBox } from '../../Components/UploadImage';

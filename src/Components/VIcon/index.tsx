@@ -30,4 +30,4 @@ const VIcon = ({
   );
 };
 
-export default VIcon;
+export { VIcon };

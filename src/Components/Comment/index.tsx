@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import workerImage from '../../Assets/images/worker.png';
 import { colors } from '../../theme/colors';
-import GrayMediumText from '../GrayMediumText';
-import VIcon from '../VIcon';
+import { GrayMediumText } from '../GrayMediumText';
+import { VIcon } from '../VIcon';
 
 const Comment = () => {
   return (
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Comment;
+export { Comment };

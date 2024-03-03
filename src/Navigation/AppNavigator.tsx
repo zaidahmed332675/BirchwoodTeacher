@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
-import HomeScreen from '../Screens/HomeScreen';
+import HomeScreen from '../Screens/Home';
 import { NavigationOptions } from '../Utils/options';
 import ProfileNavigator from './ProfileNavigator';
 import ActivityNavigator from './ActivityNavigator';

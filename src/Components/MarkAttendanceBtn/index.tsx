@@ -4,8 +4,8 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
-import GrayMediumText from '../GrayMediumText';
-import GlroyBold from '../GlroyBoldText';
+import { GrayMediumText } from '../GrayMediumText';
+import { GlroyBold } from '../GlroyBoldText';
 
 interface FormatTextProps {
   seconds: number;

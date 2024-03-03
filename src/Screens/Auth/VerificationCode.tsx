@@ -1,14 +1,14 @@
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { colors } from '../../theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import AnimatedBackgroundImage from '../../Components/AnimatedBackgroundImage';
+import { AnimatedBackgroundImage } from '../../Components/AnimatedBackgroundImage';
 import verification_child from '../../Assets/images/verification_child.png';
-import AppButton from '../../Components/Button';
-import AppInput from '../../Components/AppInput';
+import { AppButton } from '../../Components/Button';
+import { AppInput } from '../../Components/AppInput';
 import { vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'verificaionCode'>;

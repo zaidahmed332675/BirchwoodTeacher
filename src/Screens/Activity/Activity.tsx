@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -10,10 +9,10 @@ import {
   View,
 } from 'react-native';
 import dp1 from '../../Assets/icons/dp1.png';
-import ActivityPost from '../../Components/ActivityPost';
-import GlroyBold from '../../Components/GlroyBoldText';
-import GrayMediumText from '../../Components/GrayMediumText';
-import Layout from '../../Components/Layout';
+import { ActivityPost } from '../../Components/ActivityPost';
+import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
+import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
 import {

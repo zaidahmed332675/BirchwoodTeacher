@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
-import VIcon from '../VIcon';
+import { VIcon } from '../VIcon';
 
 interface AppDatePickerProps {
   style?: object;
@@ -11,7 +11,6 @@ interface AppDatePickerProps {
 const PrevIcon = () => (
   <VIcon
     type="Ionicons"
-    // onPress={() => navigation.goBack()}
     name="chevron-back-outline"
     size={22}
     color={colors.theme.primary}
@@ -24,7 +23,6 @@ const PrevIcon = () => (
 const NextIcon = () => (
   <VIcon
     type="Ionicons"
-    // onPress={() => navigation.goBack()}
     name="chevron-forward-outline"
     size={22}
     color={colors.theme.primary}
@@ -132,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppDatePicker;
+export { AppDatePicker };

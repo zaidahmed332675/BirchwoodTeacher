@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { vh } from '../../Utils/units';
-import AppInput from '../AppInput';
-import AppButton from '../Button';
+import { AppInput } from '../AppInput';
+import { AppButton } from '../Button';
 import { AppModal } from '../Modal';
 
 interface NewActivityPopupProps {

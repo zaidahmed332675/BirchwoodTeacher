@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import { vh, vw } from '../../Utils/units';
-import GlroyBold from '../../Components/GlroyBoldText';
+import { GlroyBold } from '../../Components/GlroyBoldText';
 import { colors } from '../../theme/colors';
 import student from '../../Assets/icons/student.png';
 import { appShadow } from '../../theme/colors';

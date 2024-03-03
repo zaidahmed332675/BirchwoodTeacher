@@ -1,4 +1,4 @@
-import BottomSheet, {
+import {
   BottomSheetModal,
   BottomSheetModalProps,
   BottomSheetModalProvider,
@@ -66,4 +66,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 });
-export default AppBottomSheet;
+
+export { AppBottomSheet };

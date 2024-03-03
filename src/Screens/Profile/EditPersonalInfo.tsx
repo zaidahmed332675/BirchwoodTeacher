@@ -2,10 +2,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import AppInput from '../../Components/AppInput';
-import AppButton from '../../Components/Button';
-import Layout from '../../Components/Layout';
-import UploadImage from '../../Components/UploadImage';
+import { AppInput } from '../../Components/AppInput';
+import { AppButton } from '../../Components/Button';
+import { Layout } from '../../Components/Layout';
+import { UploadImage } from '../../Components/UploadImage';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { CustomHeader } from '../../Components/CustomHeader';
 
