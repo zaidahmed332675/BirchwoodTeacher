@@ -1,19 +1,17 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import {
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Layout from '../../Components/Layout';
-import VIcon from '../../Components/VIcon';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { ImageBox } from '../../Components/UploadImage';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 
@@ -104,34 +102,6 @@ const chatList = [
   },
 ];
 
-const CustomHeader = () => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Chat List
-        </Text>
-      </View>
-    </View>
-  );
-};
-
 const Chat = ({ navigation }: Props) => {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -167,7 +137,7 @@ const Chat = ({ navigation }: Props) => {
       _styleSheetView={{
         paddingHorizontal: 10,
       }}
-      customHeader={<CustomHeader />}>
+      customHeader={<CustomHeader title="Chat List" />}>
       <View style={styles.container}>
         <FlatList
           data={chatList}
@@ -180,11 +150,6 @@ const Chat = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
   container: {},
   item: {
     flexDirection: 'row',

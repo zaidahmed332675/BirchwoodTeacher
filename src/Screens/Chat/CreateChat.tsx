@@ -17,7 +17,7 @@ import { TouchableOpacity } from 'react-native';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
-const CustomHeader = ({ title }: { title: string }) => {
+const CustomChatHeader = ({ title }: { title: string }) => {
   const navigation = useNavigation();
 
   return (
@@ -108,7 +108,7 @@ const CreateChat = ({ route }: Props) => {
       _styleSheetView={{
         paddingHorizontal: 10,
       }}
-      customHeader={<CustomHeader title={route.params.userName} />}>
+      customHeader={<CustomChatHeader title={route.params?.parentName} />}>
       <GiftedChat
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}

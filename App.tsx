@@ -1,27 +1,20 @@
 import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AppRouting from './src/Navigation';
-import { colors } from './src/theme/colors';
-// import MainStack from './src/Navigation/MainStack';
-// import {colors} from './src/Utils/theme'
+import { MenuProvider } from 'react-native-popup-menu';
 // import FlashMessage from 'react-native-flash-message'
 
 function App(): JSX.Element {
   return (
-    // <Provider store={store}>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          backgroundColor={colors.theme.primary}
-          barStyle={'light-content'}
-        />
-        {/* <FlashMessage position="top" duration={2000} icon="auto" /> */}
-        {/* <MainStack /> */}
-        <AppRouting />
-      </SafeAreaView>
-    </GestureHandlerRootView>
-    // </Provider>
+    <MenuProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          {/* <FlashMessage position="top" duration={2000} icon="auto" /> */}
+          <AppRouting />
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </MenuProvider>
   );
 }
 

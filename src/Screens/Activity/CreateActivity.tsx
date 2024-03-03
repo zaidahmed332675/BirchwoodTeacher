@@ -1,5 +1,4 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CheckBox } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
@@ -10,41 +9,12 @@ import AppButton from '../../Components/Button';
 import Layout from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
-import VIcon from '../../Components/VIcon';
 import { ActivityStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { dummyRecords } from '../../Utils/options';
-import { TouchableOpacity } from 'react-native';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
-
-const CustomHeader = () => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Create Post
-        </Text>
-      </View>
-    </View>
-  );
-};
 
 const CreateActivityModalContent = () => {
   let [audience, setAudience] = useState(0);
@@ -126,7 +96,7 @@ const CreateActivity = ({}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Layout customHeader={<CustomHeader />}>
+    <Layout customHeader={<CustomHeader title="Create Post" />}>
       <View style={styles.container}>
         <Image style={styles.profilePic} source={profile} />
         <View>
@@ -190,11 +160,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
   contentContainer: {
     backgroundColor: 'transparent',
   },

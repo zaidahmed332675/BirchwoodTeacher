@@ -49,7 +49,7 @@ const MarkAttendance = () => {
           />
           <GrayMediumText
             text="Attendance"
-            _style={{ color: colors.theme.white, wordWrap: 'break-word' }}
+            _style={{ color: colors.theme.white }}
           />
         </View>
         <View

@@ -1,51 +1,16 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import AppButton from '../../Components/Button';
 import GlroyBold from '../../Components/GlroyBoldText';
 import GrayMediumText from '../../Components/GrayMediumText';
 import Layout from '../../Components/Layout';
 import UploadImage from '../../Components/UploadImage';
-import VIcon from '../../Components/VIcon';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
-
-const CustomHeader = () => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Profile
-        </Text>
-      </View>
-    </View>
-  );
-};
 
 const Profile = ({ navigation }: Props) => {
   const profile = {
@@ -73,14 +38,17 @@ const Profile = ({ navigation }: Props) => {
   };
 
   return (
-    <Layout customHeader={<CustomHeader />}>
+    <Layout customHeader={<CustomHeader title="Profile" />}>
       <ScrollView
         style={styles.content}
         contentInsetAdjustmentBehavior="automatic">
         <View style={styles.item}>
           <View style={styles.profileGrid}>
             <View style={styles.profile}>
-              <UploadImage image={{ uri: undefined }} />
+              <UploadImage
+                originalImage={undefined}
+                image={{ uri: undefined }}
+              />
             </View>
             <Text style={styles.title}>{profile.personal.name}</Text>
           </View>
@@ -485,11 +453,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
 });
 
 export default Profile;

@@ -9,6 +9,7 @@ import AppInput from '../../Components/AppInput';
 import AppButton from '../../Components/Button';
 import reset_pass_child from '../../Assets/images/reset_pass_child.png';
 import AnimatedBackgroundImage from '../../Components/AnimatedBackgroundImage';
+import { vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'resetPassword'>;
 
@@ -18,24 +19,18 @@ export default function ResetPassword({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
       <AnimatedBackgroundImage additionalImage={reset_pass_child} />
-
       <View style={[styles.bottomContainer, { flex: 1.3 }]}>
         <View>
           <View style={styles.heading}>
             <GlroyBold
-              text={'Reset Password?'}
-              _style={{ color: colors.text.black }}
+              text={'Reset Password ?'}
+              _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
             />
           </View>
           <GrayMediumText
             text={
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+              'Please enter a new password for your account below. Make sure it is strong and secure.'
             }
             _style={styles.para}
           />
@@ -59,7 +54,6 @@ export default function ResetPassword({ navigation }: Props) {
           </View>
           <View style={{ alignItems: 'center' }}>
             <AppButton
-              bordered
               title={'Reset'}
               onPress={() => navigation.navigate(EAuthStack.signIn)}
             />

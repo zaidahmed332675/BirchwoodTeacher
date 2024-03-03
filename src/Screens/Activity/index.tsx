@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import {
@@ -11,63 +10,22 @@ import {
 import Layout from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
 import VIcon from '../../Components/VIcon';
-import { ActivityStackParams } from '../../Types/NavigationTypes';
+import {
+  ActivityStackParams,
+  EActivityStack,
+} from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { NewActivityPopup } from '../../Components/NewActivityPopup';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ActivityStackParams, 'activities'>;
-
-const CustomHeader = ({ onPress }: { onPress: () => void }) => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Activities
-        </Text>
-      </View>
-      <TouchableOpacity style={styles.actionContainer} onPress={onPress}>
-        <VIcon
-          type="Ionicons"
-          name="add-outline"
-          size={15}
-          color={colors.theme.white}
-          style={styles.addIcon}
-        />
-        <Text
-          style={{
-            color: colors.theme.secondary,
-            fontWeight: 'bold',
-            fontSize: 13,
-          }}>
-          Add
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const Activities = ({ navigation }: Props) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [activities, setActivities] = useState([
     {
       _id: 6,
-      name: 'Painting/Drawing',
+      name: 'Painting/Drawing Painting/Drawing',
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Men's avatar URL
     },
     {
@@ -122,6 +80,8 @@ const Activities = ({ navigation }: Props) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+          flexBasis: '75%',
+          paddingVertical: 10,
         }}>
         <ImageBox
           image={{ uri: item.avatar }}
@@ -130,12 +90,28 @@ const Activities = ({ navigation }: Props) => {
         />
         <Text style={styles.title}>{item.name}</Text>
       </View>
-      <VIcon
-        type="Ionicons"
-        name="ellipsis-vertical"
-        size={20}
-        color={colors.theme.greyAlt2}
-      />
+      <TouchableOpacity
+        style={{
+          paddingHorizontal: 10,
+          flexDirection: 'row',
+          height: '100%',
+        }}
+        onPress={() => {
+          navigation.navigate(EActivityStack.activity, {
+            activityId: item._id,
+            activityName: item.name,
+          });
+        }}>
+        <VIcon
+          type="Ionicons"
+          name="ellipsis-vertical"
+          size={20}
+          color={colors.theme.greyAlt2}
+          style={{
+            alignSelf: 'center',
+          }}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 
@@ -144,7 +120,13 @@ const Activities = ({ navigation }: Props) => {
       _styleSheetView={{
         paddingHorizontal: 10,
       }}
-      customHeader={<CustomHeader onPress={() => setPopupVisible(true)} />}>
+      customHeader={
+        <CustomHeader
+          title="Activities"
+          isActionEnbl={true}
+          onPress={() => setPopupVisible(true)}
+        />
+      }>
       <FlatList
         data={activities}
         renderItem={renderItem}
@@ -160,24 +142,6 @@ const Activities = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
-  actionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderRadius: 15,
-    backgroundColor: colors.theme.white,
-  },
-  addIcon: {
-    backgroundColor: colors.theme.secondary,
-    borderRadius: 10,
-    marginRight: 5,
-  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -186,7 +150,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
     borderColor: colors.theme.greyAlt,
     backgroundColor: colors.theme.white,
-    padding: 10,
+    paddingLeft: 10,
   },
   avatar: {
     width: 50,

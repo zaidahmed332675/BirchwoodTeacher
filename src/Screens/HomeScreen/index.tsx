@@ -171,11 +171,6 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
       <LinearGradient
         colors={[colors.theme.primary, colors.theme.secondary]}
         locations={[0, 1]}
@@ -213,7 +208,6 @@ const HomeScreen = ({ navigation }: Props) => {
           />
         </View>
       </LinearGradient>
-
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}

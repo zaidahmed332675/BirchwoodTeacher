@@ -24,7 +24,6 @@ const SignIn = ({ navigation }: Props) => {
   const [password, setPassword] = useState('');
 
   const handleForgotPassword = () => {
-    console.log('Forgot Password clicked');
     navigation.navigate(EAuthStack.emailVerification);
   };
 

@@ -25,11 +25,6 @@ const Layout = ({
       colors={[colors.theme.primary, colors.theme.secondary]}
       locations={[0.02, 0.2]}
       style={styles.container}>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
       <View style={styles.header}>{customHeader}</View>
       <View style={styles.bottomSheet}>
         <View style={[styles.bottomSheetView, _styleSheetView]}>

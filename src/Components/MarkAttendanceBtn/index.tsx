@@ -27,7 +27,7 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
     <TouchableOpacity
       onPress={onPress}
       style={{
-        backgroundColor: colors.theme.primary,
+        backgroundColor: colors.theme.secondary,
         width: vw * 60,
         height: vw * 60,
         borderRadius: vw * 60,

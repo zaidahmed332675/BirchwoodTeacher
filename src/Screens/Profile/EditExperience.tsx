@@ -1,7 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AppInput from '../../Components/AppInput';
 import AppButton from '../../Components/Button';
@@ -10,36 +9,9 @@ import Layout from '../../Components/Layout';
 import VIcon from '../../Components/VIcon';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
-
-const CustomHeader = () => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Edit Experience
-        </Text>
-      </View>
-    </View>
-  );
-};
 
 export default function EditExperience({}: Props) {
   const [fields, setFields] = useState<
@@ -63,7 +35,7 @@ export default function EditExperience({}: Props) {
   };
 
   return (
-    <Layout customHeader={<CustomHeader />}>
+    <Layout customHeader={<CustomHeader title="Edit Experience" />}>
       <ScrollView style={{ backgroundColor: '' }}>
         <View style={styles.container}>
           <AppInput
@@ -193,11 +165,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
   groupContainer: {},
   fieldGroup: {
     marginTop: 20,

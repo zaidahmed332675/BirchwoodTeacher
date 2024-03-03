@@ -16,7 +16,7 @@ import { BottomBackground } from '../Components/BottomBackground';
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isAttendanceMarked, setIsAttendanceMarked] = useState(false);
+  const [isAttendanceMarked, setIsAttendanceMarked] = useState(true);
 
   if (!isAttendanceMarked) {
     return (
@@ -30,7 +30,7 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={EMainStack.activityRoutes}
+      initialRouteName={EMainStack.home}
       screenOptions={NavigationOptions}>
       <Stack.Screen name={EMainStack.home} component={HomeScreen} />
       <Stack.Screen

@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -16,62 +15,14 @@ import GrayMediumText from '../../Components/GrayMediumText';
 import Layout from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
-import VIcon from '../../Components/VIcon';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { dummyRecords } from '../../Utils/options';
+import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
-const CustomHeader = () => {
-  const navigation = useNavigation();
-  return (
-    <View style={styles.header}>
-      <View style={styles.titlContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <VIcon
-            type="Ionicons"
-            name="chevron-back-outline"
-            size={30}
-            color={colors.theme.white}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.text.white,
-            marginLeft: 10,
-            fontWeight: 'bold',
-            fontSize: 18,
-          }}>
-          Work Diary
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.actionContainer}
-        onPress={() => {
-          navigation.navigate(EDiaryStack.createDiary);
-        }}>
-        <VIcon
-          type="Ionicons"
-          name="add-outline"
-          size={15}
-          color={colors.theme.white}
-          style={styles.addIcon}
-        />
-        <Text
-          style={{
-            color: colors.theme.secondary,
-            fontWeight: 'bold',
-            fontSize: 13,
-          }}>
-          Add
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const Diary = ({}: Props) => {
+const Diary = ({ navigation }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
 
   const searchModalRef = useRef();
@@ -95,7 +46,16 @@ const Diary = ({}: Props) => {
   }, [open]);
 
   return (
-    <Layout customHeader={<CustomHeader />}>
+    <Layout
+      customHeader={
+        <CustomHeader
+          title="Work Diary"
+          isActionEnbl={true}
+          onPress={() => {
+            navigation.navigate(EDiaryStack.createDiary);
+          }}
+        />
+      }>
       <View style={styles.customSwitch}>
         <CustomSwitch
           selectionMode={1}
@@ -205,24 +165,6 @@ const styles = StyleSheet.create({
   },
   diaryRecord: {
     marginVertical: 10,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titlContainer: { flexDirection: 'row', alignItems: 'center' },
-  actionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderRadius: 15,
-    backgroundColor: colors.theme.white,
-  },
-  addIcon: {
-    backgroundColor: colors.theme.secondary,
-    borderRadius: 10,
-    marginRight: 5,
   },
 });
 
