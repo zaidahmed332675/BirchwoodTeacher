@@ -65,20 +65,25 @@ const AppDatePicker = ({ style }: AppDatePickerProps) => {
         }}
         selectedDayTextColor={colors.theme.white}
         customDayHeaderStyles={() => {
-          return { textStyle: styles.daysStyle };
+          return { textStyle: styles.daysLabelStyle };
         }}
         customDatesStyles={date => {
           if (date.getDay() === 0) {
             return {
-              style: {
-                backgroundColor: colors.theme.greyAlt2,
-              },
-              textStyle: {
-                color: colors.theme.black,
-              },
+              style: styles.weekEndDaysStyle,
+            };
+          } else if (date.getDate() === 1) {
+            return {
+              style: styles.presentDaysStyle,
+              textStyle: styles.textStyle,
+            };
+          } else if (date.getDate() === 2) {
+            return {
+              style: styles.absentDaysStyle,
+              textStyle: styles.textStyle,
             };
           } else {
-            return { textStyle: styles.daysStyle };
+            return { textStyle: styles.daysLabelStyle };
           }
         }}
       />
@@ -123,10 +128,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
-  daysStyle: {
+  daysLabelStyle: {
     fontSize: 13,
-    lineHeight: 18,
-    color: '#94A3B8',
+  },
+  textStyle: {
+    color: colors.theme.white,
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  presentDaysStyle: {
+    backgroundColor: colors.theme.darkGreen,
+  },
+  absentDaysStyle: {
+    backgroundColor: colors.theme.darkRed,
+  },
+  weekEndDaysStyle: {
+    backgroundColor: colors.theme.lightSecondary,
   },
 });
 

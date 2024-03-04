@@ -5,9 +5,10 @@ const logo = {
 
 const featureIcons = {
   profile: require('./icons/ic_profile.png'),
+  class: require('./icons/ic_class.png'),
   activity: require('./icons/ic_activity.png'),
-  time_table: require('./icons/ic_calendra.png'),
   assignment: require('./icons/ic_assignment.png'),
+  time_table: require('./icons/ic_calender.png'),
   result: require('./icons/ic_results.png'),
   events: require('./icons/ic_event.png'),
   ask_doubts: require('./icons/ic_doubts.png'),

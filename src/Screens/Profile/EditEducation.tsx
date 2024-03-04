@@ -28,8 +28,6 @@ export default function EditEducation({}: Props) {
     ]);
   };
 
-  console.log(educationFields, 'edu');
-
   const removeEducationField = (index: number) => {
     setEducationFields(educationFields.filter((_, i) => i !== index));
   };

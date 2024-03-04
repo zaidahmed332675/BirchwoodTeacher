@@ -17,6 +17,7 @@ import {
 import { colors } from '../../theme/colors';
 import { NewActivityPopup } from '../../Components/NewActivityPopup';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 
 type Props = StackScreenProps<ActivityStackParams, 'activities'>;
 
@@ -25,33 +26,27 @@ const Activities = ({ navigation }: Props) => {
   const [activities, setActivities] = useState([
     {
       _id: 6,
-      name: 'Painting/Drawing Painting/Drawing',
-      avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Men's avatar URL
+      name: 'Painting/Drawing',
     },
     {
       _id: 5,
       name: 'Crafting',
-      avatar: 'https://randomuser.me/api/portraits/women/1.jpg', // Women's avatar URL
     },
     {
       _id: 4,
       name: 'Reading',
-      avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
     },
     {
       _id: 3,
       name: 'Writing',
-      avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
     },
     {
       _id: 2,
       name: 'Exercising',
-      avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     {
       _id: 1,
       name: 'Traveling',
-      avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
     },
   ]);
 
@@ -83,16 +78,17 @@ const Activities = ({ navigation }: Props) => {
           flexBasis: '75%',
           paddingVertical: 10,
         }}>
-        <ImageBox
-          image={{ uri: item.avatar }}
-          _imageStyle={styles.avatar}
-          _indicatorStyle={styles.avatar}
-        />
+        <View style={styles.avatar}>
+          <GrayMediumText
+            text={item.name.slice(0, 1)}
+            _style={{ color: colors.theme.primary, fontSize: 22 }}
+          />
+        </View>
         <Text style={styles.title}>{item.name}</Text>
       </View>
       <TouchableOpacity
         style={{
-          paddingHorizontal: 10,
+          paddingLeft: 10,
           flexDirection: 'row',
           height: '100%',
         }}
@@ -149,13 +145,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.3,
     borderBottomWidth: 0.3,
     borderColor: colors.theme.greyAlt,
-    backgroundColor: colors.theme.white,
-    paddingLeft: 10,
   },
   avatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
+    backgroundColor: colors.theme.greyAlt,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.theme.secondary,
   },
   title: {
     fontSize: 18,

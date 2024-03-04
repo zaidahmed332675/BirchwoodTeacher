@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, StatusBar } from 'react-native';
 import React, { useState } from 'react';
 import { vh, vw } from '../../Utils/units';
 import { GlroyBold } from '../../Components/GlroyBoldText';
@@ -20,6 +20,7 @@ const Header = () => {
       colors={[colors.theme.primary, colors.theme.secondary]}
       locations={[0, 1]}
       style={styles.header}>
+      <StatusBar translucent backgroundColor="transparent" />
       <View style={styles.profile_container}>
         <View>
           <GlroyBold text={`Hi ${profile.name}`} _style={styles.profile_text} />
@@ -44,10 +45,7 @@ const Header = () => {
             </View>
           </View>
         </View>
-        <ImageBox
-          image={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
-          _imageStyle={styles.profilePhoto}
-        />
+        <ImageBox image={{ uri: '' }} _imageStyle={styles.profilePhoto} />
       </View>
     </LinearGradient>
   );
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   twoCardsTop: {
-    ...appShadow,
+    ...appShadow(4),
     borderRadius: 10,
     height: vh * 23,
     width: vw * 38,

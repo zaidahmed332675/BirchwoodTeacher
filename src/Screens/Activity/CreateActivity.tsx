@@ -139,7 +139,7 @@ const CreateActivity = ({}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    paddingVertical: 15,
     backgroundColor: colors.theme.white,
     flexDirection: 'row',
     alignItems: 'center',

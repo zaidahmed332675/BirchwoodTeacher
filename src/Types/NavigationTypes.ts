@@ -32,19 +32,23 @@ export type AuthStackParams = {
 export enum EMainStack {
   home = 'home',
   profileRoutes = 'profileRoutes',
+  myClass = 'myClass',
   activityRoutes = 'activityRoutes',
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
+  changePassword = 'changePassword',
 }
 
 export type MainStackParams = {
   home: undefined;
   profileRoutes: undefined;
+  myClass: undefined;
   activityRoutes: undefined;
   diaryRoutes: undefined;
   chatRoutes: undefined;
   attendanceRoutes: undefined;
+  changePassword: undefined;
 };
 
 export enum EProfileStack {
@@ -94,7 +98,7 @@ export enum EChatStack {
 export type ChatStackParams = {
   chat: undefined;
   createChat: {
-    parentId: string;
+    parentId: number;
     parentName: string;
   };
 };

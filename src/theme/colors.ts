@@ -7,16 +7,21 @@ const colors = {
   theme: {
     primary: '#035392',
     secondary: '#6688CA',
+    lightSecondary: '#D4E2FF',
     input: '#A4A4A4' + '24',
     black: '#000000',
     borderColor: '#CCCCCC',
     themeSecondaryBorder: '#42D1AC',
-    grey: '#F6F6F6',
+    grey: '#777777',
     greyAlt: '#E1E1E1',
     greyAlt2: '#989BA5',
     white: '#ffffff',
     yellow0: '#FCF3E2',
     pink0: '#FFD8FF',
+    lightRed: '#FFB1B1',
+    darkRed: '#E92020',
+    lightGreen: '#A9F2A4',
+    darkGreen: '#0BAC00',
   },
   background: {
     primary: '#ffffff',
@@ -43,7 +48,7 @@ const colors = {
   },
 };
 
-const appShadow = {
+const appShadow = (ele = 4) => ({
   backgroundColor: 'white', // Set your box background color
   ...Platform.select({
     ios: {
@@ -53,9 +58,9 @@ const appShadow = {
       shadowRadius: 4,
     },
     android: {
-      elevation: 4,
+      elevation: ele,
     },
   }),
-};
+});
 
 export { colors, appShadow };

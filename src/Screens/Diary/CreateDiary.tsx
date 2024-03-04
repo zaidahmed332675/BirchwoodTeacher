@@ -112,10 +112,10 @@ const CreateDiary = ({}: Props) => {
           setIsOpen(false);
         }}
         _handleStyle={{
-          backgroundColor: colors.theme.primary,
+          backgroundColor: colors.theme.greyAlt2,
         }}
         _sheetStyle={{
-          backgroundColor: colors.theme.primary,
+          backgroundColor: colors.theme.greyAlt2,
         }}>
         <CreateDiaryModalContent />
       </AppBottomSheet>
@@ -140,7 +140,7 @@ const CreateDiary = ({}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    paddingVertical: 15,
     backgroundColor: colors.theme.white,
     flexDirection: 'row',
     alignItems: 'center',

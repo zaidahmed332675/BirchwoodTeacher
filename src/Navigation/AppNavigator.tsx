@@ -12,11 +12,13 @@ import { MarkAttendanceBtn } from '../Components/MarkAttendanceBtn';
 import { Header } from '../Components/Header';
 import { View } from 'react-native';
 import { BottomBackground } from '../Components/BottomBackground';
+import MyClass from '../Screens/MyClass';
+import ChangePassword from '../Screens/ChangePassword';
 
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isAttendanceMarked, setIsAttendanceMarked] = useState(true);
+  const [isAttendanceMarked, setIsAttendanceMarked] = useState(false);
 
   if (!isAttendanceMarked) {
     return (
@@ -37,6 +39,7 @@ const AppNavigator = () => {
         name={EMainStack.profileRoutes}
         component={ProfileNavigator}
       />
+      <Stack.Screen name={EMainStack.myClass} component={MyClass} />
       <Stack.Screen
         name={EMainStack.activityRoutes}
         component={ActivityNavigator}
@@ -46,6 +49,10 @@ const AppNavigator = () => {
       <Stack.Screen
         name={EMainStack.attendanceRoutes}
         component={AttendanceNavigator}
+      />
+      <Stack.Screen
+        name={EMainStack.changePassword}
+        component={ChangePassword}
       />
     </Stack.Navigator>
   );

@@ -20,6 +20,7 @@ import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
 import LinearGradient from 'react-native-linear-gradient';
 import { ImageBox } from '../../Components/UploadImage';
+import { Header } from '../../Components/Header';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -39,22 +40,28 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     {
       id: 2,
+      title: 'My Class',
+      icon: featureIcons.profile,
+      route: EMainStack.myClass,
+    },
+    {
+      id: 3,
       title: 'Activities',
       icon: featureIcons.activity,
       route: EMainStack.activityRoutes,
     },
     {
-      id: 3,
+      id: 4,
       title: 'Work Diary',
       icon: featureIcons.assignment,
       route: EMainStack.diaryRoutes,
     },
-    {
-      id: 5,
-      title: 'Chat',
-      icon: featureIcons.time_table,
-      route: EMainStack.chatRoutes,
-    },
+    // {
+    //   id: 5,
+    //   title: 'Chat',
+    //   icon: featureIcons.time_table,
+    //   route: EMainStack.chatRoutes,
+    // },
     {
       id: 5,
       title: 'Attendance',
@@ -62,12 +69,12 @@ const HomeScreen = ({ navigation }: Props) => {
       route: EMainStack.attendanceRoutes,
     },
     {
-      id: 11,
+      id: 6,
       title: 'Change Password',
       icon: featureIcons.change_password,
-      route: '',
+      route: EMainStack.changePassword,
     },
-    { id: 12, title: 'Logout', icon: featureIcons.logout, route: '' },
+    { id: 7, title: 'Logout', icon: featureIcons.logout, route: '' },
     // { id: 5, title: 'Time Table', icon: featureIcons.time_table, route: '' },
     // { id: 6, title: 'Events', icon: featureIcons.events, route: '' },
     // { id: 7, title: 'Ask Doubts', icon: featureIcons.ask_doubts, route: '' },
@@ -137,14 +144,14 @@ const HomeScreen = ({ navigation }: Props) => {
             <Image source={icons.usr} style={styles.topCardIcon} />
           </View>
           <GlroyBold
-            text={'80.39%'}
+            text="80.39%"
             _style={{
               fontSize: 20,
               color: colors.text.black,
               marginVertical: 3,
             }}
           />
-          <GrayMediumText text={'Attendance'} />
+          <GrayMediumText text="Attendance" />
         </View>
         <View style={[styles.twoCardsTop, { marginLeft: 10 }]}>
           <View
@@ -155,63 +162,22 @@ const HomeScreen = ({ navigation }: Props) => {
             <Image source={icons.dollar} style={styles.topCardIcon} />
           </View>
           <GlroyBold
-            text={'$00.00'}
+            text="35"
             _style={{
               fontSize: 20,
               color: colors.text.black,
               marginVertical: 3,
             }}
           />
-          <GrayMediumText text={'Fees Due'} />
+          <GrayMediumText text={'Total Students'} />
         </View>
       </View>
     );
   };
 
   return (
-    <>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
-      <LinearGradient
-        colors={[colors.theme.primary, colors.theme.secondary]}
-        locations={[0, 1]}
-        style={styles.header}>
-        <View style={styles.profile_container}>
-          <View>
-            <GlroyBold
-              text={`Hi ${profile.name}`}
-              _style={styles.profile_text}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 3,
-              }}>
-              <View style={styles.student_year}>
-                <Text style={{ fontSize: 12, color: colors.theme.black }}>
-                  {profile.year}
-                </Text>
-              </View>
-              <View style={styles.student_icon}>
-                <Image
-                  source={student}
-                  style={styles.student_icon_img}
-                  resizeMode="contain"
-                  tintColor={colors.theme.primary}
-                />
-              </View>
-            </View>
-          </View>
-          <ImageBox
-            image={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
-            _imageStyle={styles.profilePhoto}
-          />
-        </View>
-      </LinearGradient>
+    <View style={styles.container}>
+      <Header />
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}
@@ -220,11 +186,14 @@ const HomeScreen = ({ navigation }: Props) => {
         ListHeaderComponent={headerCards}
         contentContainerStyle={styles.flatListContainer}
       />
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   topCardIcon: {
     height: 35,
     width: 35,
@@ -249,7 +218,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   twoCardsTop: {
-    ...appShadow,
+    ...appShadow(4),
     borderRadius: 10,
     height: vh * 23,
     width: vw * 38,

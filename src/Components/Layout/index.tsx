@@ -33,7 +33,15 @@ const Layout = ({
       <View style={styles.header}>{customHeader}</View>
       <View style={styles.bottomSheet}>
         <View style={[styles.bottomSheetView, _styleSheetView]}>
-          {children}
+          <View
+            style={{
+              flex: 1,
+              paddingHorizontal: 10,
+              backgroundColor: colors.theme.white,
+            }}>
+            {children}
+          </View>
+          {/* {children} */}
           {showBottom && <BottomBackground />}
         </View>
       </View>
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     backgroundColor: colors.theme.white,
   },
 });

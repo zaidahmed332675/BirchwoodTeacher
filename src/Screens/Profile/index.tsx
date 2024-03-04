@@ -278,6 +278,59 @@ const Profile = ({ navigation }: Props) => {
               />
             </View>
           </View>
+          <View style={{ marginTop: 20 }}>
+            <GlroyBold
+              _style={{
+                color: colors.theme.primary,
+                fontSize: 22,
+              }}
+              text="Institute - 01"
+            />
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Institute Name"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Starting Date"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Subject Study"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+            </View>
+          </View>
           <View style={styles.actionsBtnView}>
             <AppButton
               btnStyle={styles.actionBtn}
@@ -395,6 +448,73 @@ const Profile = ({ navigation }: Props) => {
               />
             </View>
           </View>
+          <View style={{ marginTop: 20 }}>
+            <GlroyBold
+              _style={{
+                color: colors.theme.primary,
+                fontSize: 22,
+              }}
+              text="Experience - 01"
+            />
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Institute Name"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Starting Date"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Ending Date"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+              <View style={styles.userInfoItem}>
+                <GrayMediumText
+                  _style={{
+                    color: colors.theme.primary,
+                  }}
+                  text="Subject Taught"
+                />
+                <GrayMediumText
+                  _style={{
+                    color: colors.text.black,
+                  }}
+                  text={profile.personal.address}
+                />
+              </View>
+            </View>
+          </View>
           <View style={styles.actionsBtnView}>
             <AppButton
               btnStyle={styles.actionBtn}
@@ -417,7 +537,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     borderColor: colors.theme.secondary,
     borderRadius: 20,
-    padding: 20,
+    paddingVertical: 20,
     marginTop: 20,
   },
   profileGrid: {

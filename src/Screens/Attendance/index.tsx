@@ -1,24 +1,66 @@
-import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { BottomBackground } from '../../Components/BottomBackground';
-import { AppDatePicker } from '../../Components/DatePicker/DatePicker';
-import { Layout } from '../../Components/Layout';
-import { MarkAttendance } from '../../Components/MarkAttendance';
-import { CustomSwitch } from '../../Components/Switch';
-import { AttendanceStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { AttendanceCard } from '../../Components/AttendanceCard';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { AppDatePicker } from '../../Components/DatePicker/DatePicker';
+import { HolidayCard } from '../../Components/HolidayCard';
+import { Layout } from '../../Components/Layout';
+import { CustomSwitch } from '../../Components/Switch';
+import { colors } from '../../theme/colors';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 
-type Props = StackScreenProps<AttendanceStackParams, 'attendance'>;
+const Attendance = () => {
+  const [tabIndex, setTabIndex] = useState<number>(1);
 
-const Attendance = ({}: Props) => {
+  const attendanceData = [
+    {
+      id: 1,
+      title: 'Absent',
+      data: '03',
+      isAttendance: true,
+    },
+    {
+      id: 2,
+      title: 'Festival & Holiday',
+      data: '05',
+      isFestival: true,
+    },
+  ];
+
+  const holidaysData = [
+    {
+      id: 1,
+      title: 'Easter',
+      date: '11th november',
+    },
+    {
+      id: 2,
+      title: 'Good Friday',
+      date: '14th november',
+    },
+    {
+      id: 3,
+      title: 'Chritsmas',
+      date: '25th november',
+    },
+  ];
+
   const onSelectSwitch = (index: number) => {
-    console.log(index);
+    setTabIndex(index);
+  };
+
+  const renderItems = ({ item }) => {
+    if (tabIndex > 1) {
+      return <HolidayCard item={item} />;
+    } else {
+      return <AttendanceCard item={item} />;
+    }
   };
 
   return (
-    <Layout customHeader={<CustomHeader title="Attendance" />}>
+    <Layout
+      customHeader={<CustomHeader title="Attendance" />}
+      showBottom={true}>
       <View style={styles.customSwitch}>
         <CustomSwitch
           selectionMode={1}
@@ -29,14 +71,27 @@ const Attendance = ({}: Props) => {
           selectionColor={colors.theme.primary}
         />
       </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        <AppDatePicker />
-        <MarkAttendance />
-      </ScrollView>
-      <BottomBackground />
+      <FlatList
+        data={tabIndex > 1 ? holidaysData : attendanceData}
+        renderItem={renderItems}
+        ListHeaderComponent={() => (
+          <View>
+            <AppDatePicker />
+            {tabIndex > 1 && (
+              <GrayMediumText
+                text="List of Holidays"
+                _style={{
+                  color: colors.theme.black,
+                  fontSize: 16,
+                  margin: 15,
+                }}
+              />
+            )}
+          </View>
+        )}
+        keyExtractor={item => item.id}
+        ItemSeparatorComponent={() => <View style={{ margin: 10 }} />}
+      />
     </Layout>
   );
 };
@@ -45,9 +100,6 @@ const styles = StyleSheet.create({
   customSwitch: {
     marginVertical: 20,
     alignItems: 'center',
-  },
-  diaryRecord: {
-    marginVertical: 10,
   },
 });
 

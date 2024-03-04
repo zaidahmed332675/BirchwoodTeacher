@@ -12,7 +12,8 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
 import dp1 from '../../Assets/icons/dp1.png';
-
+import pDot from '../../Assets/icons/presentDot.png';
+import aDot from '../../Assets/icons/absentDot.png';
 interface SearchModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -28,6 +29,7 @@ const CloseIconComponent = () => (
     size={36}
   />
 );
+
 const TickIconComponent = () => (
   <VIcon
     type="Ionicons"
@@ -67,6 +69,8 @@ const SearchModal = forwardRef(
           maxLength: 15,
         }}
         renderListItem={({ label, isSelected, item }) => {
+          console.log('zaid is here');
+
           return (
             <TouchableOpacity
               onPress={() => {
@@ -84,15 +88,30 @@ const SearchModal = forwardRef(
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Image
-                source={dp1}
-                style={{
-                  height: 50,
-                  width: 50,
-                  borderRadius: 25,
-                  resizeMode: 'contain',
-                }}
-              />
+              <View>
+                <Image
+                  source={item.isPresent ? pDot : aDot}
+                  style={{
+                    height: 10,
+                    width: 10,
+                    borderRadius: 25,
+                    resizeMode: 'contain',
+                    position: 'absolute',
+                    top: 3,
+                    left: 3,
+                    zIndex: 1,
+                  }}
+                />
+                <Image
+                  source={dp1}
+                  style={{
+                    height: 50,
+                    width: 50,
+                    borderRadius: 25,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </View>
               <View style={{ marginLeft: 10, flex: 1 }}>
                 <GlroyBold
                   text={label}

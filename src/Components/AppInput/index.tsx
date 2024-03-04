@@ -61,8 +61,8 @@ const AppInput = ({
             onPress={() => setSecureTextEntry(prev => !prev)}
             style={{ position: 'absolute', right: 10 }}>
             <VIcon
-              type="FontAwesome"
-              name={secureTextEntry ? 'eye' : 'eye-slash'}
+              type="Ionicons"
+              name={secureTextEntry ? 'eye' : 'eye-off'}
               size={20}
               color="gray"
             />
