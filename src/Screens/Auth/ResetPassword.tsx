@@ -55,6 +55,9 @@ export default function ResetPassword({ navigation }: Props) {
           <View style={{ alignItems: 'center' }}>
             <AppButton
               title={'Reset'}
+              btnStyle={{
+                marginVertical: 10,
+              }}
               onPress={() => navigation.navigate(EAuthStack.signIn)}
             />
           </View>

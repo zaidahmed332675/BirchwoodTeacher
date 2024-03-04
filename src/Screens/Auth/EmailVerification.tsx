@@ -45,6 +45,9 @@ export default function EmailVerification({ navigation }: Props) {
           <View style={{ alignItems: 'center' }}>
             <AppButton
               title={'Submit'}
+              btnStyle={{
+                marginVertical: 10,
+              }}
               onPress={() => {
                 navigation.navigate(EAuthStack.verificaionCode, {
                   email: '',

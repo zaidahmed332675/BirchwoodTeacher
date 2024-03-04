@@ -61,6 +61,9 @@ const SignIn = ({ navigation }: Props) => {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title="Sign In"
+            btnStyle={{
+              marginVertical: 10,
+            }}
             onPress={() => navigation.navigate(EAuthStack.main)}
           />
         </View>

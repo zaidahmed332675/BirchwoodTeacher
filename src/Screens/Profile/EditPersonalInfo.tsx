@@ -59,7 +59,13 @@ export default function EditPersonalInfo({}: Props) {
               required
             />
 
-            <AppButton title={'Update'} onPress={() => {}} />
+            <AppButton
+              title={'Update'}
+              btnStyle={{
+                marginVertical: 10,
+              }}
+              onPress={() => {}}
+            />
           </ScrollView>
         </View>
       </ScrollView>

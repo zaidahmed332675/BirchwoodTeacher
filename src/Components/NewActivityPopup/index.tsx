@@ -33,7 +33,13 @@ const NewActivityPopup = ({
           value={activityName}
           onChange={text => setActivityName(text)}
         />
-        <AppButton title="Create" onPress={handleSubmit} />
+        <AppButton
+          title="Create"
+          btnStyle={{
+            marginVertical: 10,
+          }}
+          onPress={handleSubmit}
+        />
       </View>
     </AppModal>
   );

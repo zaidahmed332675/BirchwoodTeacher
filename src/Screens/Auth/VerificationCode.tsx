@@ -42,6 +42,9 @@ export default function VerificationCode({ navigation }: Props) {
           <View style={{ alignItems: 'center' }}>
             <AppButton
               title={'Verify'}
+              btnStyle={{
+                marginVertical: 10,
+              }}
               onPress={() =>
                 navigation.navigate(EAuthStack.resetPassword, {
                   email: '',

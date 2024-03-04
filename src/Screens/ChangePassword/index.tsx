@@ -58,7 +58,13 @@ function ChangePassword({}: Props) {
         />
       </View>
       <View style={{ alignItems: 'center' }}>
-        <AppButton title="Update" onPress={() => {}} />
+        <AppButton
+          title="Update"
+          btnStyle={{
+            marginVertical: 10,
+          }}
+          onPress={() => {}}
+        />
       </View>
     </Layout>
   );

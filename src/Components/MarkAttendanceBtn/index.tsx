@@ -6,6 +6,7 @@ import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { GlroyBold } from '../GlroyBoldText';
+import { AppButton } from '../Button';
 
 interface FormatTextProps {
   seconds: number;
@@ -92,16 +93,17 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{ marginVertical: 20 }}>
-        <GrayMediumText
-          _style={{
-            color: colors.theme.primary,
-            fontSize: vw * 3,
-            textAlign: 'center',
-          }}
-          text="Skip attendance? Navigate to the homepage"
-        />
-      </TouchableOpacity>
+      <AppButton
+        title="Apply for leave"
+        btnStyle={{
+          paddingHorizontal: 20,
+          paddingVertical: 6,
+          backgroundColor: colors.theme.darkRed,
+          borderColor: colors.theme.darkRed,
+          marginBottom: 20,
+        }}
+        onPress={() => {}}
+      />
       <GrayMediumText
         _style={{
           color: colors.theme.primary,
@@ -115,16 +117,17 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
           fontSize: vw * 3,
           textAlign: 'center',
           fontWeight: 'normal',
+          marginBottom: 20,
         }}
         text="Reminder: If you have not yet marked your attendance, please do so before 9 AM to avoid being marked absent"
       />
       <View
         style={{
           backgroundColor: colors.theme.primary,
-          marginTop: 18,
           paddingVertical: 8,
           width: vw * 70,
           borderRadius: 50,
+          marginBottom: 20,
         }}>
         <GrayMediumText
           _style={{
@@ -146,7 +149,7 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
         formatText={() => FormatedText({ seconds, onPress })}
         strokeCap="round"
         style={{
-          marginVertical: 40,
+          marginBottom: 20,
         }}
       />
     </View>
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 30,
+    justifyContent: 'center',
     paddingHorizontal: 20,
   },
 });

@@ -132,6 +132,7 @@ const CreateDiary = ({}: Props) => {
           marginTop: 0,
           backgroundColor: colors.theme.secondary,
           borderWidth: 0,
+          marginVertical: 10,
         }}
       />
     </Layout>

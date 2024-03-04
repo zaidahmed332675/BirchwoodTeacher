@@ -152,8 +152,17 @@ export default function EditExperience({}: Props) {
             bordered
             title={'Add Experience'}
             onPress={addEducationField}
+            btnStyle={{
+              marginVertical: 10,
+            }}
           />
-          <AppButton title={'Update'} onPress={() => {}} />
+          <AppButton
+            title={'Update'}
+            btnStyle={{
+              marginVertical: 10,
+            }}
+            onPress={() => {}}
+          />
         </View>
       </ScrollView>
     </Layout>

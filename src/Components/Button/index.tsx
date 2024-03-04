@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.theme.primary,
     backgroundColor: colors.theme.primary,
-    marginVertical: 10,
   },
   borderedButton: {
     borderColor: colors.text.altGrey,

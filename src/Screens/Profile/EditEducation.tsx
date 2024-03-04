@@ -132,8 +132,17 @@ export default function EditEducation({}: Props) {
               bordered
               title={'Add Education'}
               onPress={addEducationField}
+              btnStyle={{
+                marginVertical: 10,
+              }}
             />
-            <AppButton title={'Update'} onPress={() => {}} />
+            <AppButton
+              title={'Update'}
+              btnStyle={{
+                marginVertical: 10,
+              }}
+              onPress={() => {}}
+            />
           </ScrollView>
         </View>
       </ScrollView>
