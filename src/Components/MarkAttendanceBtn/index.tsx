@@ -4,9 +4,9 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
-import { GrayMediumText } from '../GrayMediumText';
-import { GlroyBold } from '../GlroyBoldText';
 import { AppButton } from '../Button';
+import { GlroyBold } from '../GlroyBoldText';
+import { GrayMediumText } from '../GrayMediumText';
 
 interface FormatTextProps {
   seconds: number;
@@ -65,7 +65,13 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
   );
 };
 
-const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
+const MarkAttendanceBtn = ({
+  onPress,
+  handleLeave,
+}: {
+  onPress: () => void;
+  handleLeave: () => void;
+}) => {
   const totalSeconds = 7200;
   const [progress, setProgress] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -102,7 +108,7 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
           borderColor: colors.theme.darkRed,
           marginBottom: 20,
         }}
-        onPress={() => {}}
+        onPress={handleLeave}
       />
       <GrayMediumText
         _style={{
@@ -148,9 +154,6 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
         progress={(progress || 1) / 100}
         formatText={() => FormatedText({ seconds, onPress })}
         strokeCap="round"
-        style={{
-          marginBottom: 20,
-        }}
       />
     </View>
   );
@@ -158,10 +161,9 @@ const MarkAttendanceBtn = ({ onPress }: { onPress: () => void }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
 });
 

@@ -20,6 +20,7 @@ interface AppInputProps {
   isMultiple?: boolean;
   onChange: (value: string) => void;
   inputStyle?: object;
+  numberOfLines?: number;
 }
 
 const AppInput = ({
@@ -32,6 +33,7 @@ const AppInput = ({
   isMultiple = false,
   onChange,
   inputStyle,
+  numberOfLines = 1,
 }: AppInputProps) => {
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
@@ -42,12 +44,14 @@ const AppInput = ({
       </Text>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
+          multiline={isMultiple}
+          numberOfLines={numberOfLines}
           placeholder={placeholder}
           style={[
             styles.textInputField,
             {
               fontSize: placeholderSize || 12,
-              height: isMultiple ? vh * 20 : 40,
+              height: isMultiple ? vh * 15 : 40,
             },
             inputStyle,
           ]}

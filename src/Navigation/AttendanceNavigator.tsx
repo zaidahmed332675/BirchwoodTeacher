@@ -6,6 +6,7 @@ import {
   EAttendanceStack,
 } from '../Types/NavigationTypes';
 import { NavigationOptions } from '../Utils/options';
+import Leave from '../Screens/Leave';
 
 const Stack = createStackNavigator<AttendanceStackParams>();
 
@@ -15,6 +16,7 @@ const AttendanceNavigator = () => {
       initialRouteName={EAttendanceStack.attendance}
       screenOptions={NavigationOptions}>
       <Stack.Screen name={EAttendanceStack.attendance} component={Attendance} />
+      <Stack.Screen name={EAttendanceStack.leave} component={Leave} />
     </Stack.Navigator>
   );
 };

@@ -105,8 +105,10 @@ export type ChatStackParams = {
 
 export enum EAttendanceStack {
   attendance = 'attendance',
+  leave = 'leave',
 }
 
 export type AttendanceStackParams = {
   attendance: undefined;
+  leave: undefined;
 };
