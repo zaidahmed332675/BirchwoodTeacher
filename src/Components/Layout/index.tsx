@@ -11,6 +11,7 @@ interface LayoutProps {
   children: React.ReactNode;
   customHeader?: React.ReactNode;
   _styleSheetView?: object;
+  _styleSheetViewContent?: object;
   showBottom?: boolean;
 }
 
@@ -18,6 +19,7 @@ const Layout = ({
   children,
   customHeader,
   _styleSheetView,
+  _styleSheetViewContent,
   showBottom = true,
 }: LayoutProps) => {
   return (
@@ -33,12 +35,7 @@ const Layout = ({
       <View style={styles.header}>{customHeader}</View>
       <View style={styles.bottomSheet}>
         <View style={[styles.bottomSheetView, _styleSheetView]}>
-          <View
-            style={{
-              flex: 1,
-              paddingHorizontal: 10,
-              backgroundColor: colors.theme.white,
-            }}>
+          <View style={[styles.bottomSheetViewContent, _styleSheetViewContent]}>
             {children}
           </View>
           {/* {children} */}
@@ -65,13 +62,19 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
+    backgroundColor: colors.theme.white,
   },
   bottomSheetView: {
     flex: 1,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
+  },
+  bottomSheetViewContent: {
+    flex: 1,
     paddingHorizontal: 10,
+    marginHorizontal: 10,
+    // alignItems: 'center',
     backgroundColor: colors.theme.white,
   },
 });

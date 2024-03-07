@@ -33,7 +33,6 @@ const ActivityPost = () => {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
     paddingVertical: 20,
   },

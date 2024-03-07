@@ -17,20 +17,20 @@ import { CustomHeader } from '../../Components/CustomHeader';
 type Props = StackScreenProps<DiaryStackParams, 'createDiary'>;
 
 const CreateDiaryModalContent = () => {
-  let [audience, setAudience] = useState(0);
-
   const searchModalRef = useRef();
-  const [open, setOpen] = useState(false);
-  const [_, setStudent] = useState<Record<string, any>>();
+
+  const [isSearchModalOpen, setSearchModalOpen] = useState(false);
+  const [audience, setAudience] = useState(0);
+  const [student, setStudent] = useState<Record<string, any>>();
 
   const [items] = useState([...dummyRecords]);
 
   useEffect(() => {
     let item = searchModalRef.current?.selectedItem;
-    if (item?.value) {
+    if (item) {
       setStudent(item);
     }
-  }, [open]);
+  }, [isSearchModalOpen]);
 
   return (
     <View style={styles.contentContainer}>
@@ -81,8 +81,8 @@ const CreateDiaryModalContent = () => {
       </View>
       {audience === 1 && (
         <SearchModal
-          open={open}
-          setOpen={setOpen}
+          open={isSearchModalOpen}
+          setOpen={setSearchModalOpen}
           items={items}
           ref={searchModalRef}
         />

@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { VIcon } from '../../Components/VIcon';
 import { colors } from '../../theme/colors';
+import { GrayMediumText } from '../GrayMediumText';
 
 const CustomHeader = ({
   title,
@@ -26,16 +27,15 @@ const CustomHeader = ({
             color={colors.theme.white}
           />
         </TouchableOpacity>
-        <Text
-          style={{
+        <GrayMediumText
+          text={title}
+          _style={{
             color: colors.text.white,
             marginLeft: 10,
-            fontWeight: 'bold',
             fontSize: 18,
             flexBasis: '55%',
-          }}>
-          {title}
-        </Text>
+          }}
+        />
       </View>
       {isActionEnbl && (
         <TouchableOpacity style={styles.actionContainer} onPress={onPress}>
@@ -46,14 +46,14 @@ const CustomHeader = ({
             color={colors.theme.white}
             style={styles.addIcon}
           />
-          <Text
-            style={{
+          <GrayMediumText
+            text="Add"
+            _style={{
               color: colors.theme.secondary,
               fontWeight: 'bold',
               fontSize: 13,
-            }}>
-            Add
-          </Text>
+            }}
+          />
         </TouchableOpacity>
       )}
     </View>

@@ -18,6 +18,7 @@ interface SearchModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   items: Record<string, any>[];
+  isMultiple?: boolean;
   _style?: object;
 }
 
@@ -40,13 +41,27 @@ const TickIconComponent = () => (
 );
 
 const SearchModal = forwardRef(
-  ({ open, setOpen, items, _style }: SearchModalProps, ref) => {
-    const [value, setValue] = useState<any>(null);
+  (
+    {
+      open,
+      setOpen,
+      items,
+      selectedItems,
+      isMultiple = false,
+      _style,
+      ...rest
+    }: SearchModalProps,
+    ref
+  ) => {
+    const [value, setValue] = useState<any>(selectedItems);
+
+    console.log(value, 'value is here');
 
     useImperativeHandle(
       ref,
       () => ({
         selectedItem: value,
+        setValue: (val: any) => setValue(val),
       }),
       [value]
     );
@@ -55,30 +70,31 @@ const SearchModal = forwardRef(
       <DropDownPicker
         testID="search-modal"
         listMode="MODAL"
+        mode="SIMPLE"
         placeholder="Select Child"
         searchPlaceholder="Enter Child Name ..."
         open={open}
-        closeOnBackPressed={false}
         loading={false}
-        value={value?.value}
+        multiple={isMultiple}
+        min={0}
+        max={items.length}
+        searchable={true}
         items={items}
+        value={value}
         setOpen={setOpen}
         setValue={setValue}
-        searchable={true}
         searchTextInputProps={{
           maxLength: 15,
         }}
-        renderListItem={({ label, isSelected, item }) => {
-          console.log('zaid is here');
-
+        {...rest}
+        renderListItem={props => {
           return (
             <TouchableOpacity
               onPress={() => {
-                setValue(item);
-                setOpen(false);
+                props.onPress(props);
               }}
               style={{
-                backgroundColor: isSelected
+                backgroundColor: props.isSelected
                   ? colors.theme.secondary
                   : colors.theme.white,
                 padding: 10,
@@ -90,7 +106,7 @@ const SearchModal = forwardRef(
               }}>
               <View>
                 <Image
-                  source={item.isPresent ? pDot : aDot}
+                  source={props.item?.isPresent ? pDot : aDot}
                   style={{
                     height: 10,
                     width: 10,
@@ -114,15 +130,17 @@ const SearchModal = forwardRef(
               </View>
               <View style={{ marginLeft: 10, flex: 1 }}>
                 <GlroyBold
-                  text={label}
+                  text={props.label}
                   _style={{
-                    color: isSelected ? colors.theme.white : colors.text.black,
+                    color: props.isSelected
+                      ? colors.theme.white
+                      : colors.text.black,
                   }}
                 />
                 <GrayMediumText
-                  text={`Roll No: ${item?.rollNumber}`}
+                  text={`Roll No: ${props.item?.rollNumber}`}
                   _style={{
-                    color: isSelected
+                    color: props.isSelected
                       ? colors.theme.white
                       : colors.text.greyAlt2,
                     fontSize: 12,
@@ -136,7 +154,7 @@ const SearchModal = forwardRef(
                   alignItems: 'center',
                   padding: 5,
                 }}>
-                {isSelected && <TickIconComponent />}
+                {props.isSelected && <TickIconComponent />}
               </View>
             </TouchableOpacity>
           );
@@ -168,7 +186,7 @@ const SearchModal = forwardRef(
         }}
         searchPlaceholderTextColor={colors.text.white}
         modalProps={{
-          animationType: 'fade',
+          animationType: 'slide',
         }}
       />
     );

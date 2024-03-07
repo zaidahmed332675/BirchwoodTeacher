@@ -14,8 +14,8 @@ export const pS = create(designResolution);
 export const dummyRecords = [
   {
     _id: 1,
-    label: 'John',
-    value: 'john',
+    label: 'John Abraham',
+    value: 'john Abraham',
     rollNumber: 1,
     class: 'X1-B',
     isPresent: true,
@@ -251,3 +251,13 @@ export const dummyRecords = [
     },
   },
 ];
+
+export const capitalizeWords = (str: string = '') => {
+  if (!str) {
+    return '';
+  }
+  return str
+    .split(' ')
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};

@@ -67,17 +67,17 @@ export type ProfileStackParams = {
 
 export enum EActivityStack {
   activities = 'activities',
-  activity = 'activity',
+  activityList = 'activityList',
   createActivity = 'createActivity',
 }
 
 export type ActivityStackParams = {
   activities: undefined;
-  activity: {
-    activityId: string;
+  activityList: undefined;
+  createActivity: {
+    activityId: number;
     activityName: string;
   };
-  createActivity: undefined;
 };
 
 export enum EDiaryStack {

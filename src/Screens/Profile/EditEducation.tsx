@@ -128,7 +128,7 @@ export default function EditEducation({}: Props) {
               ))}
             </View>
             <AppButton
-              icon
+              prefix
               bordered
               title={'Add Education'}
               onPress={addEducationField}

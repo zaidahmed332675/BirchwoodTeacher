@@ -13,7 +13,7 @@ const AppRouting = () => {
     <NavigationContainer>
       {/* {loader && <Loader />} */}
       <Stack.Navigator
-        initialRouteName={ERootStack.auth}
+        initialRouteName={ERootStack.main}
         screenOptions={NavigationOptions}>
         {/* {!token ? ( */}
         <Stack.Screen name={ERootStack.auth} component={AuthNavigator} />

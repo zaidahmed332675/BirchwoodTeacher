@@ -7,7 +7,8 @@ import { VIcon } from '../VIcon';
 interface AppButtonProps {
   title: string;
   bordered?: boolean;
-  icon?: boolean;
+  prefix?: boolean;
+  suffix?: React.ReactNode;
   btnStyle?: object;
   textStyle?: object;
   onPress: () => void;
@@ -15,7 +16,8 @@ interface AppButtonProps {
 
 const AppButton = ({
   title,
-  icon,
+  prefix = false,
+  suffix = null,
   btnStyle,
   textStyle,
   bordered = false,
@@ -29,13 +31,13 @@ const AppButton = ({
         btnStyle,
       ]}
       onPress={onPress}>
-      {icon && (
+      {prefix && (
         <VIcon
           type="Ionicons"
           name="add"
           size={15}
           color={colors.text.altGrey}
-          style={styles.icon}
+          style={styles.prefix}
         />
       )}
       <GlroyBold
@@ -46,6 +48,7 @@ const AppButton = ({
         }
         text={title}
       />
+      {suffix}
     </TouchableOpacity>
   );
 };
@@ -75,8 +78,11 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     color: colors.text.altGrey,
   },
-  icon: {
+  prefix: {
     marginRight: 5,
+  },
+  suffix: {
+    marginLeft: 5,
   },
 });
 

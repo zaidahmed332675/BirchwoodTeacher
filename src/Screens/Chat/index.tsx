@@ -133,11 +133,7 @@ const Chat = ({ navigation }: Props) => {
   };
 
   return (
-    <Layout
-      _styleSheetView={{
-        paddingHorizontal: 10,
-      }}
-      customHeader={<CustomHeader title="Chat List" />}>
+    <Layout customHeader={<CustomHeader title="Chat List" />}>
       <View style={styles.container}>
         <FlatList
           data={chatList}

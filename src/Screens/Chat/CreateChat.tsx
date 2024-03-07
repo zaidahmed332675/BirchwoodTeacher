@@ -105,9 +105,6 @@ const CreateChat = ({ route }: Props) => {
 
   return (
     <Layout
-      _styleSheetView={{
-        paddingHorizontal: 10,
-      }}
       customHeader={<CustomChatHeader title={route.params?.parentName} />}>
       <GiftedChat
         messagesContainerStyle={styles.messageContainer}

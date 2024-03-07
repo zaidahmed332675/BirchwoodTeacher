@@ -16,21 +16,23 @@ import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
 
-const CreateActivityModalContent = () => {
-  let [audience, setAudience] = useState(0);
-
+const CreateActivityModalContent = ({
+  audience,
+  setAudience,
+  students,
+  setStudents,
+}) => {
   const searchModalRef = useRef();
-  const [open, setOpen] = useState(false);
-  const [_, setStudent] = useState<Record<string, any>>();
 
-  const [items] = useState([...dummyRecords]);
+  const [isSearchModalOpen, setSearchModalOpen] = useState(false);
+  const items = [...dummyRecords];
 
   useEffect(() => {
     let item = searchModalRef.current?.selectedItem;
-    if (item?.value) {
-      setStudent(item);
+    if (item) {
+      setStudents(item);
     }
-  }, [open]);
+  }, [isSearchModalOpen, setStudents]);
 
   return (
     <View style={styles.contentContainer}>
@@ -59,7 +61,10 @@ const CreateActivityModalContent = () => {
             marginVertical: 8,
           }}
           checkedColor={colors.theme.white}
-          onIconPress={() => setAudience(0)}
+          onIconPress={() => {
+            setAudience(0);
+            setStudents();
+          }}
         />
         <CheckBox
           checked={audience === 1}
@@ -81,10 +86,15 @@ const CreateActivityModalContent = () => {
       </View>
       {audience === 1 && (
         <SearchModal
-          open={open}
-          setOpen={setOpen}
+          isMultiple={true}
+          open={isSearchModalOpen}
+          setOpen={setSearchModalOpen}
           items={items}
+          selectedItems={students}
           ref={searchModalRef}
+          multipleText={`${students?.length} ${
+            students?.length > 1 ? 'children' : 'child'
+          } have been selected`}
         />
       )}
     </View>
@@ -93,15 +103,39 @@ const CreateActivityModalContent = () => {
 
 const CreateActivity = ({}: Props) => {
   const sheetRef = useRef<BottomSheetModal>(null);
-  const [isOpen, setIsOpen] = useState(false);
+
+  let [audience, setAudience] = useState(0);
+  const [students, setStudents] = useState<any>();
+  const [isSheetOpen, setSheetOpen] = useState(false);
 
   return (
-    <Layout customHeader={<CustomHeader title="Create Post" />}>
+    <Layout customHeader={<CustomHeader title="Create Activity Post" />}>
       <View style={styles.container}>
         <Image style={styles.profilePic} source={profile} />
         <View>
           <Text style={styles.userName}>Anna Mary</Text>
-          <Text style={styles.timeStamp}>Class Post</Text>
+          <AppButton
+            title={
+              !students?.length
+                ? 'Class'
+                : students?.length > 1
+                ? 'Children'
+                : 'Child'
+            }
+            bordered
+            suffix
+            btnStyle={{
+              alignSelf: 'flex-start',
+              marginTop: 5,
+              borderRadius: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 0,
+            }}
+            onPress={() => {
+              setSheetOpen(true);
+              sheetRef.current?.present();
+            }}
+          />
         </View>
       </View>
       <RichTextEditor />
@@ -109,7 +143,7 @@ const CreateActivity = ({}: Props) => {
         ref={sheetRef}
         enableDismissOnClose
         onDismiss={() => {
-          setIsOpen(false);
+          setSheetOpen(false);
         }}
         _handleStyle={{
           backgroundColor: colors.theme.primary,
@@ -117,13 +151,21 @@ const CreateActivity = ({}: Props) => {
         _sheetStyle={{
           backgroundColor: colors.theme.primary,
         }}>
-        <CreateActivityModalContent />
+        <CreateActivityModalContent
+          audience={audience}
+          setAudience={setAudience}
+          students={students}
+          setStudents={setStudents}
+        />
       </AppBottomSheet>
       <AppButton
-        title={isOpen ? 'Done' : 'Post Now'}
+        title={isSheetOpen ? 'Done' : 'Post Now'}
         onPress={() => {
-          sheetRef.current?.present();
-          setIsOpen(true);
+          if (isSheetOpen) {
+            sheetRef.current?.dismiss();
+            setSheetOpen(false);
+          } else {
+          }
         }}
         btnStyle={{
           width: '95%',

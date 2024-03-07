@@ -20,7 +20,7 @@ import { appShadow, colors } from '../theme/colors';
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isAttendanceMarked, setIsAttendanceMarked] = useState(false);
+  const [isAttendanceMarked, setIsAttendanceMarked] = useState(true);
   const [isApplyingLeave, setIsApplyingLeave] = useState(false);
 
   const handleLeave = () => {
@@ -43,7 +43,7 @@ const AppNavigator = () => {
     },
   });
 
-  if (!isAttendanceMarked || !isApplyingLeave) {
+  if (!isAttendanceMarked) {
     return (
       <View style={styles.container}>
         <Header />
@@ -68,7 +68,7 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={EMainStack.home}
+      initialRouteName={EMainStack.activityRoutes}
       screenOptions={NavigationOptions}>
       <Stack.Screen name={EMainStack.home} component={HomeScreen} />
       <Stack.Screen

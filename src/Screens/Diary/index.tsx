@@ -23,27 +23,26 @@ import { CustomHeader } from '../../Components/CustomHeader';
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
 const Diary = ({ navigation }: Props) => {
-  const [tabIndex, setTabIndex] = useState<number>(1);
-
   const searchModalRef = useRef();
-  const [open, setOpen] = useState(false);
-  const [student, setStudent] = useState<Record<string, any>>();
 
-  const [items] = useState([...dummyRecords]);
+  const [tabIndex, setTabIndex] = useState<number>(1);
+  const [isSearchModalOpen, setSearchModalOpen] = useState(false);
+  const [student, setStudent] = useState<Record<string, any>>();
+  const items = [...dummyRecords];
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
     if (index > 1) {
-      setOpen(true);
+      setSearchModalOpen(true);
     }
   };
 
   useEffect(() => {
     let item = searchModalRef.current?.selectedItem;
-    if (item?.value) {
+    if (item) {
       setStudent(item);
     }
-  }, [open]);
+  }, [isSearchModalOpen]);
 
   return (
     <Layout
@@ -96,7 +95,7 @@ const Diary = ({ navigation }: Props) => {
             />
           </View>
           <TouchableOpacity
-            onPress={() => setOpen(o => !o)}
+            onPress={() => setSearchModalOpen(o => !o)}
             style={{
               alignSelf: 'flex-start',
               flexDirection: 'row',
@@ -117,8 +116,8 @@ const Diary = ({ navigation }: Props) => {
       )}
 
       <SearchModal
-        open={open}
-        setOpen={setOpen}
+        open={isSearchModalOpen}
+        setOpen={setSearchModalOpen}
         items={items}
         ref={searchModalRef}
         _style={{

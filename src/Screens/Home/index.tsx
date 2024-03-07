@@ -1,36 +1,27 @@
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   FlatList,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { vh, vw } from '../../Utils/units';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { colors } from '../../theme/colors';
-import student from '../../Assets/icons/student.png';
 import { appShadow } from '../../theme/colors';
 import { featureIcons } from '../../Assets';
 import { icons } from '../../Assets/icons';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import LinearGradient from 'react-native-linear-gradient';
-import { ImageBox } from '../../Components/UploadImage';
+// import LinearGradient from 'react-native-linear-gradient';
+// import { ImageBox } from '../../Components/UploadImage';
 import { Header } from '../../Components/Header';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
-  const [profile] = useState({
-    name: 'Zaid Ahmed',
-    year: '2024 - 2025',
-    photo: '',
-  });
-
   const data = [
     {
       id: 1,
