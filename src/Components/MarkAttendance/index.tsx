@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
-import { MarkAttendanceBtn } from '../MarkAttendanceBtn';
+import { MarkAttendanceBtn } from '../Attendance';
 
 export const MarkAttendance = () => {
   return (

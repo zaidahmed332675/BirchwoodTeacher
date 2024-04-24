@@ -10,6 +10,9 @@ export interface User {
   isAdmin: boolean;
   isMember: boolean;
   status: string;
+  attendance: {
+    status: '';
+  };
   tokens: string[];
   createdAt: string;
   updatedAt: string;
@@ -55,4 +58,11 @@ export interface ChangePasswordPayload {
   old_password: string;
   new_password: string;
   confirmPassword: string;
+}
+
+export interface LeavePayload {
+  leaveType: string;
+  leaveReason: string;
+  startDate: string;
+  endDate: string;
 }

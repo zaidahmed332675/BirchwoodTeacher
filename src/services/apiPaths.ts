@@ -1,6 +1,5 @@
 export enum AuthApiPaths {
-  login = 'auth/signin',
-  signUp = 'auth/signup',
+  login = 'teacher/auth/signin',
 }
 
 export enum ResetPasswordApiPaths {
@@ -10,86 +9,21 @@ export enum ResetPasswordApiPaths {
 }
 
 export enum ProfileApiPaths {
-  profile = 'profile/getProfile',
-  updateProfile = 'profile/updateProfile',
+  profile = 'teacher/profile/getProfile',
+  updateProfile = 'teacher/profile/updateProfile',
   changePassword = 'profile/changePassword',
-}
-
-export enum ReparationCardApiPaths {
-  states = 'state/getAllStates',
-  positions = 'position/getAllPositions',
-  representativeByPosition = 'representative/getRepresentativeByPosition',
-}
-
-export enum ReparationSchoolApiPaths {
-  reparationSchool = 'school/getAllSchools',
-}
-
-export enum PodcastApiPaths {
-  podcasts = 'podcast/getAllPodcasts',
-}
-
-export enum EventApiPaths {
-  events = 'event/getAllEvents',
-  eventById = 'event/getEventById',
-}
-
-export enum NewsApiPaths {
-  news = 'news/getAllNews',
-}
-
-export enum HistoryApiPaths {
-  histories = 'history/getAllHistorys',
-}
-
-export enum OrderApiPaths {
-  createOrder = 'order/addOrder',
-  orders = 'order/getMyOrders',
-  createPayment = 'payment/orderPayment',
-}
-
-export enum ProductApiPaths {
-  products = 'product/getAllProducts',
-}
-
-export enum DonationApiPaths {
-  donatePayment = 'payment/donationPayment',
-}
-
-export enum DeleteAccount {
-  deleteAccount = 'admin/user/deleteUser/:id',
+  checkIn = 'teacher/attendance/markCheckIn',
+  checkOut = 'teacher/attendance/markCheckOut',
+  leave = 'teacher/attendance/leave',
 }
 
 export const AllApiPaths = Object.freeze({
   ...AuthApiPaths,
   ...ResetPasswordApiPaths,
   ...ProfileApiPaths,
-  ...EventApiPaths,
-  ...ReparationCardApiPaths,
-  ...ReparationSchoolApiPaths,
-  ...PodcastApiPaths,
-  ...OrderApiPaths,
-  ...ProductApiPaths,
-  ...NewsApiPaths,
-  ...HistoryApiPaths,
-  ...DonationApiPaths,
-  ...DeleteAccount,
 });
 
-export type ApiPaths =
-  | AuthApiPaths
-  | ResetPasswordApiPaths
-  | ProfileApiPaths
-  | EventApiPaths
-  | ReparationCardApiPaths
-  | ReparationSchoolApiPaths
-  | PodcastApiPaths
-  | OrderApiPaths
-  | ProductApiPaths
-  | NewsApiPaths
-  | HistoryApiPaths
-  | DonationApiPaths
-  | DeleteAccount;
+export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths;
 
 class ApiPathHandler<T> {
   private paths: T;

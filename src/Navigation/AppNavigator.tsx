@@ -4,12 +4,12 @@ import { StyleSheet, View } from 'react-native';
 import { BottomBackground } from '../Components/BottomBackground';
 import { Header } from '../Components/Header';
 import { LeaveForm } from '../Components/LeaveForm';
-import { MarkAttendanceBtn } from '../Components/MarkAttendanceBtn';
+import { Attendance } from '../Components/Attendance';
 import ChangePassword from '../Screens/ChangePassword';
 import HomeScreen from '../Screens/Home';
 import MyClass from '../Screens/MyClass';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
-import { NavigationOptions } from '../Utils/options';
+import { attendanceEnum, NavigationOptions } from '../Utils/options';
 import ActivityNavigator from './ActivityNavigator';
 import AttendanceNavigator from './AttendanceNavigator';
 import ChatNavigator from './ChatNavigator';
@@ -17,16 +17,14 @@ import DiaryNavigator from './DiaryNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import { appShadow, colors } from '../theme/colors';
 import StudentInfo from '../Screens/MyClass/StudentInfo';
+import { useAppSelector } from '../Stores/hooks';
+import { selectUserProfile } from '../Stores/slices/user.slice';
 
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isAttendanceMarked, setIsAttendanceMarked] = useState(false);
-  const [isApplyingLeave, setIsApplyingLeave] = useState(false);
-
-  const handleLeave = () => {
-    setIsApplyingLeave(true);
-  };
+  const [isApplyingLeave, setIsApplyingLeave] = useState(true);
+  const profile = useAppSelector(selectUserProfile);
 
   const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.theme.white },
@@ -44,7 +42,7 @@ const AppNavigator = () => {
     },
   });
 
-  if (!isAttendanceMarked) {
+  if (!attendanceEnum.includes(profile.attendance?.status ?? '')) {
     return (
       <View style={styles.container}>
         <Header />
@@ -55,10 +53,7 @@ const AppNavigator = () => {
             </View>
           ) : (
             <View style={styles.card}>
-              <MarkAttendanceBtn
-                onPress={() => setIsAttendanceMarked(true)}
-                handleLeave={handleLeave}
-              />
+              <Attendance handleLeave={() => setIsApplyingLeave(true)} />
             </View>
           )}
         </View>

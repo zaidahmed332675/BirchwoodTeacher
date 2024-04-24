@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, AnyAction } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, Action } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 
 import commonSlice from './slices/common.slice';
@@ -16,7 +16,7 @@ const persistConfig = {
   whitelist: ['user'],
 };
 
-const rootReducer = (state: any, action: AnyAction) => {
+const rootReducer = (state: any, action: Action) => {
   if (action.type === 'User/resetUserState') {
     state = {};
   }

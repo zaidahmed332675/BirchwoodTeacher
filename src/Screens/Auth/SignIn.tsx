@@ -76,7 +76,7 @@ const SignIn = ({ navigation }: Props) => {
               },
               pattern: {
                 value: /\S+@\S+\.\S+/,
-                message: 'Email format is Invalid',
+                message: 'Email format is invalid',
               },
             }}
             render={({ field: { onChange, value } }) => (

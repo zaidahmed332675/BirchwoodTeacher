@@ -1,16 +1,27 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { addHours, format, isAfter, isBefore, startOfToday } from 'date-fns';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
+import { asyncCheckInUser } from '../../Stores/actions/user.action';
+import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
+import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
 
 interface FormatTextProps {
   seconds: number;
-  onPress: () => void;
+  onPress: (body: { checkIn: string }) => Promise<void>;
 }
 
 const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
@@ -67,17 +78,14 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
   );
 };
 
-export const MarkAttendanceBtn = ({
-  onPress,
-  handleLeave,
-}: {
-  onPress: () => void;
-  handleLeave: () => void;
-}) => {
+export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
   const totalSeconds = useRef(0);
   const checkInTime = useMemo(() => addHours(startOfToday(), 13), []);
   const [progress, setProgress] = useState(0);
   const [seconds, setSeconds] = useState(0);
+
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<NavigationProp<MainStackParams>>();
 
   useEffect(() => {
     const currentTime = new Date();
@@ -109,6 +117,17 @@ export const MarkAttendanceBtn = ({
   useEffect(() => {
     setProgress((seconds / totalSeconds.current) * 100);
   }, [seconds]);
+
+  const onSubmit = useCallback(async () => {
+    const date = new Date();
+    const checkInDateTime = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    const res = await dispatch(
+      asyncCheckInUser({ checkIn: checkInDateTime })
+    ).unwrap();
+    if (res) {
+      navigation.navigate(EMainStack.home);
+    }
+  }, [navigation, dispatch]);
 
   return (
     <View style={styles.container}>
@@ -172,7 +191,7 @@ export const MarkAttendanceBtn = ({
         unfilledColor={colors.theme.secondary}
         borderWidth={0}
         progress={(progress || 1) / 100}
-        formatText={() => FormatedText({ seconds, onPress })}
+        formatText={() => FormatedText({ seconds, onPress: onSubmit })}
         strokeCap="round"
       />
     </View>
