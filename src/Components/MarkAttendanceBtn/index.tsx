@@ -51,7 +51,7 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
           color: colors.theme.white,
           fontWeight: 'normal',
         }}
-        text="To record your attendance"
+        text="To record your check-in"
       />
       <GlroyBold
         _style={{
@@ -115,7 +115,7 @@ const MarkAttendanceBtn = ({
           color: colors.theme.primary,
           fontSize: vw * 5,
         }}
-        text="Please record today's attendance"
+        text="Please record today's check-in"
       />
       <GrayMediumText
         _style={{
@@ -125,7 +125,7 @@ const MarkAttendanceBtn = ({
           fontWeight: 'normal',
           marginBottom: 20,
         }}
-        text="Reminder: If you have not yet marked your attendance, please do so before 9 AM to avoid being marked absent"
+        text="Reminder: If you have not yet checked in, please do so before 9 AM to avoid being marked absent"
       />
       <View
         style={{

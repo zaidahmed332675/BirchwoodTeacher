@@ -17,6 +17,7 @@ import { MainLogo } from '../../Components/MainLogo';
 import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { vh } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 
@@ -33,7 +34,7 @@ const SignIn = ({ navigation }: Props) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', marginTop: vh * 5 }}>
           <MainLogo />
         </View>
         <View style={styles.formContainer}>

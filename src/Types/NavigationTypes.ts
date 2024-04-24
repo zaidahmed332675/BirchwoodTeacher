@@ -33,6 +33,7 @@ export enum EMainStack {
   home = 'home',
   profileRoutes = 'profileRoutes',
   myClass = 'myClass',
+  studentInfo = 'studentInfo',
   activityRoutes = 'activityRoutes',
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
@@ -44,6 +45,7 @@ export type MainStackParams = {
   home: undefined;
   profileRoutes: undefined;
   myClass: undefined;
+  studentInfo: undefined;
   activityRoutes: undefined;
   diaryRoutes: undefined;
   chatRoutes: undefined;

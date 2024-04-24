@@ -25,8 +25,10 @@ type Props = StackScreenProps<MainStackParams, 'myClass'>;
 const MyClass = ({}: Props) => {
   const navigation = useNavigation();
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.item}>
+  const renderItem = ({ item }: any) => (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => navigation.navigate('studentInfo')}>
       <View
         style={{
           alignSelf: 'flex-start',
@@ -106,7 +108,7 @@ const MyClass = ({}: Props) => {
     <Layout customHeader={<CustomHeader title={'My Class'} />}>
       <FlatList
         data={[...dummyRecords]}
-        keyExtractor={item => item._id}
+        keyExtractor={item => item._id.toString()}
         renderItem={renderItem}
       />
     </Layout>

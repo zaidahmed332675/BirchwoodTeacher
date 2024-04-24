@@ -16,11 +16,12 @@ import ChatNavigator from './ChatNavigator';
 import DiaryNavigator from './DiaryNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import { appShadow, colors } from '../theme/colors';
+import StudentInfo from '../Screens/MyClass/StudentInfo';
 
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isAttendanceMarked, setIsAttendanceMarked] = useState(true);
+  const [isAttendanceMarked, setIsAttendanceMarked] = useState(false);
   const [isApplyingLeave, setIsApplyingLeave] = useState(false);
 
   const handleLeave = () => {
@@ -68,7 +69,7 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={EMainStack.activityRoutes}
+      initialRouteName={EMainStack.home}
       screenOptions={NavigationOptions}>
       <Stack.Screen name={EMainStack.home} component={HomeScreen} />
       <Stack.Screen
@@ -76,6 +77,7 @@ const AppNavigator = () => {
         component={ProfileNavigator}
       />
       <Stack.Screen name={EMainStack.myClass} component={MyClass} />
+      <Stack.Screen name={EMainStack.studentInfo} component={StudentInfo} />
       <Stack.Screen
         name={EMainStack.activityRoutes}
         component={ActivityNavigator}
