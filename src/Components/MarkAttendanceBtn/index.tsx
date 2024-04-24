@@ -1,5 +1,5 @@
-import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { addHours, format, isAfter, isBefore, startOfToday } from 'date-fns';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { vw } from '../../Utils/units';
@@ -44,22 +44,24 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
         }}
         text={formatTime(seconds)}
       />
-      <GrayMediumText
-        _style={{
-          fontSize: vw * 4,
-          textAlign: 'center',
-          color: colors.theme.white,
-          fontWeight: 'normal',
-        }}
-        text="To record your check-in"
-      />
+      {seconds ? (
+        <GrayMediumText
+          _style={{
+            fontSize: vw * 4,
+            textAlign: 'center',
+            color: colors.theme.white,
+            fontWeight: 'normal',
+          }}
+          text="To record your check-in"
+        />
+      ) : null}
       <GlroyBold
         _style={{
           fontSize: vw * 4,
           textAlign: 'center',
           color: colors.theme.white,
         }}
-        text="Press Here"
+        text={!seconds ? 'Continue To App\nPress Here' : 'Press Here'}
       />
     </TouchableOpacity>
   );
@@ -72,29 +74,40 @@ export const MarkAttendanceBtn = ({
   onPress: () => void;
   handleLeave: () => void;
 }) => {
-  const totalSeconds = 7200;
+  const totalSeconds = useRef(0);
+  const checkInTime = useMemo(() => addHours(startOfToday(), 13), []);
   const [progress, setProgress] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    setSeconds(totalSeconds);
+    const currentTime = new Date();
+    if (isAfter(currentTime, checkInTime)) {
+      setSeconds(0);
+      setProgress(0);
+    } else if (isBefore(currentTime, checkInTime)) {
+      const remainingSeconds = Math.floor(
+        (checkInTime.getTime() - currentTime.getTime()) / 1000
+      );
+      totalSeconds.current = remainingSeconds;
+      setSeconds(remainingSeconds);
 
-    const interval = setInterval(() => {
-      setSeconds(prevSeconds => {
-        if (prevSeconds <= 0) {
-          clearInterval(interval);
-          return 0;
-        } else {
-          return prevSeconds - 1;
-        }
-      });
-    }, 1000);
+      const interval = setInterval(() => {
+        setSeconds(prevSeconds => {
+          if (prevSeconds <= 0) {
+            clearInterval(interval);
+            return 0;
+          } else {
+            return prevSeconds - 1;
+          }
+        });
+      }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearInterval(interval);
+    }
+  }, [checkInTime]);
 
   useEffect(() => {
-    setProgress((seconds / totalSeconds) * 100);
+    setProgress((seconds / totalSeconds.current) * 100);
   }, [seconds]);
 
   return (
@@ -114,8 +127,14 @@ export const MarkAttendanceBtn = ({
         _style={{
           color: colors.theme.primary,
           fontSize: vw * 5,
+          textAlign: 'center',
+          marginBottom: 10,
         }}
-        text="Please record today's check-in"
+        text={
+          !seconds
+            ? 'You missed the check-in\nPlease ensure to check in on time'
+            : "Please record today's check-in"
+        }
       />
       <GrayMediumText
         _style={{
@@ -123,9 +142,10 @@ export const MarkAttendanceBtn = ({
           fontSize: vw * 3,
           textAlign: 'center',
           fontWeight: 'normal',
-          marginBottom: 20,
         }}
-        text="Reminder: If you have not yet checked in, please do so before 9 AM to avoid being marked absent"
+        text={
+          'Reminder: If you have not yet checked in, please do so before \n9 AM to avoid being marked absent'
+        }
       />
       <View
         style={{
@@ -133,7 +153,7 @@ export const MarkAttendanceBtn = ({
           paddingVertical: 8,
           width: vw * 70,
           borderRadius: 50,
-          marginBottom: 20,
+          marginVertical: 20,
         }}>
         <GrayMediumText
           _style={{
@@ -148,7 +168,7 @@ export const MarkAttendanceBtn = ({
         size={vw * 80}
         thickness={25}
         showsText={true}
-        color={colors.theme.primary}
+        color={seconds ? colors.theme.primary : colors.theme.secondary}
         unfilledColor={colors.theme.secondary}
         borderWidth={0}
         progress={(progress || 1) / 100}
