@@ -10,7 +10,7 @@ import {
 
 interface MenuPopupProps {}
 
-const MenuPopup = ({ children }: MenuPopupProps) => {
+export const MenuPopup = ({ children }: MenuPopupProps) => {
   return (
     <View>
       <Text>Hello world!</Text>
@@ -28,5 +28,3 @@ const MenuPopup = ({ children }: MenuPopupProps) => {
     </View>
   );
 };
-
-export { MenuPopup };

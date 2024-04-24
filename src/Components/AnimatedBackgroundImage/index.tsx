@@ -16,7 +16,7 @@ interface AnimatedBackgroundImageProps {
   additionalImage?: unknown;
 }
 
-const AnimatedBackgroundImage = ({
+export const AnimatedBackgroundImage = ({
   source,
   additionalImage,
 }: AnimatedBackgroundImageProps) => {
@@ -148,5 +148,3 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -50 }, { translateY: -50 }], // Center the image
   },
 });
-
-export { AnimatedBackgroundImage };

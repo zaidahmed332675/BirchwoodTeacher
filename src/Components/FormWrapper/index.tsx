@@ -2,14 +2,13 @@ import React from 'react';
 import {
   TouchableWithoutFeedback,
   Keyboard,
-  View,
   //   ScrollView,
   //   KeyboardAvoidingView,
   //   SafeAreaView,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-export default function FormWrapper({ children }: any) {
+export const FormWrapper = ({ children }: any) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAwareScrollView
@@ -23,4 +22,4 @@ export default function FormWrapper({ children }: any) {
       </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
-}
+};

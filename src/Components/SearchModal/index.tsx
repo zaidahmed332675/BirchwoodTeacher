@@ -40,7 +40,7 @@ const TickIconComponent = () => (
   />
 );
 
-const SearchModal = forwardRef(
+export const SearchModal = forwardRef(
   (
     {
       open,
@@ -192,5 +192,3 @@ const SearchModal = forwardRef(
     );
   }
 );
-
-export { SearchModal };

@@ -15,7 +15,7 @@ interface LayoutProps {
   showBottom?: boolean;
 }
 
-const Layout = ({
+export const Layout = ({
   children,
   customHeader,
   _styleSheetView,
@@ -78,5 +78,3 @@ const styles = StyleSheet.create({
     backgroundColor: colors.theme.white,
   },
 });
-
-export { Layout };

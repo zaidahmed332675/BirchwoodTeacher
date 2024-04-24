@@ -1,20 +1,48 @@
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useCallback } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import forgot_child from '../../Assets/images/forgot_child.png';
+import { AnimatedBackgroundImage } from '../../Components/AnimatedBackgroundImage';
+import { AppInput } from '../../Components/AppInput';
+import { AppButton } from '../../Components/Button';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
+import { asyncEmailVerification } from '../../Stores/actions/user.action';
+import { useAppDispatch } from '../../Stores/hooks';
 import { colors } from '../../theme/colors';
-import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
-import { AnimatedBackgroundImage } from '../../Components/AnimatedBackgroundImage';
-import { AppButton } from '../../Components/Button';
-import { AppInput } from '../../Components/AppInput';
-import forgot_child from '../../Assets/images/forgot_child.png';
+import { EmailVerificationPayload } from '../../Types/User';
 import { vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'emailVerification'>;
 
 export default function EmailVerification({ navigation }: Props) {
-  const [email, setEmail] = useState('');
+  const dispatch = useAppDispatch();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EmailVerificationPayload>({
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onSubmit = useCallback(
+    async (body: EmailVerificationPayload) => {
+      const res = await dispatch(asyncEmailVerification(body)).unwrap();
+
+      if (res?.encodedEmail) {
+        navigation.navigate(EAuthStack.verificaionCode, {
+          email: body.email,
+        });
+      }
+    },
+    [navigation, dispatch]
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -34,13 +62,36 @@ export default function EmailVerification({ navigation }: Props) {
             _style={styles.para}
           />
           <View>
-            <AppInput
-              label="Enter your Email"
-              placeholder={'Email'}
-              value={email}
-              required
-              onChange={setEmail}
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: 'Email format is Invalid',
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <AppInput
+                  label="Enter your Email"
+                  placeholder={'Email'}
+                  value={value}
+                  required
+                  onChange={onChange}
+                />
+              )}
             />
+
+            {errors.email?.message && (
+              <GrayMediumText
+                _style={{ color: colors.theme.lightRed }}
+                text={errors.email.message}
+              />
+            )}
           </View>
           <View style={{ alignItems: 'center' }}>
             <AppButton
@@ -48,11 +99,12 @@ export default function EmailVerification({ navigation }: Props) {
               btnStyle={{
                 marginVertical: 10,
               }}
-              onPress={() => {
-                navigation.navigate(EAuthStack.verificaionCode, {
-                  email: '',
-                });
-              }}
+              onPress={handleSubmit(onSubmit)}
+              // onPress={() => {
+              //   navigation.navigate(EAuthStack.verificaionCode, {
+              //     email: '',
+              //   });
+              // }}
             />
           </View>
         </View>

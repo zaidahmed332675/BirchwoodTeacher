@@ -5,7 +5,7 @@ import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { MarkAttendanceBtn } from '../MarkAttendanceBtn';
 
-const MarkAttendance = () => {
+export const MarkAttendance = () => {
   return (
     <View style={styles.container}>
       <MarkAttendanceBtn />
@@ -83,5 +83,3 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
 });
-
-export { MarkAttendance };

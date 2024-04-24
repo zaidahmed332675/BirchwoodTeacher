@@ -5,7 +5,7 @@ import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { VIcon } from '../VIcon';
 
-const Comment = () => {
+export const Comment = () => {
   return (
     <View style={styles.comment}>
       <Image style={styles.commentPic} source={workerImage} />
@@ -66,5 +66,3 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
 });
-
-export { Comment };

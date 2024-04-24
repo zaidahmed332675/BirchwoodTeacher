@@ -32,7 +32,7 @@ const NextIcon = () => (
   />
 );
 
-const AppDatePicker = ({ style }: AppDatePickerProps) => {
+export const AppDatePicker = ({ style }: AppDatePickerProps) => {
   const [selectedStartDate, setSelectedStartDate] = useState<string>('');
 
   const onDateChange = (date: any) => {
@@ -146,5 +146,3 @@ const styles = StyleSheet.create({
     backgroundColor: colors.theme.lightSecondary,
   },
 });
-
-export { AppDatePicker };

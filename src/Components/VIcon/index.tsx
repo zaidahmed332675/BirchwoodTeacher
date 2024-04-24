@@ -10,7 +10,7 @@ interface VIconProps {
   onPress?: () => void;
 }
 
-const VIcon = ({
+export const VIcon = ({
   type = '',
   name,
   color,
@@ -29,5 +29,3 @@ const VIcon = ({
     />
   );
 };
-
-export { VIcon };

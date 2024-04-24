@@ -11,7 +11,7 @@ interface AppModalProps {
   onClose: () => void;
 }
 
-const AppModal = ({
+export const AppModal = ({
   isModalVisible,
   children,
   _styleContent,
@@ -91,5 +91,3 @@ const styles = StyleSheet.create({
   //   fontSize: 16,
   // },
 });
-
-export { AppModal };

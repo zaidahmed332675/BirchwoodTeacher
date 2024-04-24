@@ -11,7 +11,7 @@ interface NewActivityPopupProps {
   onSubmit: (activityName: string) => void;
 }
 
-const NewActivityPopup = ({
+export const NewActivityPopup = ({
   isVisible,
   onClose,
   onSubmit,
@@ -57,5 +57,3 @@ const styles = StyleSheet.create({
     height: vh * 6,
   },
 });
-
-export { NewActivityPopup };

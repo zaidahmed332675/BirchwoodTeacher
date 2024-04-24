@@ -4,7 +4,7 @@ import { icons } from '../../Assets/icons';
 import { GlroyBold } from '../GlroyBoldText';
 import { colors } from '../../theme/colors';
 
-const SocialMediaIcons = () => {
+export const SocialMediaIcons = () => {
   return (
     <>
       <GlroyBold text={'Sign In With'} _style={styles.text} />
@@ -34,8 +34,6 @@ const SocialMediaIcons = () => {
     </>
   );
 };
-
-export { SocialMediaIcons };
 
 const styles = StyleSheet.create({
   icons_container: {

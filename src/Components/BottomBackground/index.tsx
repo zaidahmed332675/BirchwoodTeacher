@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, View } from 'react-native';
 import bg_bottom_logo from '../../Assets/images/bottom-logo.png';
 import { vh } from '../../Utils/units';
 
-const BottomBackground = () => {
+export const BottomBackground = () => {
   return (
     <View style={styles.bottomView}>
       <ImageBackground
@@ -13,8 +13,6 @@ const BottomBackground = () => {
     </View>
   );
 };
-
-export { BottomBackground };
 
 const styles = StyleSheet.create({
   bottomView: {

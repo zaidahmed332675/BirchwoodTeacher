@@ -6,7 +6,7 @@ interface MainLogoProps {
   _style?: object;
 }
 
-const MainLogo = ({ _style }: MainLogoProps) => {
+export const MainLogo = ({ _style }: MainLogoProps) => {
   return (
     <Image
       source={main_logo}
@@ -15,8 +15,6 @@ const MainLogo = ({ _style }: MainLogoProps) => {
     />
   );
 };
-
-export { MainLogo };
 
 const styles = StyleSheet.create({
   img: {

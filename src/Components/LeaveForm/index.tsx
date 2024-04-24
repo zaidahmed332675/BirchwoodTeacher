@@ -7,7 +7,7 @@ import { GrayMediumText } from '../../Components/GrayMediumText';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 
-const LeaveForm = ({}) => {
+export const LeaveForm = ({}) => {
   const [leaveType, setLeaveType] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -83,5 +83,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export { LeaveForm };

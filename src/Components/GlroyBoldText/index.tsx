@@ -7,11 +7,9 @@ interface GlroyBoldTextProps {
   _style?: object;
 }
 
-const GlroyBold = ({ text, _style }: GlroyBoldTextProps) => {
+export const GlroyBold = ({ text, _style }: GlroyBoldTextProps) => {
   return <Text style={{ ...styles.text, ..._style }}>{text}</Text>;
 };
-
-export { GlroyBold };
 
 const styles = StyleSheet.create({
   text: {

@@ -4,7 +4,7 @@ import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { VIcon } from '../VIcon';
 
-const Reaction = () => {
+export const Reaction = () => {
   return (
     <View style={styles.reaction}>
       <GrayMediumText
@@ -69,5 +69,3 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
-export { Reaction };

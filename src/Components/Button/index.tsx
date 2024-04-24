@@ -14,7 +14,7 @@ interface AppButtonProps {
   onPress: () => void;
 }
 
-const AppButton = ({
+export const AppButton = ({
   title,
   prefix = false,
   suffix = null,
@@ -85,5 +85,3 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
-
-export { AppButton };

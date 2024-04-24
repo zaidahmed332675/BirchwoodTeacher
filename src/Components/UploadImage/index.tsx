@@ -27,7 +27,7 @@ interface UploadImageProps {
 
 const IMG_URL = '';
 
-const UploadImage = ({
+export const UploadImage = ({
   isEditable,
   style,
   image,
@@ -176,5 +176,3 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
-
-export { UploadImage };

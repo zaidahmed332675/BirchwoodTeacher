@@ -4,7 +4,7 @@ import { vh, vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 
-const AttendanceCard = ({ item }) => {
+export const AttendanceCard = ({ item }: any) => {
   if (item.isAttendance) {
     return (
       <View style={[styles.container, { borderColor: colors.theme.darkRed }]}>
@@ -56,8 +56,6 @@ const AttendanceCard = ({ item }) => {
     );
   }
 };
-
-export { AttendanceCard };
 
 const styles = StyleSheet.create({
   container: {

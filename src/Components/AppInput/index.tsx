@@ -23,7 +23,7 @@ interface AppInputProps {
   numberOfLines?: number;
 }
 
-const AppInput = ({
+export const AppInput = ({
   label,
   placeholder,
   placeholderSize,
@@ -76,8 +76,6 @@ const AppInput = ({
     </View>
   );
 };
-
-export { AppInput };
 
 const styles = StyleSheet.create({
   textInputField: {

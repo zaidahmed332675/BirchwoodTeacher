@@ -7,11 +7,9 @@ interface GrayMediumTextProps {
   _style?: object;
 }
 
-const GrayMediumText = ({ text, _style }: GrayMediumTextProps) => {
+export const GrayMediumText = ({ text, _style }: GrayMediumTextProps) => {
   return <Text style={{ ...styles.text, ..._style }}>{text}</Text>;
 };
-
-export { GrayMediumText };
 
 const styles = StyleSheet.create({
   text: {

@@ -1,5 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Image,
   KeyboardAvoidingView,
@@ -13,46 +14,121 @@ import {
 import chil_logo from '../../Assets/images/logo/child_logo.png';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { MainLogo } from '../../Components/MainLogo';
 import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
-import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
+import { asyncLogin } from '../../Stores/actions/user.action';
+import { useAppDispatch } from '../../Stores/hooks';
 import { colors } from '../../theme/colors';
+import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
+import { LoginUserPayload } from '../../Types/User';
 import { vh } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 
 const SignIn = ({ navigation }: Props) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleForgotPassword = () => {
     navigation.navigate(EAuthStack.emailVerification);
   };
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginUserPayload>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = useCallback(
+    async (body: LoginUserPayload) => {
+      console.log(body, 'body');
+      const res = await dispatch(asyncLogin(body)).unwrap();
+      if (res) {
+        navigation.navigate(EAuthStack.main);
+      }
+    },
+    [navigation, dispatch]
+  );
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={{ alignItems: 'center', marginTop: vh * 5 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}>
+        <View style={{ alignItems: 'center', marginVertical: vh * 5 }}>
           <MainLogo />
         </View>
         <View style={styles.formContainer}>
-          <AppInput
-            label="Email Address"
-            placeholder={'Enter your email here'}
-            value={email}
-            required
-            onChange={setEmail}
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Email is required',
+              },
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: 'Email format is Invalid',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Email Address"
+                placeholder={'Enter your email here'}
+                value={value}
+                required
+                onChange={onChange}
+              />
+            )}
           />
-          <AppInput
-            label="Password"
-            placeholder={'password'}
-            value={password}
-            required
-            isPassword
-            onChange={setPassword}
+
+          {errors.email?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.email.message}
+            />
+          )}
+
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Password is required',
+              },
+              minLength: {
+                value: 8,
+                message: 'Password must be minimum 8 characters',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Password"
+                placeholder={'password'}
+                value={value}
+                required
+                isPassword
+                onChange={onChange}
+              />
+            )}
           />
+
+          {errors.password?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.password.message}
+            />
+          )}
+
           <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -65,7 +141,7 @@ const SignIn = ({ navigation }: Props) => {
             btnStyle={{
               marginVertical: 10,
             }}
-            onPress={() => navigation.navigate(EAuthStack.main)}
+            onPress={handleSubmit(onSubmit)}
           />
         </View>
         <View style={{ alignItems: 'center', marginVertical: 10 }}>

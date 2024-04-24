@@ -4,7 +4,7 @@ import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 
-const HolidayCard = ({ item }) => {
+export const HolidayCard = ({ item }: any) => {
   return (
     <View style={styles.container}>
       <GrayMediumText
@@ -28,8 +28,6 @@ const HolidayCard = ({ item }) => {
     </View>
   );
 };
-
-export { HolidayCard };
 
 const styles = StyleSheet.create({
   container: {

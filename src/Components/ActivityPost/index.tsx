@@ -7,7 +7,7 @@ import { Comment } from '../Comment';
 import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
 
-const ActivityPost = () => {
+export const ActivityPost = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -72,5 +72,3 @@ const styles = StyleSheet.create({
     borderColor: colors.theme.greyAlt,
   },
 });
-
-export { ActivityPost };

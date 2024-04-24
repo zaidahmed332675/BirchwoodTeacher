@@ -12,7 +12,7 @@ interface CustomSwitchProps {
   selectionColor: string;
 }
 
-const CustomSwitch = ({
+export const CustomSwitch = ({
   selectionMode,
   roundCorner,
   option1,
@@ -84,5 +84,3 @@ const CustomSwitch = ({
     </View>
   );
 };
-
-export { CustomSwitch };

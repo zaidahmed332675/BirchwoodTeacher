@@ -8,7 +8,7 @@ import { appShadow } from '../../theme/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import { ImageBox } from '../../Components/UploadImage';
 
-const Header = () => {
+export const Header = () => {
   const [profile] = useState({
     name: 'Zaid Ahmed',
     year: '2024 - 2025',
@@ -148,5 +148,3 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 38,
   },
 });
-
-export { Header };

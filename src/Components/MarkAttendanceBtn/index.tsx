@@ -65,7 +65,7 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
   );
 };
 
-const MarkAttendanceBtn = ({
+export const MarkAttendanceBtn = ({
   onPress,
   handleLeave,
 }: {
@@ -166,5 +166,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-
-export { MarkAttendanceBtn };

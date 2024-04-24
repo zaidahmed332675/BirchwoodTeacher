@@ -5,7 +5,7 @@ import { VIcon } from '../../Components/VIcon';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 
-const CustomHeader = ({
+export const CustomHeader = ({
   title,
   onPress,
   isActionEnbl = false,
@@ -85,5 +85,3 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
 });
-
-export { CustomHeader };

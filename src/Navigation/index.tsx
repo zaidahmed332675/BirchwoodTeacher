@@ -1,17 +1,23 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
-import AuthNavigator from './AuthNavigator';
 import { NavigationOptions } from '../Utils/options';
 import AppNavigator from './AppNavigator';
+import AuthNavigator from './AuthNavigator';
+import { useAppSelector } from '../Stores/hooks';
+import { selectAppLoader } from '../Stores/slices/common.slice';
+import { AppLoader } from '../Components/AppLoader';
 
 const Stack = createStackNavigator<RootStackParams>();
 
 const AppRouting = () => {
+  // const token = useAppSelector(state => state.user.token);
+  const loader = useAppSelector(selectAppLoader);
+
   return (
     <NavigationContainer>
-      {/* {loader && <Loader />} */}
+      {loader && <AppLoader />}
       <Stack.Navigator
         initialRouteName={ERootStack.auth}
         screenOptions={NavigationOptions}>

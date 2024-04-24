@@ -15,7 +15,7 @@ interface AppBottomSheetProps extends Partial<BottomSheetModalProps> {
   _handleStyle?: object;
 }
 
-const AppBottomSheet = forwardRef(
+export const AppBottomSheet = forwardRef(
   (
     {
       snapPoints = ['50%', '75%', '100%'],
@@ -66,5 +66,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 });
-
-export { AppBottomSheet };

@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-const FormContainer = ({ children }) => {
+export const FormContainer = ({ children }: any) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -24,5 +24,3 @@ const FormContainer = ({ children }) => {
     </TouchableWithoutFeedback>
   );
 };
-
-export { FormContainer };
