@@ -27,12 +27,7 @@ export const commonSlice = createSlice({
 export const { setError, setLoading, setSuccess } = commonSlice.actions;
 export default commonSlice.reducer;
 
-export const selectCommonState = createDraftSafeSelector(
-  [(state: RootState) => state.common],
-  commonState => commonState
-);
-
 export const selectAppLoader = createDraftSafeSelector(
-  [selectCommonState],
+  [(state: RootState) => state.common],
   state => state.loading
 );

@@ -35,12 +35,7 @@ export const { setUserState, setUser, resetUserState } = userSlice.actions;
 
 export default userSlice.reducer;
 
-export const selectUserState = createDraftSafeSelector(
-  [(state: RootState) => state.user],
-  state => state
-);
-
 export const selectUserProfile = createDraftSafeSelector(
-  [selectUserState],
+  [(state: RootState) => state.user],
   state => state.user
 );
