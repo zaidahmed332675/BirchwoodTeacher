@@ -184,7 +184,8 @@ export const asyncCheckInUser = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
-      dispatch(setUser(res.data));
+      // newAttendnace is liye warning de raha he keun ke callAPI me response type nahi set
+      dispatch(setUser({ newAttendance: res?.data?.newAttendance }));
       dispatch(asyncShowSuccess(res.message ?? 'Success'));
     }
     dispatch(setLoading(false));

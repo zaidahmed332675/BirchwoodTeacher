@@ -1,21 +1,28 @@
 export interface User {
   _id: string;
-  fullName: string;
+  teacherId: string;
   firstName: string;
   lastName: string;
-  gender: 'Male' | 'Female' | null;
-  phone: number | null;
   email: string;
+  phone: number | null;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
   image: string;
-  isAdmin: boolean;
-  isMember: boolean;
+  bio: string;
+  checkIn: boolean;
+  checkOut: boolean;
   status: string;
-  attendance: {
-    status: '';
+  education: any[];
+  employment: any[];
+  newAttendance: {
+    status: string;
   };
   tokens: string[];
   createdAt: string;
   updatedAt: string;
+  __v: number;
 }
 
 export interface LoginUserPayload {

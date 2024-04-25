@@ -7,12 +7,12 @@ import { User } from '../../types/User';
 import { RootState } from '../index';
 
 interface UserSliceState {
-  user: Partial<User>;
+  user: User;
   token: string | null;
 }
 
 const initialState: UserSliceState = {
-  user: {},
+  user: {} as User,
   token: null,
 };
 
@@ -20,12 +20,9 @@ export const userSlice = createSlice({
   name: 'User',
   initialState,
   reducers: {
-    setUserState: (
-      state,
-      { payload }: PayloadAction<Partial<UserSliceState>>
-    ) => ({ ...state, ...payload }),
-    setUser: (state, { payload }: PayloadAction<User>) => {
-      state.user = payload;
+    setUserState: (_, { payload }: PayloadAction<UserSliceState>) => payload,
+    setUser: (state, { payload }: PayloadAction<Partial<User>>) => {
+      state.user = { ...state.user, ...payload };
     },
     resetUserState: _ => ({ ...initialState }),
   },
@@ -34,6 +31,11 @@ export const userSlice = createSlice({
 export const { setUserState, setUser, resetUserState } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const selectUserToken = createDraftSafeSelector(
+  [(state: RootState) => state.user],
+  state => state.token
+);
 
 export const selectUserProfile = createDraftSafeSelector(
   [(state: RootState) => state.user],

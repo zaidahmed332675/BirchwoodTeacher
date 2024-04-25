@@ -23,7 +23,7 @@ import { selectUserProfile } from '../Stores/slices/user.slice';
 const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
-  const [isApplyingLeave, setIsApplyingLeave] = useState(true);
+  const [isApplyingLeave, setIsApplyingLeave] = useState(false);
   const profile = useAppSelector(selectUserProfile);
 
   const styles = StyleSheet.create({
@@ -36,13 +36,14 @@ const AppNavigator = () => {
     card: {
       flex: 1,
       borderRadius: 20,
-      paddingVertical: 30,
-      marginBottom: 30,
+      marginBottom: 10,
       ...appShadow(4),
     },
   });
 
-  if (!attendanceEnum.includes(profile.attendance?.status ?? '')) {
+  console.log(profile);
+
+  if (!attendanceEnum.includes(profile?.newAttendance?.status ?? '')) {
     return (
       <View style={styles.container}>
         <Header />
@@ -52,7 +53,7 @@ const AppNavigator = () => {
               <LeaveForm />
             </View>
           ) : (
-            <View style={styles.card}>
+            <View style={[styles.card, { justifyContent: 'center' }]}>
               <Attendance handleLeave={() => setIsApplyingLeave(true)} />
             </View>
           )}

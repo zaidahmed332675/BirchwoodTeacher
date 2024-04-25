@@ -48,7 +48,7 @@ const SignIn = ({ navigation }: Props) => {
     async (body: LoginUserPayload) => {
       console.log(body, 'body');
       const res = await dispatch(asyncLogin(body)).unwrap();
-      if (res) {
+      if (res.status) {
         navigation.navigate(EAuthStack.main);
       }
     },

@@ -1,44 +1,69 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useCallback } from 'react';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import DropDownPicker, {
+  DropDownPickerProps,
+  ItemType,
+  ValueType,
+} from 'react-native-dropdown-picker';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme/colors';
 
-export default function DropDown({
-  placeholder,
-  list,
-  onChange,
-  value,
-  noTitle,
-  searchable,
-  multiple,
-  disabled,
-  multipleText,
-  selected,
-  multiValue,
-  open,
-  setOpen,
-  zIndex,
-  dropDownMaxHeight,
+interface DropDownCustomProps {
+  items: ItemType<ValueType>[];
+  label: string;
+  badge?: boolean;
+  required?: boolean;
+  starColor?: string;
+  mainContainer_style: any;
+  placeholderStyle?: Record<string, any>;
+}
+
+export const DropDown = ({
+  // placeholder,
+  items,
+  // setValue,
+  // value,
+  // min,
+  // max,
+  // searchable,
+  multiple = false,
+  // disabled,
+  // multipleText,
+  // open,
+  // setOpen,
   mainContainer_style,
-  style,
-  labelStyle,
-  listMode,
-  arrowIconStyle,
-  translation,
+  // labelStyle,
+  listMode = 'DEFAULT',
   placeholderStyle,
-  placeholderClr,
-  setItems,
-  badge,
+  // setItems,
+  badge = false,
   label,
-  required,
+  required = false,
   starColor,
-}) {
-  const ArrowUpIconComponent = () => (
-    <Ionicon name="chevron-up" size={20} color={colors.text.altGrey} />
+  ...restProps
+}: DropDownPickerProps<ValueType> & DropDownCustomProps) => {
+  const ArrowUpIconComponent = useCallback(
+    (props: { style: StyleProp<ViewStyle> }) => (
+      <Ionicon
+        name="chevron-up"
+        size={20}
+        color={colors.text.altGrey}
+        {...props}
+      />
+    ),
+    []
   );
-  const ArrowDownIconComponent = () => (
-    <Ionicon name="chevron-down" size={20} color={colors.text.altGrey} />
+
+  const ArrowDownIconComponent = useCallback(
+    (props: { style: StyleProp<ViewStyle> }) => (
+      <Ionicon
+        name="chevron-down"
+        size={20}
+        color={colors.text.altGrey}
+        {...props}
+      />
+    ),
+    []
   );
 
   return (
@@ -48,28 +73,23 @@ export default function DropDown({
         {required && <Text style={{ color: starColor || 'red' }}>*</Text>}
       </Text>
       <DropDownPicker
-        items={list}
-        placeholder={placeholder}
+        {...restProps}
+        items={items}
+        // value={value}
+        // placeholder={placeholder}
         containerStyle={{ borderRadius: 10 }}
-        style={{ ...styles.mainContainer_style, ...mainContainer_style }}
-        value={value}
-        defaultValue={value}
-        min={0}
-        max={5}
-        multipleText={multipleText}
-        // maxHeight={100}
-        // dropDownMaxHeight={100}
-        open={open}
-        setOpen={setOpen}
-        setValue={onChange}
-        disabled={disabled}
-        searchable={searchable === true}
-        setItems={multiple ? setItems : null}
+        style={[styles.mainContainer_style, mainContainer_style]}
+        // multipleText={multipleText}
+        // open={open}
+        // setOpen={setOpen}
+        // setValue={setValue}
+        // disabled={disabled}
+        // searchable={searchable}
+        // setItems={multiple ? setItems : undefined}
         multiple={multiple}
-        selected={selected}
-        labelStyle={labelStyle ? labelStyle : null}
-        listMode={listMode ? listMode : 'DEFAULT'}
-        placeholderStyle={{ ...styles.placeholder, ...placeholderStyle }}
+        // labelStyle={labelStyle ? labelStyle : null}
+        listMode={listMode}
+        placeholderStyle={[styles.placeholder, placeholderStyle]}
         dropDownContainerStyle={{
           borderColor: colors.input.background,
         }}
@@ -85,7 +105,7 @@ export default function DropDown({
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   placeholder: {

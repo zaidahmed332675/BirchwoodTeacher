@@ -7,12 +7,18 @@ import student from '../../Assets/icons/student.png';
 import { appShadow } from '../../theme/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import { ImageBox } from '../../Components/UploadImage';
+import { useAppSelector } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { getImagePath } from '../../services/axios';
 
 export const Header = () => {
+  const user = useAppSelector(selectUserProfile);
+  const currentYear = new Date().getFullYear();
+
   const [profile] = useState({
-    name: 'Zaid Ahmed',
-    year: '2024 - 2025',
-    photo: '',
+    name: `${user.firstName} ${user.lastName}`,
+    year: `${currentYear} - ${currentYear + 1}`,
+    photo: `${user?.image ? getImagePath(user.image) : ''}`,
   });
 
   return (
@@ -45,7 +51,10 @@ export const Header = () => {
             </View>
           </View>
         </View>
-        <ImageBox image={{ uri: '' }} _imageStyle={styles.profilePhoto} />
+        <ImageBox
+          image={{ uri: profile.photo }}
+          _imageStyle={styles.profilePhoto}
+        />
       </View>
     </LinearGradient>
   );

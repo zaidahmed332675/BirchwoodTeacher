@@ -10,6 +10,7 @@ const designResolution = {
 };
 
 export const pS = create(designResolution);
+export const perfectSize = create(designResolution);
 
 export const dummyRecords = [
   {
@@ -263,3 +264,4 @@ export const capitalizeWords = (str: string = '') => {
 };
 
 export const attendanceEnum = ['PRESENT', 'ABSENT', 'LEAVE', 'HOLIDAY'];
+export const leaveTypeEnum = ['SICK', 'CASUAL', 'ANNUAL'];

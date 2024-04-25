@@ -8,12 +8,19 @@ import AuthNavigator from './AuthNavigator';
 import { useAppSelector } from '../Stores/hooks';
 import { selectAppLoader } from '../Stores/slices/common.slice';
 import { AppLoader } from '../Components/AppLoader';
+import {
+  selectUserProfile,
+  selectUserToken,
+} from '../Stores/slices/user.slice';
 
 const Stack = createStackNavigator<RootStackParams>();
 
 const AppRouting = () => {
-  // const token = useAppSelector(state => state.user.token);
+  const token = useAppSelector(selectUserToken);
+  const user = useAppSelector(selectUserProfile);
   const loader = useAppSelector(selectAppLoader);
+
+  // console.log('user:', user);
 
   return (
     <NavigationContainer>
@@ -21,11 +28,11 @@ const AppRouting = () => {
       <Stack.Navigator
         initialRouteName={ERootStack.main}
         screenOptions={NavigationOptions}>
-        {/* {!token ? ( */}
-        <Stack.Screen name={ERootStack.auth} component={AuthNavigator} />
-        {/* ) : ( */}
-        <Stack.Screen name={ERootStack.main} component={AppNavigator} />
-        {/* )} */}
+        {!token ? (
+          <Stack.Screen name={ERootStack.auth} component={AuthNavigator} />
+        ) : (
+          <Stack.Screen name={ERootStack.main} component={AppNavigator} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

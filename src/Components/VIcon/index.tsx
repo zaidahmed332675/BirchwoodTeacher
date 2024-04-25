@@ -2,9 +2,9 @@ import React from 'react';
 import { vectorIcons } from '../../Utils/vectorIcons';
 
 interface VIconProps {
-  type: string;
+  type?: string;
   name: string;
-  size: number;
+  size?: number;
   color?: string;
   style?: object;
   onPress?: () => void;
@@ -13,8 +13,8 @@ interface VIconProps {
 export const VIcon = ({
   type = '',
   name,
-  color,
-  size,
+  color = 'black',
+  size = 10,
   style,
   onPress,
 }: VIconProps) => {

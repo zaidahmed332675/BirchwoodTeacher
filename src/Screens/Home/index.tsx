@@ -18,6 +18,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 // import LinearGradient from 'react-native-linear-gradient';
 // import { ImageBox } from '../../Components/UploadImage';
 import { Header } from '../../Components/Header';
+import { AppButton } from '../../Components/Button';
+import { resetUserState } from '../../Stores/slices/user.slice';
+import { useAppDispatch } from '../../Stores/hooks';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -166,9 +169,12 @@ const HomeScreen = ({ navigation }: Props) => {
     );
   };
 
+  const dispatch = useAppDispatch();
+
   return (
     <View style={styles.container}>
       <Header />
+      <AppButton title="Reset" onPress={() => dispatch(resetUserState())} />
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}

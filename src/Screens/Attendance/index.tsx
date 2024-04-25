@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { AttendanceCard } from '../../Components/AttendanceCard';
 import { CustomHeader } from '../../Components/CustomHeader';
-import { AppDatePicker } from '../../Components/DatePicker/DatePicker';
+import { AppCalender } from '../../Components/AppCalender';
 import { HolidayCard } from '../../Components/HolidayCard';
 import { Layout } from '../../Components/Layout';
 import { CustomSwitch } from '../../Components/Switch';
@@ -10,7 +10,7 @@ import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 
 const Attendance = () => {
-  const [tabIndex, setTabIndex] = useState<number>(1);
+  const [tabIndex, setTabIndex] = useState(1);
 
   const attendanceData = [
     {
@@ -49,7 +49,7 @@ const Attendance = () => {
     setTabIndex(index);
   };
 
-  const renderItems = ({ item }) => {
+  const renderItems = ({ item }: any) => {
     if (tabIndex > 1) {
       return <HolidayCard item={item} />;
     } else {
@@ -76,7 +76,7 @@ const Attendance = () => {
         renderItem={renderItems}
         ListHeaderComponent={() => (
           <View>
-            <AppDatePicker />
+            <AppCalender />
             {tabIndex > 1 && (
               <GrayMediumText
                 text="List of Holidays"

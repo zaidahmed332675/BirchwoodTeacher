@@ -24,9 +24,12 @@ import {
   ERootStack,
   MainStackParams,
 } from '../../Types/NavigationTypes';
+import { leaveTypeEnum } from '../../Utils/options';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { LeavePayload } from '../../types/User';
+import { AppSelect } from '../AppSelect';
+import { AppDatePicker } from '../AppDatePicker';
 
 export const LeaveForm = ({}) => {
   const dispatch = useAppDispatch();
@@ -62,16 +65,17 @@ export const LeaveForm = ({}) => {
   } = useForm<LeavePayload>({
     defaultValues: {
       leaveType: '',
-      leaveReason: '',
       startDate: '',
       endDate: '',
+      leaveReason: '',
     },
   });
 
   const onSubmit = useCallback(
     async (body: LeavePayload) => {
+      console.log(body);
       const res = await dispatch(asyncUserLeave(body)).unwrap();
-      if (res) {
+      if (res.status) {
         navigation.navigate(EMainStack.home);
       }
     },
@@ -91,12 +95,6 @@ export const LeaveForm = ({}) => {
             _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
           />
         </View>
-        <GrayMediumText
-          text={
-            'Please enter a new password for your account below. Make sure it is strong and secure.'
-          }
-          _style={styles.para}
-        />
         <View>
           <Controller
             name="leaveType"
@@ -107,12 +105,14 @@ export const LeaveForm = ({}) => {
                 message: 'Leave Type is required',
               },
             }}
-            render={({ field: { onChange, value } }) => (
-              <AppInput
+            render={({ field: { onChange } }) => (
+              <AppSelect
+                data={Array.from(leaveTypeEnum, key => ({
+                  title: key.slice(0, 1) + key.slice(1).toLowerCase(),
+                  value: key,
+                }))}
                 label="Leave Type"
-                placeholder="Select Leave Type"
-                value={value}
-                onChange={onChange}
+                onSelect={item => onChange(item.value)}
               />
             )}
           />
@@ -130,15 +130,14 @@ export const LeaveForm = ({}) => {
             rules={{
               required: {
                 value: true,
-                message: 'Start Date is required',
+                message: 'Start date is required',
               },
             }}
             render={({ field: { onChange, value } }) => (
-              <AppInput
+              <AppDatePicker
                 label="Start Date"
-                placeholder="Select Start Date"
-                value={value}
                 onChange={onChange}
+                value={value}
               />
             )}
           />
@@ -160,11 +159,10 @@ export const LeaveForm = ({}) => {
               },
             }}
             render={({ field: { onChange, value } }) => (
-              <AppInput
+              <AppDatePicker
                 label="End Date"
-                placeholder="Select End Date"
-                value={value}
                 onChange={onChange}
+                value={value}
               />
             )}
           />
@@ -187,8 +185,9 @@ export const LeaveForm = ({}) => {
             }}
             render={({ field: { onChange, value } }) => (
               <AppInput
-                label="Reason"
+                label="Leave Reason"
                 placeholder="Enter Your Reason"
+                required
                 value={value}
                 onChange={onChange}
                 isMultiple={true}
@@ -223,13 +222,14 @@ export const LeaveForm = ({}) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
+    paddingVertical: 30,
   },
   para: {
     textAlign: 'center',
-    marginTop: 15,
     lineHeight: 22,
   },
   heading: {
+    marginVertical: 15,
     alignItems: 'center',
   },
 });

@@ -4,7 +4,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
-interface AppDatePickerProps {
+interface AppCalenderProps {
   style?: object;
 }
 
@@ -32,7 +32,7 @@ const NextIcon = () => (
   />
 );
 
-export const AppDatePicker = ({ style }: AppDatePickerProps) => {
+export const AppCalender = ({ style }: AppCalenderProps) => {
   const [selectedStartDate, setSelectedStartDate] = useState<string>('');
 
   const onDateChange = (date: any) => {

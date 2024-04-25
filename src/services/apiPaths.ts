@@ -14,7 +14,7 @@ export enum ProfileApiPaths {
   changePassword = 'profile/changePassword',
   checkIn = 'teacher/attendance/markCheckIn',
   checkOut = 'teacher/attendance/markCheckOut',
-  leave = 'teacher/attendance/leave',
+  leave = 'teacher/attendance/markLeave',
 }
 
 export const AllApiPaths = Object.freeze({

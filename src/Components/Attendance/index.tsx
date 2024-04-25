@@ -7,36 +7,42 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as Progress from 'react-native-progress';
 import { asyncCheckInUser } from '../../Stores/actions/user.action';
-import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
+import { useAppDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { resetUserState } from '../../Stores/slices/user.slice';
 
 interface FormatTextProps {
   seconds: number;
-  onPress: (body: { checkIn: string }) => Promise<void>;
+  onPress: (event: GestureResponderEvent) => void;
 }
 
 const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
-  const formatTime = (timeInSeconds: number) => {
-    const hours = Math.floor(timeInSeconds / 60 / 60);
-    const minutes = Math.floor((timeInSeconds / 60) % 60);
-    seconds = Math.floor(timeInSeconds % 60);
+  // const formatTime = (timeInSeconds: number) => {
+  //   const hours = Math.floor(timeInSeconds / 60 / 60);
+  //   const minutes = Math.floor((timeInSeconds / 60) % 60);
+  //   seconds = Math.floor(timeInSeconds % 60);
 
-    return `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+  //   return `${hours.toString().padStart(2, '0')}:${minutes
+  //     .toString()
+  //     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  // };
 
   return (
     <TouchableOpacity
+      activeOpacity={0.7}
       onPress={onPress}
       style={{
         backgroundColor: colors.theme.secondary,
@@ -53,26 +59,16 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
           textAlign: 'center',
           color: colors.theme.white,
         }}
-        text={formatTime(seconds)}
+        text="Check-In"
       />
-      {seconds ? (
-        <GrayMediumText
-          _style={{
-            fontSize: vw * 4,
-            textAlign: 'center',
-            color: colors.theme.white,
-            fontWeight: 'normal',
-          }}
-          text="To record your check-in"
-        />
-      ) : null}
+
       <GlroyBold
         _style={{
-          fontSize: vw * 4,
+          fontSize: vw * 5,
           textAlign: 'center',
           color: colors.theme.white,
         }}
-        text={!seconds ? 'Continue To App\nPress Here' : 'Press Here'}
+        text="Press Here"
       />
     </TouchableOpacity>
   );
@@ -80,8 +76,8 @@ const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
 
 export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
   const totalSeconds = useRef(0);
-  const checkInTime = useMemo(() => addHours(startOfToday(), 13), []);
-  const [progress, setProgress] = useState(0);
+  const checkInTime = useMemo(() => addHours(startOfToday(), 8), []);
+  const [progress] = useState(100);
   const [seconds, setSeconds] = useState(0);
 
   const dispatch = useAppDispatch();
@@ -91,7 +87,6 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
     const currentTime = new Date();
     if (isAfter(currentTime, checkInTime)) {
       setSeconds(0);
-      setProgress(0);
     } else if (isBefore(currentTime, checkInTime)) {
       const remainingSeconds = Math.floor(
         (checkInTime.getTime() - currentTime.getTime()) / 1000
@@ -114,9 +109,9 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
     }
   }, [checkInTime]);
 
-  useEffect(() => {
-    setProgress((seconds / totalSeconds.current) * 100);
-  }, [seconds]);
+  // useEffect(() => {
+  //   setProgress((seconds / totalSeconds.current) * 100);
+  // }, [seconds]);
 
   const onSubmit = useCallback(async () => {
     const date = new Date();
@@ -124,13 +119,14 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
     const res = await dispatch(
       asyncCheckInUser({ checkIn: checkInDateTime })
     ).unwrap();
-    if (res) {
+    if (res.status) {
       navigation.navigate(EMainStack.home);
     }
   }, [navigation, dispatch]);
 
   return (
     <View style={styles.container}>
+      <AppButton title="Reset" onPress={() => dispatch(resetUserState())} />
       <AppButton
         title="Apply for leave"
         btnStyle={{
@@ -151,7 +147,7 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
         }}
         text={
           !seconds
-            ? 'You missed the check-in\nPlease ensure to check in on time'
+            ? 'Please ensure to check in on time'
             : "Please record today's check-in"
         }
       />
@@ -163,7 +159,7 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
           fontWeight: 'normal',
         }}
         text={
-          'Reminder: If you have not yet checked in, please do so before \n9 AM to avoid being marked absent'
+          'Reminder: If you have not yet checked in, please do so to avoid being marked absent'
         }
       />
       <View
@@ -187,7 +183,7 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
         size={vw * 80}
         thickness={25}
         showsText={true}
-        color={seconds ? colors.theme.primary : colors.theme.secondary}
+        color={colors.theme.primary}
         unfilledColor={colors.theme.secondary}
         borderWidth={0}
         progress={(progress || 1) / 100}
@@ -203,5 +199,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
+    // paddingVertical: 30,
   },
 });
