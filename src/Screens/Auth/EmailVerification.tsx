@@ -34,7 +34,7 @@ export default function EmailVerification({ navigation }: Props) {
     async (body: EmailVerificationPayload) => {
       const res = await dispatch(asyncEmailVerification(body)).unwrap();
 
-      if (res?.encodedEmail) {
+      if (res?.data?.encodedEmail) {
         navigation.navigate(EAuthStack.verificaionCode, {
           email: body.email,
         });
@@ -52,65 +52,57 @@ export default function EmailVerification({ navigation }: Props) {
       />
       <AnimatedBackgroundImage additionalImage={forgot_child} />
       <View style={[styles.bottomContainer, { flex: 1 }]}>
-        <View>
-          <View style={styles.heading}>
-            <GlroyBold
-              text={'Forgot Password ?'}
-              _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
-            />
-          </View>
-          <GrayMediumText
-            text={
-              'Please enter the email address associated with your account below. We will send you a verification code to reset your password.'
-            }
-            _style={styles.para}
+        <View style={styles.heading}>
+          <GlroyBold
+            text={'Forgot Password ?'}
+            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
           />
-          <View>
-            <Controller
-              name="email"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Email is required',
-                },
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: 'Email format is Invalid',
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <AppInput
-                  label="Enter your Email"
-                  placeholder={'Email'}
-                  value={value}
-                  required
-                  onChange={onChange}
-                />
-              )}
-            />
-
-            {errors.email?.message && (
-              <GrayMediumText
-                _style={{ color: colors.theme.lightRed }}
-                text={errors.email.message}
+        </View>
+        <GrayMediumText
+          text={
+            'Please enter the email address associated with your account below. We will send you a verification code to reset your password.'
+          }
+          _style={styles.para}
+        />
+        <View style={{ width: '100%' }}>
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Email is required',
+              },
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: 'Email format is Invalid',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Enter Address"
+                placeholder="Email your email"
+                value={value}
+                required
+                onChange={onChange}
               />
             )}
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <AppButton
-              title={'Submit'}
-              btnStyle={{
-                marginVertical: 10,
-              }}
-              onPress={handleSubmit(onSubmit)}
-              // onPress={() => {
-              //   navigation.navigate(EAuthStack.verificaionCode, {
-              //     email: '',
-              //   });
-              // }}
+          />
+          {errors.email?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.email.message}
             />
-          </View>
+          )}
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <AppButton
+            title={'Submit'}
+            btnStyle={{
+              marginVertical: 10,
+            }}
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </View>
     </View>
@@ -124,8 +116,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 20,
   },
   para: {
     textAlign: 'center',

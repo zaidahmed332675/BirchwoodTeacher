@@ -41,7 +41,7 @@ const AppNavigator = () => {
     },
   });
 
-  console.log(profile);
+  console.log(profile, 'checko');
 
   if (!attendanceEnum.includes(profile?.newAttendance?.status ?? '')) {
     return (

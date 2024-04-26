@@ -4,7 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  phone: number | null;
+  phone: string;
   address: string;
   city: string;
   state: string;
@@ -65,6 +65,27 @@ export interface ChangePasswordPayload {
   old_password: string;
   new_password: string;
   confirmPassword: string;
+}
+
+export interface UserCheckIn {
+  newAttendance: any;
+}
+
+export interface UserCheckInPayload {
+  checkIn: string;
+}
+
+export interface UserCheckInResponse {
+  [index: string]: any;
+}
+
+export interface UserAttendance {
+  [index: string]: any;
+}
+
+export interface UserAttendanceResponse {
+  [index: string]: any;
+  attendance: UserAttendance[];
 }
 
 export interface LeavePayload {

@@ -22,24 +22,12 @@ import { colors } from '../../theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
-import { resetUserState } from '../../Stores/slices/user.slice';
 
 interface FormatTextProps {
-  seconds: number;
   onPress: (event: GestureResponderEvent) => void;
 }
 
-const FormatedText = ({ seconds, onPress }: FormatTextProps) => {
-  // const formatTime = (timeInSeconds: number) => {
-  //   const hours = Math.floor(timeInSeconds / 60 / 60);
-  //   const minutes = Math.floor((timeInSeconds / 60) % 60);
-  //   seconds = Math.floor(timeInSeconds % 60);
-
-  //   return `${hours.toString().padStart(2, '0')}:${minutes
-  //     .toString()
-  //     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  // };
-
+const FormatedText = ({ onPress }: FormatTextProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -109,13 +97,9 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
     }
   }, [checkInTime]);
 
-  // useEffect(() => {
-  //   setProgress((seconds / totalSeconds.current) * 100);
-  // }, [seconds]);
-
   const onSubmit = useCallback(async () => {
     const date = new Date();
-    const checkInDateTime = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    const checkInDateTime = date.toISOString();
     const res = await dispatch(
       asyncCheckInUser({ checkIn: checkInDateTime })
     ).unwrap();
@@ -186,7 +170,7 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
         unfilledColor={colors.theme.secondary}
         borderWidth={0}
         progress={(progress || 1) / 100}
-        formatText={() => FormatedText({ seconds, onPress: onSubmit })}
+        formatText={() => FormatedText({ onPress: onSubmit })}
         strokeCap="round"
       />
     </View>

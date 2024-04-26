@@ -1,16 +1,50 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { AppCalender } from '../../Components/AppCalender';
 import { AttendanceCard } from '../../Components/AttendanceCard';
 import { CustomHeader } from '../../Components/CustomHeader';
-import { AppCalender } from '../../Components/AppCalender';
+import { DataLoader } from '../../Components/DataLoader';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { HolidayCard } from '../../Components/HolidayCard';
 import { Layout } from '../../Components/Layout';
 import { CustomSwitch } from '../../Components/Switch';
+import { asyncUserMonthlyAttendance } from '../../Stores/actions/user.action';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useLoaderDispatch,
+} from '../../Stores/hooks';
+import { selectUserAttendance } from '../../Stores/slices/user.slice';
 import { colors } from '../../theme/colors';
-import { GrayMediumText } from '../../Components/GrayMediumText';
+import { getMonth, getYear } from 'date-fns';
+import { setLoading } from '../../Stores/slices/common.slice';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(1);
+  const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
+  const [loading, getUserMonthlyAttendnace] = useLoaderDispatch(
+    asyncUserMonthlyAttendance
+  );
+  const userAttendance = useAppSelector(selectUserAttendance);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+  }, [dispatch]);
+
+  const loadData = useCallback(async () => {
+    let res = await getUserMonthlyAttendnace({
+      month: getMonth(calenderMonthYear),
+      year: getYear(calenderMonthYear),
+    });
+    if (res.status) {
+      dispatch(setLoading(false));
+    }
+  }, [calenderMonthYear, getUserMonthlyAttendnace, dispatch]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const attendanceData = [
     {
@@ -57,6 +91,16 @@ const Attendance = () => {
     }
   };
 
+  const ItemSeperator = useCallback(() => <View style={{ margin: 10 }} />, []);
+
+  const handleMonthChange = (date: Date) => {
+    setCalenderMonthYear(date);
+  };
+
+  if (loading) {
+    return <DataLoader />;
+  }
+
   return (
     <Layout
       customHeader={<CustomHeader title="Attendance" />}
@@ -71,26 +115,28 @@ const Attendance = () => {
           selectionColor={colors.theme.primary}
         />
       </View>
+      <View>
+        <AppCalender
+          calenderMonthYear={calenderMonthYear}
+          attendance={userAttendance}
+          handleMonthChange={handleMonthChange}
+        />
+        {tabIndex > 1 && (
+          <GrayMediumText
+            text="List of Holidays"
+            _style={{
+              color: colors.theme.black,
+              fontSize: 16,
+              margin: 15,
+            }}
+          />
+        )}
+      </View>
       <FlatList
         data={tabIndex > 1 ? holidaysData : attendanceData}
         renderItem={renderItems}
-        ListHeaderComponent={() => (
-          <View>
-            <AppCalender />
-            {tabIndex > 1 && (
-              <GrayMediumText
-                text="List of Holidays"
-                _style={{
-                  color: colors.theme.black,
-                  fontSize: 16,
-                  margin: 15,
-                }}
-              />
-            )}
-          </View>
-        )}
         keyExtractor={item => item.id}
-        ItemSeparatorComponent={() => <View style={{ margin: 10 }} />}
+        ItemSeparatorComponent={ItemSeperator}
       />
     </Layout>
   );

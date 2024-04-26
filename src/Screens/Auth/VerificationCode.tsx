@@ -45,8 +45,8 @@ export default function VerificationCode({ navigation, route }: Props) {
 
       if (res.status) {
         navigation.navigate(EAuthStack.resetPassword, {
-          email: '',
-          code: '',
+          email: body.email,
+          code: body.code,
         });
       }
     },
@@ -57,58 +57,57 @@ export default function VerificationCode({ navigation, route }: Props) {
     <View style={styles.container}>
       <AnimatedBackgroundImage additionalImage={verification_child} />
       <View style={[styles.bottomContainer, { flex: 1 }]}>
-        <View>
-          <View style={styles.heading}>
-            <GlroyBold
-              text={'Verification Code ?'}
-              _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
-            />
-          </View>
-          <GrayMediumText
-            text={'Please enter the verification code sent to your email.'}
-            _style={styles.para}
+        <View style={styles.heading}>
+          <GlroyBold
+            text={'Verification Code ?'}
+            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
           />
-          <View>
-            <Controller
-              name="code"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Otp is required',
-                },
-                minLength: {
-                  value: 4,
-                  message: 'Otp is incomplete',
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <AppInput
-                  label="Enter your verification code"
-                  placeholder={'Code'}
-                  value={value}
-                  required
-                  onChange={onChange}
-                />
-              )}
-            />
-
-            {errors.code?.message && (
-              <GrayMediumText
-                _style={{ color: colors.theme.lightRed }}
-                text={errors.code.message}
+        </View>
+        <GrayMediumText
+          text={'Please enter the verification code sent to your email.'}
+          _style={styles.para}
+        />
+        <View style={{ width: '100%' }}>
+          <Controller
+            name="code"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Otp is required',
+              },
+              minLength: {
+                value: 4,
+                message: 'Otp is incomplete',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Enter your verification code"
+                placeholder={'Code'}
+                value={value}
+                required
+                onChange={onChange}
+                keyboardType="number-pad"
               />
             )}
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <AppButton
-              title={'Verify'}
-              btnStyle={{
-                marginVertical: 10,
-              }}
-              onPress={handleSubmit(onSubmit)}
+          />
+
+          {errors.code?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.code.message}
             />
-          </View>
+          )}
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <AppButton
+            title={'Verify'}
+            btnStyle={{
+              marginVertical: 10,
+            }}
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </View>
     </View>
@@ -122,8 +121,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 20,
   },
   para: {
     textAlign: 'center',

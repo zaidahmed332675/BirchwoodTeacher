@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  KeyboardTypeOptions,
 } from 'react-native';
 import { colors } from '../../theme/colors';
 import { vh } from '../../Utils/units';
@@ -21,6 +22,7 @@ interface AppInputProps {
   onChange: (value: string) => void;
   inputStyle?: object;
   numberOfLines?: number;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 export const AppInput = ({
@@ -34,6 +36,7 @@ export const AppInput = ({
   onChange,
   inputStyle,
   numberOfLines = 1,
+  keyboardType = 'default',
 }: AppInputProps) => {
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
@@ -44,6 +47,7 @@ export const AppInput = ({
       </Text>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
+          keyboardType={keyboardType}
           multiline={isMultiple}
           numberOfLines={numberOfLines}
           placeholder={placeholder}

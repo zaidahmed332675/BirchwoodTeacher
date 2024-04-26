@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import { compareAsc, format } from 'date-fns';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
+import { UserAttendance } from '../../types/User';
 import { VIcon } from '../VIcon';
 
 interface AppCalenderProps {
+  attendance: UserAttendance[];
+  calenderMonthYear: Date;
+  handleMonthChange: (date: Date) => void;
   style?: object;
 }
 
@@ -32,27 +37,31 @@ const NextIcon = () => (
   />
 );
 
-export const AppCalender = ({ style }: AppCalenderProps) => {
-  const [selectedStartDate, setSelectedStartDate] = useState<string>('');
-
-  const onDateChange = (date: any) => {
-    setSelectedStartDate(date);
-  };
-
-  const startDate: string = selectedStartDate
-    ? selectedStartDate?.toString()
-    : '';
-
-  console.log(startDate);
+export const AppCalender = ({
+  attendance = [],
+  calenderMonthYear,
+  handleMonthChange,
+  style,
+}: AppCalenderProps) => {
+  const datesWithCheckIns = attendance?.reduce((acc, curr) => {
+    let formatedDate = format(new Date(curr.checkIn), 'yyyy-MM-dd');
+    return {
+      ...acc,
+      [formatedDate]: {
+        checkInDate: formatedDate,
+        checkIn: curr.teacher.checkIn,
+      },
+    };
+  }, []);
 
   return (
     <View style={[styles.container, style]}>
       <CalendarPicker
-        initialDate={new Date()}
+        onMonthChange={handleMonthChange}
+        initialDate={calenderMonthYear}
         startFromMonday={true}
         showDayStragglers={true}
         dayShape="circle"
-        onDateChange={onDateChange}
         monthTitleStyle={{ fontWeight: 'bold' }}
         yearTitleStyle={{ fontWeight: 'bold' }}
         previousComponent={<PrevIcon />}
@@ -68,16 +77,30 @@ export const AppCalender = ({ style }: AppCalenderProps) => {
           return { textStyle: styles.daysLabelStyle };
         }}
         customDatesStyles={date => {
+          let calenderDate = format(date, 'yyyy-MM-dd');
+          let calenderDateUserEntry = datesWithCheckIns[calenderDate];
+
+          const isDateMatched =
+            !isNaN(
+              compareAsc(calenderDate, calenderDateUserEntry?.checkInDate)
+            ) || undefined;
+
+          console.log(
+            calenderDateUserEntry?.checkIn,
+            isDateMatched,
+            'isMatched'
+          );
+
           if (date.getDay() === 0) {
             return {
               style: styles.weekEndDaysStyle,
             };
-          } else if (date.getDate() === 1) {
+          } else if (isDateMatched && calenderDateUserEntry?.checkIn) {
             return {
               style: styles.presentDaysStyle,
               textStyle: styles.textStyle,
             };
-          } else if (date.getDate() === 2) {
+          } else if (isDateMatched && !calenderDateUserEntry?.checkIn) {
             return {
               style: styles.absentDaysStyle,
               textStyle: styles.textStyle,

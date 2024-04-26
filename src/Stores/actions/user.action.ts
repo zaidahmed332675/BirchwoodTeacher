@@ -1,18 +1,26 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { callApi } from '../../services/api';
-import { allApiPaths } from '../../services/apiPaths';
+import { allApiPaths, ApiPaths } from '../../services/apiPaths';
 import {
+  ChangePasswordPayload,
+  EmailVerificationPayload,
   EmailVerificationResponse,
+  LoginUserPayload,
   LoginUserResponse,
+  OtpVerificationPayload,
   OtpVerificationResponse,
   User,
-  EmailVerificationPayload,
-  LoginUserPayload,
-  OtpVerificationPayload,
-  ChangePasswordPayload,
+  UserAttendanceResponse,
+  UserCheckInPayload,
+  UserCheckInResponse,
 } from '../../types/User';
 import { setLoading } from '../slices/common.slice';
-import { resetUserState, setUser, setUserState } from '../slices/user.slice';
+import {
+  resetUserState,
+  setUser,
+  setUserAttendance,
+  setUserState,
+} from '../slices/user.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncLogin = createAsyncThunk(
@@ -30,7 +38,13 @@ export const asyncLogin = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
-      dispatch(setUserState({ user: res.data?.user, token: res.data?.token }));
+      dispatch(
+        setUserState({
+          user: res?.data?.user!,
+          token: res?.data?.token!,
+          attendance: [],
+        })
+      );
     }
     dispatch(setLoading(false));
 
@@ -53,7 +67,7 @@ export const asyncEmailVerification = createAsyncThunk(
       axiosSecure: false,
     });
 
-    if (!res?.encodedEmail) {
+    if (!res?.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
       dispatch(asyncShowSuccess(res.message ?? 'Success'));
@@ -147,35 +161,35 @@ export const asyncGetUserProfile = createAsyncThunk(
   }
 );
 
-export const asyncUpdateProfile = createAsyncThunk(
-  'updateProfile',
-  async (data: any, { dispatch }) => {
-    dispatch(setLoading(true));
+// export const asyncUpdateProfile = createAsyncThunk(
+//   'updateProfile',
+//   async (data: any, { dispatch }) => {
+//     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
-      method: 'POST',
-      path: allApiPaths.getPath('updateProfile'),
-      isFormData: true,
-      body: data,
-    });
+//     const res = await callApi<{}, User>({
+//       method: 'POST',
+//       path: allApiPaths.getPath('updateProfile'),
+//       isFormData: true,
+//       body: data,
+//     });
 
-    if (!res?.status) {
-      dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
-    } else {
-      dispatch(setUser(res.data));
-      dispatch(asyncShowSuccess(res.message ?? 'Success'));
-    }
-    dispatch(setLoading(false));
-    return res;
-  }
-);
+//     if (!res?.status) {
+//       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+//     } else {
+//       dispatch(setUser(res.data));
+//       dispatch(asyncShowSuccess(res.message ?? 'Success'));
+//     }
+//     dispatch(setLoading(false));
+//     return res;
+//   }
+// );
 
 export const asyncCheckInUser = createAsyncThunk(
   'checkIn',
   async (data: any, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
+    const res = await callApi<UserCheckInResponse, UserCheckInPayload>({
       method: 'POST',
       path: allApiPaths.getPath('checkIn'),
       body: data,
@@ -184,7 +198,6 @@ export const asyncCheckInUser = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
-      // newAttendnace is liye warning de raha he keun ke callAPI me response type nahi set
       dispatch(setUser({ newAttendance: res?.data?.newAttendance }));
       dispatch(asyncShowSuccess(res.message ?? 'Success'));
     }
@@ -193,46 +206,67 @@ export const asyncCheckInUser = createAsyncThunk(
   }
 );
 
-export const asyncCheckOutUser = createAsyncThunk(
-  'checkOut',
-  async (data: any, { dispatch }) => {
-    dispatch(setLoading(true));
+// export const asyncCheckOutUser = createAsyncThunk(
+//   'checkOut',
+//   async (data: any, { dispatch }) => {
+//     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
-      method: 'POST',
-      path: allApiPaths.getPath('checkOut'),
-      body: data,
+//     const res = await callApi<{}, User>({
+//       method: 'POST',
+//       path: allApiPaths.getPath('checkOut'),
+//       body: data,
+//     });
+
+//     if (!res?.status) {
+//       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+//     } else {
+//       dispatch(setUser(res.data));
+//       dispatch(asyncShowSuccess(res.message ?? 'Success'));
+//     }
+//     dispatch(setLoading(false));
+//     return res;
+//   }
+// );
+
+// export const asyncUserLeave = createAsyncThunk(
+//   'userLeave',
+//   async (data: any, { dispatch }) => {
+//     dispatch(setLoading(true));
+
+//     const res = await callApi<{}, User>({
+//       method: 'POST',
+//       path: allApiPaths.getPath('leave'),
+//       body: data,
+//     });
+
+//     if (!res?.status) {
+//       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+//     } else {
+//       dispatch(setUser(res.data));
+//       dispatch(asyncShowSuccess(res.message ?? 'Success'));
+//     }
+//     dispatch(setLoading(false));
+//     return res;
+//   }
+// );
+
+export const asyncUserMonthlyAttendance = createAsyncThunk(
+  'monthlyAttendance',
+  async ({ month, year }: any, { dispatch }) => {
+    // dispatch(setLoading(true));
+
+    const res = await callApi<UserAttendanceResponse>({
+      path: (allApiPaths.getPath('monthlyAttendance') +
+        `?month=${month}&year=${year}`) as ApiPaths,
     });
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
-      dispatch(setUser(res.data));
-      dispatch(asyncShowSuccess(res.message ?? 'Success'));
+      dispatch(setUserAttendance(res?.data?.attendance!));
+      // dispatch(asyncShowSuccess(res.message ?? 'Success'));
     }
-    dispatch(setLoading(false));
-    return res;
-  }
-);
-
-export const asyncUserLeave = createAsyncThunk(
-  'checkOut',
-  async (data: any, { dispatch }) => {
-    dispatch(setLoading(true));
-
-    const res = await callApi<{}, User>({
-      method: 'POST',
-      path: allApiPaths.getPath('leave'),
-      body: data,
-    });
-
-    if (!res?.status) {
-      dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
-    } else {
-      dispatch(setUser(res.data));
-      dispatch(asyncShowSuccess(res.message ?? 'Success'));
-    }
-    dispatch(setLoading(false));
+    // dispatch(setLoading(false));
     return res;
   }
 );

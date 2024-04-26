@@ -15,6 +15,7 @@ export enum ProfileApiPaths {
   checkIn = 'teacher/attendance/markCheckIn',
   checkOut = 'teacher/attendance/markCheckOut',
   leave = 'teacher/attendance/markLeave',
+  monthlyAttendance = 'teacher/attendance/getAttendanceByMonth',
 }
 
 export const AllApiPaths = Object.freeze({

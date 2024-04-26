@@ -64,97 +64,95 @@ export default function ResetPassword({ navigation, route }: Props) {
     <View style={styles.container}>
       <AnimatedBackgroundImage additionalImage={reset_pass_child} />
       <View style={[styles.bottomContainer, { flex: 1.3 }]}>
-        <View>
-          <View style={styles.heading}>
-            <GlroyBold
-              text={'Reset Password ?'}
-              _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
-            />
-          </View>
-          <GrayMediumText
-            text={
-              'Please enter a new password for your account below. Make sure it is strong and secure.'
-            }
-            _style={styles.para}
+        <View style={styles.heading}>
+          <GlroyBold
+            text={'Reset Password ?'}
+            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
           />
-          <View>
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Password is required',
-                },
-                minLength: {
-                  value: 8,
-                  message: 'Password must be minimum 8 characters',
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <AppInput
-                  label="Password"
-                  placeholder={'Password'}
-                  value={value}
-                  required
-                  onChange={onChange}
-                  isPassword
-                />
-              )}
-            />
-
-            {errors.password?.message && (
-              <GrayMediumText
-                _style={{ color: colors.theme.lightRed }}
-                text={errors.password.message}
+        </View>
+        <GrayMediumText
+          text={
+            'Please enter a new password for your account below. Make sure it is strong and secure.'
+          }
+          _style={styles.para}
+        />
+        <View style={{ width: '100%' }}>
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Password is required',
+              },
+              minLength: {
+                value: 8,
+                message: 'Password must be minimum 8 characters',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Password"
+                placeholder={'Enter password'}
+                value={value}
+                required
+                onChange={onChange}
+                isPassword
               />
             )}
+          />
 
-            <Controller
-              name="confirmPassword"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Confirm Password is required',
-                },
-                validate: {
-                  matchesPreviousPassword: value => {
-                    const { password } = getValues();
-                    return (
-                      (value && password === value) || 'Passwords do not match'
-                    );
-                  },
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <AppInput
-                  label="Confirm New Password"
-                  placeholder={'Confirm new password'}
-                  value={value}
-                  required
-                  onChange={onChange}
-                  isPassword
-                />
-              )}
+          {errors.password?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.password.message}
             />
+          )}
 
-            {errors.confirmPassword?.message && (
-              <GrayMediumText
-                _style={{ color: colors.theme.lightRed }}
-                text={errors.confirmPassword.message}
+          <Controller
+            name="confirmPassword"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Confirm Password is required',
+              },
+              validate: {
+                matchesPreviousPassword: value => {
+                  const { password } = getValues();
+                  return (
+                    (value && password === value) || 'Passwords do not match'
+                  );
+                },
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Confirm New Password"
+                placeholder={'Enter password to confirm'}
+                value={value}
+                required
+                onChange={onChange}
+                isPassword
               />
             )}
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <AppButton
-              title={'Reset'}
-              btnStyle={{
-                marginVertical: 10,
-              }}
-              onPress={handleSubmit(onSubmit)}
+          />
+
+          {errors.confirmPassword?.message && (
+            <GrayMediumText
+              _style={{ color: colors.theme.lightRed }}
+              text={errors.confirmPassword.message}
             />
-          </View>
+          )}
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <AppButton
+            title={'Reset'}
+            btnStyle={{
+              marginVertical: 10,
+            }}
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </View>
     </View>
@@ -168,8 +166,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 20,
   },
   para: {
     textAlign: 'center',
