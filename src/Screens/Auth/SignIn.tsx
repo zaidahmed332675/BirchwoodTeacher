@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -59,6 +60,11 @@ const SignIn = ({ navigation }: Props) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}>
@@ -82,7 +88,7 @@ const SignIn = ({ navigation }: Props) => {
             render={({ field: { onChange, value } }) => (
               <AppInput
                 label="Email Address"
-                placeholder={'Enter your email here'}
+                placeholder={'Enter your email'}
                 value={value}
                 required
                 onChange={onChange}
@@ -113,7 +119,7 @@ const SignIn = ({ navigation }: Props) => {
             render={({ field: { onChange, value } }) => (
               <AppInput
                 label="Password"
-                placeholder={'password'}
+                placeholder={'Enter your password'}
                 value={value}
                 required
                 isPassword

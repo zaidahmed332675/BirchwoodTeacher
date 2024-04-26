@@ -4,6 +4,7 @@ import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
 export const AppLoader = () => {
   return (
     <Modal
+      statusBarTranslucent={true}
       transparent={true}
       animationType="slide"
       visible={true}

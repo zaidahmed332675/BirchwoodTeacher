@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { vh, vw } from '../../Utils/units';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { colors } from '../../theme/colors';
@@ -15,12 +15,9 @@ import { icons } from '../../Assets/icons';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-// import LinearGradient from 'react-native-linear-gradient';
-// import { ImageBox } from '../../Components/UploadImage';
 import { Header } from '../../Components/Header';
-import { AppButton } from '../../Components/Button';
-import { resetUserState } from '../../Stores/slices/user.slice';
-import { useAppDispatch } from '../../Stores/hooks';
+import { asyncSignOut } from '../../Stores/actions/user.action';
+import { store } from '../../Stores';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -68,7 +65,7 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 7, title: 'Logout', icon: featureIcons.logout, route: '' },
+    { id: 7, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // { id: 5, title: 'Time Table', icon: featureIcons.time_table, route: '' },
     // { id: 6, title: 'Events', icon: featureIcons.events, route: '' },
     // { id: 7, title: 'Ask Doubts', icon: featureIcons.ask_doubts, route: '' },
@@ -92,7 +89,14 @@ const HomeScreen = ({ navigation }: Props) => {
     // },
   ];
 
+  const handleUserLogOut = useCallback(async () => {
+    await store.dispatch(asyncSignOut()).unwrap();
+  }, []);
+
   const handleNavigate = (route: keyof MainStackParams) => {
+    if (route === EMainStack.logOut) {
+      return handleUserLogOut();
+    }
     navigation.navigate(route);
   };
 
@@ -169,12 +173,9 @@ const HomeScreen = ({ navigation }: Props) => {
     );
   };
 
-  const dispatch = useAppDispatch();
-
   return (
     <View style={styles.container}>
       <Header />
-      <AppButton title="Reset" onPress={() => dispatch(resetUserState())} />
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}

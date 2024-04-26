@@ -45,7 +45,11 @@ export default function EmailVerification({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <AnimatedBackgroundImage additionalImage={forgot_child} />
       <View style={[styles.bottomContainer, { flex: 1 }]}>
         <View>

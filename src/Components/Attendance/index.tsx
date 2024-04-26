@@ -126,7 +126,6 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
 
   return (
     <View style={styles.container}>
-      <AppButton title="Reset" onPress={() => dispatch(resetUserState())} />
       <AppButton
         title="Apply for leave"
         btnStyle={{

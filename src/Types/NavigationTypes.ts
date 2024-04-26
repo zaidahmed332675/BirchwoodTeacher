@@ -39,6 +39,7 @@ export enum EMainStack {
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
   changePassword = 'changePassword',
+  logOut = 'logOut',
 }
 
 export type MainStackParams = {
@@ -51,6 +52,7 @@ export type MainStackParams = {
   chatRoutes: undefined;
   attendanceRoutes: undefined;
   changePassword: undefined;
+  logOut: undefined;
 };
 
 export enum EProfileStack {

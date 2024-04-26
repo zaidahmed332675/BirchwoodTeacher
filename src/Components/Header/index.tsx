@@ -26,7 +26,11 @@ export const Header = () => {
       colors={[colors.theme.primary, colors.theme.secondary]}
       locations={[0, 1]}
       style={styles.header}>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <View style={styles.profile_container}>
         <View>
           <GlroyBold text={`Hi ${profile.name}`} _style={styles.profile_text} />
