@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: vh * 3,
     alignItems: 'center',
-    marginTop: vh * 12,
   },
   noItemText: {
     color: colors.theme.primary,

@@ -10,6 +10,7 @@ import {
   OtpVerificationPayload,
   OtpVerificationResponse,
   User,
+  UserAttendance,
   UserAttendanceResponse,
   UserCheckInPayload,
   UserCheckInResponse,
@@ -42,7 +43,7 @@ export const asyncLogin = createAsyncThunk(
         setUserState({
           user: res?.data?.user!,
           token: res?.data?.token!,
-          attendance: [],
+          attendance: {} as UserAttendance,
         })
       );
     }
@@ -228,32 +229,32 @@ export const asyncCheckInUser = createAsyncThunk(
 //   }
 // );
 
-// export const asyncUserLeave = createAsyncThunk(
-//   'userLeave',
-//   async (data: any, { dispatch }) => {
-//     dispatch(setLoading(true));
+export const asyncUserLeave = createAsyncThunk(
+  'userLeave',
+  async (data: any, { dispatch }) => {
+    dispatch(setLoading(true));
 
-//     const res = await callApi<{}, User>({
-//       method: 'POST',
-//       path: allApiPaths.getPath('leave'),
-//       body: data,
-//     });
+    const res = await callApi<{}, User>({
+      method: 'POST',
+      path: allApiPaths.getPath('leave'),
+      body: data,
+    });
 
-//     if (!res?.status) {
-//       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
-//     } else {
-//       dispatch(setUser(res.data));
-//       dispatch(asyncShowSuccess(res.message ?? 'Success'));
-//     }
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );
+    if (!res?.status) {
+      dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+    } else {
+      dispatch(setUser({ newAttendance: { status: 'LEAVE' } }));
+      dispatch(asyncShowSuccess(res.message ?? 'Success'));
+    }
+    dispatch(setLoading(false));
+    return res;
+  }
+);
 
 export const asyncUserMonthlyAttendance = createAsyncThunk(
   'monthlyAttendance',
   async ({ month, year }: any, { dispatch }) => {
-    // dispatch(setLoading(true));
+    dispatch(setLoading(true));
 
     const res = await callApi<UserAttendanceResponse>({
       path: (allApiPaths.getPath('monthlyAttendance') +
@@ -263,10 +264,9 @@ export const asyncUserMonthlyAttendance = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
     } else {
-      dispatch(setUserAttendance(res?.data?.attendance!));
-      // dispatch(asyncShowSuccess(res.message ?? 'Success'));
+      dispatch(setUserAttendance(res.data ?? ({} as UserAttendanceResponse)));
     }
-    // dispatch(setLoading(false));
+    dispatch(setLoading(false));
     return res;
   }
 );

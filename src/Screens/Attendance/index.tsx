@@ -16,13 +16,14 @@ import {
 } from '../../Stores/hooks';
 import { selectUserAttendance } from '../../Stores/slices/user.slice';
 import { colors } from '../../theme/colors';
-import { getMonth, getYear } from 'date-fns';
+import { format, getMonth, getYear } from 'date-fns';
 import { setLoading } from '../../Stores/slices/common.slice';
+import { attendanceEnum } from '../../Utils/options';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(1);
   const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
-  const [loading, getUserMonthlyAttendnace] = useLoaderDispatch(
+  const [_, getUserMonthlyAttendnace] = useLoaderDispatch(
     asyncUserMonthlyAttendance
   );
   const userAttendance = useAppSelector(selectUserAttendance);
@@ -46,21 +47,6 @@ const Attendance = () => {
     loadData();
   }, [loadData]);
 
-  const attendanceData = [
-    {
-      id: 1,
-      title: 'Absent',
-      data: '03',
-      isAttendance: true,
-    },
-    {
-      id: 2,
-      title: 'Festival & Holiday',
-      data: '05',
-      isFestival: true,
-    },
-  ];
-
   const holidaysData = [
     {
       id: 1,
@@ -83,23 +69,35 @@ const Attendance = () => {
     setTabIndex(index);
   };
 
-  const renderItems = ({ item }: any) => {
-    if (tabIndex > 1) {
-      return <HolidayCard item={item} />;
-    } else {
-      return <AttendanceCard item={item} />;
-    }
-  };
+  // const renderItems = ({ item }: any) => {
+  //   if (tabIndex > 1) {
+  //     return <HolidayCard item={item} />;
+  //   } else {
+  //     return <AttendanceCard item={item} />;
+  //   }
+  // };
 
-  const ItemSeperator = useCallback(() => <View style={{ margin: 10 }} />, []);
+  // const ItemSeperator = useCallback(() => <View style={{ margin: 10 }} />, []);
 
   const handleMonthChange = (date: Date) => {
     setCalenderMonthYear(date);
   };
 
-  if (loading) {
-    return <DataLoader />;
-  }
+  // if (true) {
+  //   return <DataLoader />;
+  // }
+
+  const attendanceData = userAttendance?.attendance?.reduce((acc, curr) => {
+    let formatedDate = format(new Date(curr.checkIn), 'yyyy-MM-dd');
+    return {
+      ...acc,
+      [formatedDate]: {
+        checkInDate: formatedDate,
+        checkIn: curr.teacher.checkIn,
+        status: curr.status,
+      },
+    };
+  }, []);
 
   return (
     <Layout
@@ -116,11 +114,19 @@ const Attendance = () => {
         />
       </View>
       <View>
-        <AppCalender
-          calenderMonthYear={calenderMonthYear}
-          attendance={userAttendance}
-          handleMonthChange={handleMonthChange}
-        />
+        {tabIndex > 1 ? (
+          <AppCalender
+            data={attendanceData}
+            calenderMonthYear={calenderMonthYear}
+            handleMonthChange={handleMonthChange}
+          />
+        ) : (
+          <AppCalender
+            data={attendanceData}
+            calenderMonthYear={calenderMonthYear}
+            handleMonthChange={handleMonthChange}
+          />
+        )}
         {tabIndex > 1 && (
           <GrayMediumText
             text="List of Holidays"
@@ -132,12 +138,28 @@ const Attendance = () => {
           />
         )}
       </View>
-      <FlatList
-        data={tabIndex > 1 ? holidaysData : attendanceData}
-        renderItem={renderItems}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={ItemSeperator}
-      />
+
+      {tabIndex > 1 ? (
+        <HolidayCard item={holidaysData[0]} />
+      ) : (
+        <View style={{ marginTop: 30, rowGap: 10 }}>
+          <AttendanceCard
+            type={attendanceEnum.PRESENT}
+            title="Present"
+            count={userAttendance.stats.PRESENT}
+          />
+          <AttendanceCard
+            type={attendanceEnum.ABSENT}
+            title="Absent"
+            count={userAttendance.stats.ABSENT}
+          />
+          <AttendanceCard
+            type={attendanceEnum.LEAVE}
+            title="Leave"
+            count={userAttendance.stats.LEAVE}
+          />
+        </View>
+      )}
     </Layout>
   );
 };

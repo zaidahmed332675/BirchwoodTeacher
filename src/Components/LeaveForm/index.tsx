@@ -19,11 +19,7 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { asyncUserLeave } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
-import {
-  EMainStack,
-  ERootStack,
-  MainStackParams,
-} from '../../Types/NavigationTypes';
+import { ERootStack, MainStackParams } from '../../Types/NavigationTypes';
 import { leaveTypeEnum } from '../../Utils/options';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
@@ -64,22 +60,18 @@ export const LeaveForm = ({}) => {
     formState: { errors },
   } = useForm<LeavePayload>({
     defaultValues: {
+      leaveFrom: '',
+      leaveTo: '',
       leaveType: '',
-      startDate: '',
-      endDate: '',
       leaveReason: '',
     },
   });
 
   const onSubmit = useCallback(
     async (body: LeavePayload) => {
-      console.log(body);
-      const res = await dispatch(asyncUserLeave(body)).unwrap();
-      if (res.status) {
-        navigation.navigate(EMainStack.home);
-      }
+      await dispatch(asyncUserLeave(body)).unwrap();
     },
-    [navigation, dispatch]
+    [dispatch]
   );
 
   return (
@@ -107,7 +99,7 @@ export const LeaveForm = ({}) => {
             }}
             render={({ field: { onChange } }) => (
               <AppSelect
-                data={Array.from(leaveTypeEnum, key => ({
+                data={Array.from(Object.keys(leaveTypeEnum ?? {}), key => ({
                   title: key.slice(0, 1) + key.slice(1).toLowerCase(),
                   value: key,
                 }))}
@@ -125,24 +117,24 @@ export const LeaveForm = ({}) => {
           )}
 
           <Controller
-            name="startDate"
+            name="leaveFrom"
             control={control}
             rules={{
               required: {
                 value: true,
-                message: 'Start date is required',
+                message: 'From is required',
               },
             }}
             render={({ field: { onChange, value } }) => (
               <AppDatePicker
-                label="Start Date"
+                label="Leave From"
                 onChange={onChange}
                 value={value}
               />
             )}
           />
 
-          {errors.startDate?.message && (
+          {errors.leaveFrom?.message && (
             <GrayMediumText
               _style={{ color: colors.theme.lightRed }}
               text={errors.startDate.message}
@@ -150,24 +142,24 @@ export const LeaveForm = ({}) => {
           )}
 
           <Controller
-            name="endDate"
+            name="leaveTo"
             control={control}
             rules={{
               required: {
                 value: true,
-                message: 'End date is required',
+                message: 'To is required',
               },
             }}
             render={({ field: { onChange, value } }) => (
               <AppDatePicker
-                label="End Date"
+                label="Leave To"
                 onChange={onChange}
                 value={value}
               />
             )}
           />
 
-          {errors.endDate?.message && (
+          {errors.leaveTo?.message && (
             <GrayMediumText
               _style={{ color: colors.theme.lightRed }}
               text={errors.endDate.message}

@@ -3,11 +3,10 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
-import { UserAttendance } from '../../types/User';
 import { VIcon } from '../VIcon';
 
 interface AppCalenderProps {
-  attendance: UserAttendance[];
+  data: Record<string, any>;
   calenderMonthYear: Date;
   handleMonthChange: (date: Date) => void;
   style?: object;
@@ -38,22 +37,11 @@ const NextIcon = () => (
 );
 
 export const AppCalender = ({
-  attendance = [],
+  data,
   calenderMonthYear,
   handleMonthChange,
   style,
 }: AppCalenderProps) => {
-  const datesWithCheckIns = attendance?.reduce((acc, curr) => {
-    let formatedDate = format(new Date(curr.checkIn), 'yyyy-MM-dd');
-    return {
-      ...acc,
-      [formatedDate]: {
-        checkInDate: formatedDate,
-        checkIn: curr.teacher.checkIn,
-      },
-    };
-  }, []);
-
   return (
     <View style={[styles.container, style]}>
       <CalendarPicker
@@ -78,18 +66,12 @@ export const AppCalender = ({
         }}
         customDatesStyles={date => {
           let calenderDate = format(date, 'yyyy-MM-dd');
-          let calenderDateUserEntry = datesWithCheckIns[calenderDate];
+          let calenderDateUserEntry = data[calenderDate];
 
           const isDateMatched =
             !isNaN(
               compareAsc(calenderDate, calenderDateUserEntry?.checkInDate)
             ) || undefined;
-
-          console.log(
-            calenderDateUserEntry?.checkIn,
-            isDateMatched,
-            'isMatched'
-          );
 
           if (date.getDay() === 0) {
             return {

@@ -9,7 +9,7 @@ import { useAppSelector } from '../Stores/hooks';
 import { selectAppLoader } from '../Stores/slices/common.slice';
 import { AppLoader } from '../Components/AppLoader';
 import {
-  selectUserProfile,
+  // selectUserProfile,
   selectUserToken,
 } from '../Stores/slices/user.slice';
 
@@ -17,7 +17,7 @@ const Stack = createStackNavigator<RootStackParams>();
 
 const AppRouting = () => {
   const token = useAppSelector(selectUserToken);
-  const user = useAppSelector(selectUserProfile);
+  // const user = useAppSelector(selectUserProfile);
   const loader = useAppSelector(selectAppLoader);
 
   // console.log('user:', user);

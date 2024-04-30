@@ -263,5 +263,18 @@ export const capitalizeWords = (str: string = '') => {
     .join(' ');
 };
 
-export const attendanceEnum = ['PRESENT', 'ABSENT', 'LEAVE', 'HOLIDAY'];
-export const leaveTypeEnum = ['SICK', 'CASUAL', 'ANNUAL'];
+export const attendanceEnum = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LEAVE: 'LEAVE',
+  HOLIDAY: 'HOLIDAY',
+} as {
+  readonly [key: string]: string;
+};
+export const leaveTypeEnum = {
+  SICK: 'SICK',
+  CASUAL: 'CASUAL',
+  ANNUAL: 'ANNUAL',
+} as {
+  readonly [key: string]: string;
+};

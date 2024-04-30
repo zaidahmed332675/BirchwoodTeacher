@@ -81,16 +81,22 @@ export interface UserCheckInResponse {
 
 export interface UserAttendance {
   [index: string]: any;
+  attendance: Record<string, any>[];
+  stats: {
+    PRESENT: number;
+    ABSENT: number;
+    LEAVE: number;
+    HOLIDAY: number;
+  };
 }
 
-export interface UserAttendanceResponse {
+export interface UserAttendanceResponse extends UserAttendance {
   [index: string]: any;
-  attendance: UserAttendance[];
 }
 
 export interface LeavePayload {
   leaveType: string;
   leaveReason: string;
-  startDate: string;
-  endDate: string;
+  leaveFrom: string;
+  leaveTo: string;
 }

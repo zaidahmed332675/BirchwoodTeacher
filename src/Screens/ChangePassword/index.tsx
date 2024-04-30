@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
@@ -10,12 +10,50 @@ import { MainStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { useAppDispatch } from '../../Stores/hooks';
+import { ChangePasswordPayload } from '../../types/User';
+import { Controller, useForm } from 'react-hook-form';
+import {
+  asyncChangePassword,
+  asyncSignOut,
+} from '../../Stores/actions/user.action';
+import { CommonActions } from '@react-navigation/native';
+import { store } from '../../Stores';
 
 type Props = StackScreenProps<MainStackParams, 'changePassword'>;
 
-function ChangePassword({}: Props) {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+function ChangePassword({ navigation }: Props) {
+  const dispatch = useAppDispatch();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm<ChangePasswordPayload>({
+    defaultValues: {
+      old_password: '',
+      new_password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = useCallback(
+    async (body: ChangePasswordPayload) => {
+      const res = await dispatch(asyncChangePassword(body)).unwrap();
+
+      if (res.status) {
+        await store.dispatch(asyncSignOut()).unwrap();
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'auth' }],
+          })
+        );
+      }
+    },
+    [navigation, dispatch]
+  );
 
   return (
     <Layout customHeader={<CustomHeader title="Change Password" />}>
@@ -32,30 +70,101 @@ function ChangePassword({}: Props) {
         _style={styles.para}
       />
       <View>
-        <AppInput
-          label="Current Password"
-          placeholder="Enter Current Password"
-          value={password}
-          required
-          onChange={setPassword}
-          isPassword
+        <Controller
+          name="old_password"
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Current password is required',
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <AppInput
+              label="Current Password"
+              placeholder="Enter current password"
+              value={value}
+              required
+              onChange={onChange}
+              isPassword
+            />
+          )}
         />
-        <AppInput
-          label="New Password"
-          placeholder="Enter New Password"
-          value={password}
-          required
-          onChange={setPassword}
-          isPassword
+
+        {errors.old_password?.message && (
+          <GrayMediumText
+            text={errors.old_password.message}
+            _style={{ color: colors.theme.lightRed }}
+          />
+        )}
+
+        <Controller
+          name="new_password"
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'New password is required',
+            },
+            minLength: {
+              value: 8,
+              message: 'Password must be minimum 8 characters',
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <AppInput
+              label="New password"
+              placeholder="Enter new password"
+              value={value}
+              required
+              onChange={onChange}
+              isPassword
+            />
+          )}
         />
-        <AppInput
-          label="Confirm Password"
-          placeholder="Confirm New Password"
-          value={confirmPassword}
-          required
-          onChange={setConfirmPassword}
-          isPassword
+
+        {errors.new_password?.message && (
+          <GrayMediumText
+            text={errors.new_password.message}
+            _style={{ color: colors.theme.lightRed }}
+          />
+        )}
+
+        <Controller
+          name="confirmPassword"
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Confirm Password is required',
+            },
+            validate: {
+              matchesPreviousPassword: value => {
+                const { new_password } = getValues();
+                return (
+                  (value && new_password === value) || 'Passwords do not match'
+                );
+              },
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <AppInput
+              label="Confirm Password"
+              placeholder="Confirm New Password"
+              value={value}
+              required
+              onChange={onChange}
+              isPassword
+            />
+          )}
         />
+
+        {errors.confirmPassword?.message && (
+          <GrayMediumText
+            text={errors.confirmPassword.message}
+            _style={{ color: colors.theme.lightRed }}
+          />
+        )}
       </View>
       <View style={{ alignItems: 'center' }}>
         <AppButton
@@ -63,7 +172,7 @@ function ChangePassword({}: Props) {
           btnStyle={{
             marginVertical: 10,
           }}
-          onPress={() => {}}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
     </Layout>

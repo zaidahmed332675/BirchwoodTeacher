@@ -41,9 +41,7 @@ const AppNavigator = () => {
     },
   });
 
-  console.log(profile, 'checko');
-
-  if (!attendanceEnum.includes(profile?.newAttendance?.status ?? '')) {
+  if (!attendanceEnum[profile?.newAttendance?.status]) {
     return (
       <View style={styles.container}>
         <Header />

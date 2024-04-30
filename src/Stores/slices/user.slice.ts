@@ -8,13 +8,13 @@ import { RootState } from '../index';
 
 interface UserSliceState {
   user: User;
-  attendance: UserAttendance[];
+  attendance: UserAttendance;
   token: string | null;
 }
 
 const initialState: UserSliceState = {
   user: {} as User,
-  attendance: [],
+  attendance: {} as UserAttendance,
   token: null,
 };
 
@@ -29,13 +29,10 @@ export const userSlice = createSlice({
     ) => {
       state.user = { ...state.user, ...payload };
     },
-    setUserAttendance: (
-      state,
-      { payload }: PayloadAction<UserAttendance[]>
-    ) => {
+    setUserAttendance: (state, { payload }: PayloadAction<UserAttendance>) => {
       state.attendance = payload;
     },
-    resetUserState: _ => ({ ...initialState }),
+    resetUserState: _ => initialState,
   },
 });
 

@@ -3,58 +3,41 @@ import { StyleSheet, Text, View } from 'react-native';
 import { vh, vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
+import { attendanceEnum } from '../../Utils/options';
 
-export const AttendanceCard = ({ item }: any) => {
-  if (item.isAttendance) {
-    return (
-      <View style={[styles.container, { borderColor: colors.theme.darkRed }]}>
-        <View
-          style={[styles.leftBorder, { backgroundColor: colors.theme.darkRed }]}
-        />
-        <View style={styles.content}>
-          <GrayMediumText
-            text="Absent"
-            _style={{ color: colors.theme.black }}
-          />
-          <View
-            style={[
-              styles.dataContainer,
-              { backgroundColor: colors.theme.lightRed },
-            ]}>
-            <Text style={[styles.dataTitle, { color: colors.theme.darkRed }]}>
-              {item.data}
-            </Text>
-          </View>
+type AttendanceCardProps = {
+  title: string;
+  type: string;
+  count: number;
+};
+
+export const AttendanceCard = ({ title, type, count }: AttendanceCardProps) => {
+  let [dark, light] =
+    type === attendanceEnum.PRESENT
+      ? [colors.theme.darkGreen, colors.theme.lightGreen]
+      : type === attendanceEnum.ABSENT
+      ? [colors.theme.darkRed, colors.theme.lightRed]
+      : [colors.theme.secondary, colors.theme.lightSecondary];
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: dark,
+        },
+      ]}>
+      <View style={[styles.leftBorder, { backgroundColor: dark }]} />
+      <View style={styles.content}>
+        <GrayMediumText text={title} _style={{ color: colors.theme.black }} />
+        <View style={[styles.dataContainer, { backgroundColor: light }]}>
+          <Text style={[styles.dataTitle, { color: dark }]}>
+            {String(count).padStart(2, '0')}
+          </Text>
         </View>
       </View>
-    );
-  } else if (item.isFestival) {
-    return (
-      <View style={[styles.container, { borderColor: colors.theme.darkGreen }]}>
-        <View
-          style={[
-            styles.leftBorder,
-            { backgroundColor: colors.theme.darkGreen },
-          ]}
-        />
-        <View style={styles.content}>
-          <GrayMediumText
-            text="Festival & Holidays"
-            _style={{ color: colors.theme.black }}
-          />
-          <View
-            style={[
-              styles.dataContainer,
-              { backgroundColor: colors.theme.lightGreen },
-            ]}>
-            <Text style={[styles.dataTitle, { color: colors.theme.darkGreen }]}>
-              {item.data}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -89,5 +72,8 @@ const styles = StyleSheet.create({
   dataTitle: {
     fontSize: 12,
     fontWeight: 'bold',
+    // minWidth: 10,
+    // minHeight: 10,
+    borderRadius: 100,
   },
 });
