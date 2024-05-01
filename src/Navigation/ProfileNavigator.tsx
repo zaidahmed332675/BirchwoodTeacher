@@ -27,16 +27,6 @@ const ProfileNavigator = () => {
         name={EProfileStack.editExperience}
         component={EditExperience}
       />
-      {/* <Stack.Screen name={routes.screens.profileForm} component={ProfileForm} /> */}
-      {/* <Stack.Screen
-        name={EAuthStack.emailVerification}
-        component={EmailVerification}
-      />*/}
-      {/* <Stack.Screen
-        name={EAuthStack.verificaionCode}
-        component={VerificationCode}
-      /> */}
-      {/* <Stack.Screen name={EAuthStack.resetPassword} component={ResetPassword} /> */}
     </Stack.Navigator>
   );
 };

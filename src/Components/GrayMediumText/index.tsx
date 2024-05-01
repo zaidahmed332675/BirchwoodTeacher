@@ -3,7 +3,7 @@ import { StyleSheet, Text } from 'react-native';
 import { colors } from '../../theme/colors';
 
 interface GrayMediumTextProps {
-  text: string;
+  text: any;
   _style?: object;
 }
 

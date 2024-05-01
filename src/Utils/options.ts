@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { create } from 'react-native-pixel-perfect';
 
 export const NavigationOptions = () => {
@@ -259,7 +260,7 @@ export const capitalizeWords = (str: string = '') => {
   }
   return str
     .split(' ')
-    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word: string) => _.capitalize(word))
     .join(' ');
 };
 
@@ -268,13 +269,27 @@ export const attendanceEnum = {
   ABSENT: 'ABSENT',
   LEAVE: 'LEAVE',
   HOLIDAY: 'HOLIDAY',
-} as {
-  readonly [key: string]: string;
+} as const as {
+  readonly [index: string]: string;
 };
+
 export const leaveTypeEnum = {
   SICK: 'SICK',
   CASUAL: 'CASUAL',
   ANNUAL: 'ANNUAL',
-} as {
-  readonly [key: string]: string;
+} as const as {
+  readonly [index: string]: string;
+};
+
+export const isArrayOfObjectsEqual = (
+  x: Record<string, any>[],
+  y: Record<string, any>[],
+  comparator: string[]
+) => {
+  const pickProps = (obj: Record<string, any>, props: string[]) =>
+    _.pick(obj, props);
+  const xProps = x.map(obj => pickProps(obj, comparator));
+  // our new object already in proper shape with required props
+  // const yProps = y.map(obj => pickProps(obj, keys));
+  return _.isEqual(xProps, y);
 };

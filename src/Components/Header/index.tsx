@@ -9,7 +9,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ImageBox } from '../../Components/UploadImage';
 import { useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { getImagePath } from '../../services/axios';
 
 export const Header = () => {
   const user = useAppSelector(selectUserProfile);
@@ -18,7 +17,7 @@ export const Header = () => {
   const [profile] = useState({
     name: `${user.firstName} ${user.lastName}`,
     year: `${currentYear} - ${currentYear + 1}`,
-    photo: `${user?.image ? getImagePath(user.image) : ''}`,
+    photo: `${user?.image ? user.image : ''}`,
   });
 
   return (

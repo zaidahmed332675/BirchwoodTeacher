@@ -1,39 +1,43 @@
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   Image,
+  ImageProps,
   StyleSheet,
   TouchableOpacity,
   View,
-  Alert,
-  ActivityIndicator,
-  ImageProps,
 } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import { VIcon } from '../VIcon';
 import profile from '../../Assets/images/avatar.jpg';
+import { getImagePath } from '../../services/axios';
 import { colors } from '../../theme/colors';
 import {
   insertImageFromCamera,
   insertImageFromGallery,
 } from '../../Utils/cameraOptions';
+import { VIcon } from '../VIcon';
 
 interface UploadImageProps {
   isEditable?: boolean;
   image: Asset;
+  _imageStyle?: Record<string, any>;
+  _indicatorStyle?: Record<string, any>;
   originalImage: string | undefined;
   handleImage?: (param: Asset & { status?: boolean; message?: string }) => void;
   style?: object;
 }
 
-const IMG_URL = '';
-
 export const UploadImage = ({
   isEditable,
   style,
   image,
+  _imageStyle = {},
+  _indicatorStyle = {},
   originalImage,
   handleImage,
 }: UploadImageProps) => {
+  console.log(originalImage, 'casdasdas');
   const selectOptionIMG = () => {
     Alert.alert(
       'Select Image',
@@ -65,19 +69,22 @@ export const UploadImage = ({
     <View style={[style]}>
       <View
         style={{
-          borderWidth: 3,
           borderRadius: 100,
-          backgroundColor: colors.theme.secondary,
-          borderColor: colors.theme.secondary,
         }}>
-        <ImageBox image={image} />
+        <ImageBox
+          image={image}
+          _imageStyle={_imageStyle}
+          _indicatorStyle={_indicatorStyle}
+        />
         {isEditable &&
           (image?.fileName ? (
             <TouchableOpacity
               style={styles.editBtn}
               onPress={() =>
                 handleImage?.({
-                  uri: originalImage ? IMG_URL + originalImage : originalImage,
+                  uri: originalImage
+                    ? getImagePath(originalImage)
+                    : originalImage,
                 })
               }>
               <VIcon
@@ -126,7 +133,7 @@ export const ImageBox = ({
         }}
         source={
           image?.uri
-            ? { uri: image?.fileName ? image?.uri : IMG_URL + image?.uri }
+            ? { uri: image?.fileName ? image?.uri : getImagePath(image?.uri) }
             : imagePlaceholder || profile
         }
         alt="User Profile Image"

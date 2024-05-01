@@ -185,6 +185,50 @@ export const asyncGetUserProfile = createAsyncThunk(
 //   }
 // );
 
+export const asyncUpdateEducation = createAsyncThunk(
+  'updateEducation',
+  async (data: any, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<{}, User>({
+      method: 'POST',
+      path: allApiPaths.getPath('updateEducation'),
+      body: data,
+    });
+
+    if (!res?.status) {
+      dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+    } else {
+      dispatch(setUser({ education: res.data }));
+      dispatch(asyncShowSuccess(res.message ?? 'Success'));
+    }
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncUpdateExperience = createAsyncThunk(
+  'updateExperience',
+  async (data: any, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<{}, User>({
+      method: 'POST',
+      path: allApiPaths.getPath('updateExperience'),
+      body: data,
+    });
+
+    if (!res?.status) {
+      dispatch(asyncShowError(res.message ?? 'Something Went Wrong!'));
+    } else {
+      dispatch(setUser({ employment: res.data }));
+      dispatch(asyncShowSuccess(res.message ?? 'Success'));
+    }
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
 export const asyncCheckInUser = createAsyncThunk(
   'checkIn',
   async (data: any, { dispatch }) => {

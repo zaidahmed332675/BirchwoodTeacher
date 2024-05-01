@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AppInput } from '../../Components/AppInput';
@@ -10,67 +10,81 @@ import { VIcon } from '../../Components/VIcon';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { isArrayOfObjectsEqual } from '../../Utils/options';
+import { asyncShowError } from '../../Stores/actions/common.action';
+import { asyncUpdateExperience } from '../../Stores/actions/user.action';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { AppDatePicker } from '../../Components/AppDatePicker';
+import { GrayMediumText } from '../../Components/GrayMediumText';
+import _ from 'lodash';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
 
 export default function EditExperience({}: Props) {
-  const [fields, setFields] = useState<
-    {
-      institute: string;
-      startingDate: string;
-      endingDate: string;
-      subjectStudy: string;
-    }[]
-  >([]);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUserProfile);
 
-  const addEducationField = () => {
-    setFields([
-      ...fields,
-      { institute: '', startingDate: '', endingDate: '', subjectStudy: '' },
-    ]);
+  const initObj = useMemo(
+    () => ({
+      officeName: '',
+      designation: '',
+      startingDate: '',
+      endingDate: '',
+    }),
+    []
+  );
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<any>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'exp',
+  });
+
+  useEffect(() => {
+    if (user?.employment?.length) {
+      setValue('exp.0.instituteName', 'testing institute by zaid');
+    } else {
+      !fields.length && append(initObj);
+    }
+  }, [append, fields.length, initObj, setValue, user?.employment?.length]);
+
+  const onSubmit = useCallback(
+    async (data: any) => {
+      if (isArrayOfObjectsEqual(user.education, data, _.keys(initObj))) {
+        return dispatch(asyncShowError('No changes have been made!'));
+      } else {
+        await dispatch(asyncUpdateExperience(data.edu)).unwrap();
+      }
+    },
+    [dispatch, user, initObj]
+  );
+
+  const addExperienceField = () => {
+    append(initObj);
   };
 
-  const removeEducationField = (index: number) => {
-    setFields(fields.filter((_, i) => i !== index));
+  const removeExperienceField = (index: number) => {
+    remove(index);
   };
+
+  console.log(errors, 'errors');
 
   return (
     <Layout customHeader={<CustomHeader title="Edit Experience" />}>
-      <ScrollView style={{ backgroundColor: '' }}>
+      <ScrollView>
         <View style={styles.container}>
-          <AppInput
-            label="Institute Name"
-            onChange={() => {}}
-            placeholder={'institute name'}
-            value={''}
-            required
-          />
-          <AppInput
-            label="Starting Date"
-            onChange={() => {}}
-            placeholder={'start date'}
-            value={''}
-            required
-          />
-          <AppInput
-            label="Ending Date"
-            onChange={() => {}}
-            placeholder={'end date'}
-            value={''}
-            required
-          />
-          <AppInput
-            label="Subject Taught"
-            onChange={() => {}}
-            placeholder={'subject taught'}
-            value={''}
-            required
-          />
-
           {/* Dynamic Fields */}
           <View style={styles.groupContainer}>
-            {fields.map((_, index) => (
-              <View key={index} style={styles.fieldGroup}>
+            {fields.map((item, index) => (
+              <View key={item.id} style={styles.fieldGroup}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -81,77 +95,139 @@ export default function EditExperience({}: Props) {
                       color: colors.theme.primary,
                       fontSize: 22,
                     }}
-                    text={`Institute - 0${index + 1}`}
+                    text={`Employment - 0${index + 1}`}
                   />
-                  <TouchableOpacity
-                    onPress={() => removeEducationField(index)}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: colors.theme.primary,
-                      borderRadius: 8,
-                      padding: 4,
-                    }}>
-                    <VIcon
-                      type="Ionicons"
-                      name="close"
-                      size={20}
-                      color={colors.theme.white}
-                    />
-                  </TouchableOpacity>
+                  {fields.length > 1 && (
+                    <TouchableOpacity
+                      onPress={() => removeExperienceField(index)}
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: colors.theme.primary,
+                        borderRadius: 8,
+                        padding: 4,
+                      }}>
+                      <VIcon
+                        type="Ionicons"
+                        name="close"
+                        size={20}
+                        color={colors.theme.white}
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
-                <AppInput
-                  label="Institute Name"
-                  onChange={text => {
-                    const newFields = [...fields];
-                    newFields[index].institute = text;
-                    setFields(newFields);
+
+                <Controller
+                  name={`exp.${index}.officeName`}
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'office name is required',
+                    },
                   }}
-                  placeholder={'institute name'}
-                  value={''}
-                  required
+                  render={({ field: { onChange, value } }) => (
+                    <AppInput
+                      label="Office Name"
+                      placeholder={'Enter office name'}
+                      value={value}
+                      onChange={onChange}
+                      required
+                    />
+                  )}
                 />
-                <AppInput
-                  label="Starting Date"
-                  onChange={text => {
-                    const newFields = [...fields];
-                    newFields[index].endingDate = text;
-                    setFields(newFields);
+
+                {errors?.exp?.[index]?.officeName?.message && (
+                  <GrayMediumText
+                    text={errors?.exp?.[index]?.officeName.message}
+                    _style={{ color: colors.theme.lightRed }}
+                  />
+                )}
+
+                <Controller
+                  name={`exp.${index}.designation`}
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'Designation name is required',
+                    },
                   }}
-                  placeholder={'start date'}
-                  value={''}
-                  required
+                  render={({ field: { onChange, value } }) => (
+                    <AppInput
+                      label="Designation Name"
+                      placeholder={'Enter designation name'}
+                      value={value}
+                      onChange={onChange}
+                      required
+                    />
+                  )}
                 />
-                <AppInput
-                  label="Ending Date"
-                  onChange={text => {
-                    const newFields = [...fields];
-                    newFields[index].startingDate = text;
-                    setFields(newFields);
+
+                {errors?.exp?.[index]?.designation?.message && (
+                  <GrayMediumText
+                    text={errors?.exp?.[index]?.designation.message}
+                    _style={{ color: colors.theme.lightRed }}
+                  />
+                )}
+
+                <Controller
+                  name={`exp.${index}.startingDate`}
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'Start date is required',
+                    },
                   }}
-                  placeholder={'end date'}
-                  value={''}
-                  required
+                  render={({ field: { onChange, value } }) => (
+                    <AppDatePicker
+                      label="Start Date"
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
                 />
-                <AppInput
-                  label="Subject Taught"
-                  onChange={text => {
-                    const newFields = [...fields];
-                    newFields[index].subjectStudy = text;
-                    setFields(newFields);
+
+                {errors?.exp?.[index]?.startingDate?.message && (
+                  <GrayMediumText
+                    text={errors?.exp?.[index]?.startingDate.message}
+                    _style={{ color: colors.theme.lightRed }}
+                  />
+                )}
+
+                <Controller
+                  name={`exp.${index}.endingDate`}
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'End date is required',
+                    },
                   }}
-                  placeholder={'subject taught'}
-                  value={''}
-                  required
+                  render={({ field: { onChange, value } }) => (
+                    <AppDatePicker
+                      label="End Date"
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
                 />
+
+                {errors?.exp?.[index]?.endingDate?.message && (
+                  <GrayMediumText
+                    text={errors?.exp?.[index]?.endingDate.message}
+                    _style={{ color: colors.theme.lightRed }}
+                  />
+                )}
               </View>
             ))}
           </View>
           <AppButton
-            icon
+            prefix
             bordered
             title={'Add Experience'}
-            onPress={addEducationField}
+            onPress={addExperienceField}
             btnStyle={{
               marginVertical: 10,
             }}
@@ -161,7 +237,7 @@ export default function EditExperience({}: Props) {
             btnStyle={{
               marginVertical: 10,
             }}
-            onPress={() => {}}
+            onPress={handleSubmit(onSubmit)}
           />
         </View>
       </ScrollView>

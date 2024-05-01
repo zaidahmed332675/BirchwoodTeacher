@@ -2,17 +2,17 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
+import { DataLoader } from '../../Components/DataLoader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
-import { UploadImage } from '../../Components/UploadImage';
-import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
-import { CustomHeader } from '../../Components/CustomHeader';
+import { ImageBox } from '../../Components/UploadImage';
 import { asyncGetUserProfile } from '../../Stores/actions/user.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { DataLoader } from '../../Components/DataLoader';
+import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
 
@@ -25,27 +25,24 @@ const Profile = ({ navigation }: Props) => {
   }, [getUserProfile]);
 
   const profileold = {
-    personal: {
-      name: 'Zaid Ahmed',
-      dob: '15-02-1997',
-      age: '26',
-      gender: 'Male',
-      phone: '0309-1245985',
-      address: 'Quaidabad',
-      city: 'Karachi',
-    },
-    education: {
-      instituteName: '',
-      startingDate: '',
-      EndingDate: '',
-      subject: '',
-    },
-    experience: {
-      instituteName: '',
-      startingDate: '',
-      endingDate: '',
-      subjectTaught: '',
-    },
+    education: [
+      {
+        instituteName:
+          'Federal Urdu University of Arts, Science & Technology, Karachi.',
+        degree: "Bachelor's degree",
+        startingDate: '2016',
+        endingDate: '2020',
+        fieldOfStudy: 'Computer Science',
+      },
+    ],
+    experience: [
+      {
+        officeName: 'TheCoding Buzz',
+        designation: 'MERN Stack Developer',
+        startingDate: '2016',
+        endingDate: 'Present',
+      },
+    ],
   };
 
   if (loading) {
@@ -60,9 +57,9 @@ const Profile = ({ navigation }: Props) => {
         <View style={styles.item}>
           <View style={styles.profileGrid}>
             <View style={styles.profile}>
-              <UploadImage
-                originalImage={undefined}
-                image={{ uri: undefined }}
+              <ImageBox
+                image={{ uri: profile.image }}
+                _imageStyle={styles.profilePhoto}
               />
             </View>
             <Text
@@ -196,159 +193,62 @@ const Profile = ({ navigation }: Props) => {
             }}
             text="Education"
           />
-          <View style={styles.userInfo}>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Name"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.name}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Age"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.age}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Date "
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.dob}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Gender"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.gender}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Phone"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.phone}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Address"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.address}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="City"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.city}
-              />
-            </View>
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <GlroyBold
-              _style={{
-                color: colors.theme.primary,
-                fontSize: 22,
-              }}
-              text="Institute - 01"
-            />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
+          {profileold.education?.map((edu, ind) => (
+            <View key={'edu-' + ind}>
+              {ind > 0 && (
+                <View
+                  style={{
+                    backgroundColor: colors.theme.secondary,
+                    height: 0.3,
                   }}
-                  text="Institute Name"
                 />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
-              </View>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
-                  }}
-                  text="Starting Date"
-                />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
-              </View>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
-                  }}
-                  text="Subject Study"
-                />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
+              )}
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Institute Name"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={edu.instituteName}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Field of study"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={`${edu.degree}, ${edu.fieldOfStudy}`}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Start - End Date"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={`${edu.startingDate} - ${edu.endingDate}`}
+                  />
+                </View>
               </View>
             </View>
-          </View>
+          ))}
           <View style={styles.actionsBtnView}>
             <AppButton
               btnStyle={styles.actionBtn}
@@ -366,173 +266,62 @@ const Profile = ({ navigation }: Props) => {
             }}
             text="Experience"
           />
-          <View style={styles.userInfo}>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Name"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.name}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Age"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.age}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Date "
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.dob}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Gender"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.gender}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Phone"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.phone}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="Address"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.address}
-              />
-            </View>
-            <View style={styles.userInfoItem}>
-              <GrayMediumText
-                _style={{
-                  color: colors.theme.primary,
-                }}
-                text="City"
-              />
-              <GrayMediumText
-                _style={{
-                  color: colors.text.black,
-                }}
-                text={profileold.personal.city}
-              />
-            </View>
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <GlroyBold
-              _style={{
-                color: colors.theme.primary,
-                fontSize: 22,
-              }}
-              text="Experience - 01"
-            />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
+          {profileold.experience?.map((exp, ind) => (
+            <View key={'exp-' + ind}>
+              {ind > 0 && (
+                <View
+                  style={{
+                    backgroundColor: colors.theme.secondary,
+                    height: 0.3,
                   }}
-                  text="Institute Name"
                 />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
-              </View>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
-                  }}
-                  text="Starting Date"
-                />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
-              </View>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
-                  }}
-                  text="Ending Date"
-                />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
-              </View>
-              <View style={styles.userInfoItem}>
-                <GrayMediumText
-                  _style={{
-                    color: colors.theme.primary,
-                  }}
-                  text="Subject Taught"
-                />
-                <GrayMediumText
-                  _style={{
-                    color: colors.text.black,
-                  }}
-                  text={profileold.personal.address}
-                />
+              )}
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Job Title"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={exp.designation}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Office Name"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={exp.officeName}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Start - End Date"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={`${exp.startingDate} - ${exp.endingDate}`}
+                  />
+                </View>
               </View>
             </View>
-          </View>
+          ))}
           <View style={styles.actionsBtnView}>
             <AppButton
               btnStyle={styles.actionBtn}
@@ -566,6 +355,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 13,
     width: '100%',
+  },
+  profilePhoto: {
+    borderWidth: 3,
+    borderColor: colors.theme.primary,
   },
   userInfo: {
     flexDirection: 'row',
