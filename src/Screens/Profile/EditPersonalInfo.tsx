@@ -29,8 +29,11 @@ export default function EditPersonalInfo({}: Props) {
     defaultValues: {
       firstName: '',
       lastName: '',
-      gender: '',
       phone: '',
+      city: '',
+      state: '',
+      zip: '',
+      address: '',
       image: { uri: '' },
     },
   });
@@ -79,10 +82,16 @@ export default function EditPersonalInfo({}: Props) {
   );
 
   useEffect(() => {
-    setValue('firstName', user?.firstName);
-    setValue('lastName', user?.lastName);
-    user?.image && setValue('image', { uri: user?.image });
-  }, [user._id, user.firstName, user.lastName, user.image, setValue]);
+    let { firstName, lastName, phone, city, state, zip, address, image } = user;
+    setValue('firstName', firstName);
+    setValue('lastName', lastName);
+    setValue('phone', phone);
+    setValue('city', city);
+    setValue('state', state);
+    setValue('zip', zip);
+    setValue('address', address);
+    image && setValue('image', { uri: image });
+  }, [setValue, user]);
 
   return (
     <Layout customHeader={<CustomHeader title="Edit Personal Info" />}>
