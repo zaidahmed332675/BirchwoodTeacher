@@ -48,7 +48,7 @@ export const RichTextEditor = ({ enableToolbar = true }) => {
       mediaType === 'image' ? insertImageFromCamera : insertVideoFromCamera;
     let media = await method();
 
-    console.log(media, 'media is here');
+    // console.log(media, 'media is here');
 
     if (media.status) {
       setMediaUri(media.uri);

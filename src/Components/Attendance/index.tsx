@@ -100,6 +100,9 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
   const onSubmit = useCallback(async () => {
     const date = new Date();
     const checkInDateTime = date.toISOString();
+
+    // console.log(checkInDateTime)
+
     const res = await dispatch(
       asyncCheckInUser({ checkIn: checkInDateTime })
     ).unwrap();

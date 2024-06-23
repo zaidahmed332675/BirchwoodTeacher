@@ -9,14 +9,15 @@ import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { UploadImage } from '../../Components/UploadImage';
 import { asyncShowError } from '../../Stores/actions/common.action';
+import { asyncUpdateProfile } from '../../Stores/actions/user.action';
 import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { colors } from '../../theme/colors';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 
-export default function EditPersonalInfo({}: Props) {
+export default function EditPersonalInfo({ }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
@@ -42,7 +43,7 @@ export default function EditPersonalInfo({}: Props) {
     async (data: any) => {
       let formData = new FormData();
       let body: any = {};
-      console.log('Data Profile Edit >>', data);
+      // console.log('Data Profile Edit >>', data);
 
       if (data.firstName !== user?.firstName) {
         body.firstName = data.firstName;
@@ -58,6 +59,22 @@ export default function EditPersonalInfo({}: Props) {
         body.phone = data.phone;
         formData.append('phone', data.phone);
       }
+      if (data.city !== user?.city) {
+        body.city = data.city;
+        formData.append('city', data.city);
+      }
+      if (data.state !== user?.state) {
+        body.state = data.state;
+        formData.append('state', data.state);
+      }
+      if (data.zip !== user?.zip) {
+        body.zip = data.zip;
+        formData.append('zip', data.zip);
+      }
+      if (data.address !== user?.address) {
+        body.address = data.address;
+        formData.append('address', data.address);
+      }
 
       if (data.image?.fileName) {
         body.image = data.image.uri;
@@ -69,13 +86,12 @@ export default function EditPersonalInfo({}: Props) {
         });
       }
 
-      console.log('Body Data >>>', body);
+      // console.log('Body Data >>>', body);
 
       if (Object.keys(body).length === 0) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
-        console.log('Form Data >>>>>', formData);
-        // await dispatch(asyncUpdateProfile(formData)).unwrap();
+        await dispatch(asyncUpdateProfile(formData)).unwrap();
       }
     },
     [dispatch, user]

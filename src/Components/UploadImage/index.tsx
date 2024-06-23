@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 import { Asset } from 'react-native-image-picker';
 import profile from '../../Assets/images/avatar.jpg';
-import { getImagePath } from '../../services/axios';
-import { colors } from '../../theme/colors';
 import {
   insertImageFromCamera,
   insertImageFromGallery,
 } from '../../Utils/cameraOptions';
+import { getImagePath } from '../../services/axios';
+import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
 interface UploadImageProps {
@@ -37,7 +37,7 @@ export const UploadImage = ({
   originalImage,
   handleImage,
 }: UploadImageProps) => {
-  console.log(originalImage, 'casdasdas');
+  // console.log(originalImage, 'casdasdas');
   const selectOptionIMG = () => {
     Alert.alert(
       'Select Image',

@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { DiaryStackParams, EDiaryStack } from '../Types/NavigationTypes';
-import { NavigationOptions } from '../Utils/options';
 import Diary from '../Screens/Diary';
 import CreateDiary from '../Screens/Diary/CreateDiary';
+import { DiaryStackParams, EDiaryStack } from '../Types/NavigationTypes';
+import { NavigationOptions } from '../Utils/options';
 
 const Stack = createStackNavigator<DiaryStackParams>();
 

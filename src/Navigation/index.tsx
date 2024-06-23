@@ -1,17 +1,17 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
-import { NavigationOptions } from '../Utils/options';
-import AppNavigator from './AppNavigator';
-import AuthNavigator from './AuthNavigator';
+import { AppLoader } from '../Components/AppLoader';
 import { useAppSelector } from '../Stores/hooks';
 import { selectAppLoader } from '../Stores/slices/common.slice';
-import { AppLoader } from '../Components/AppLoader';
 import {
   // selectUserProfile,
   selectUserToken,
 } from '../Stores/slices/user.slice';
+import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
+import { NavigationOptions } from '../Utils/options';
+import AppNavigator from './AppNavigator';
+import AuthNavigator from './AuthNavigator';
 
 const Stack = createStackNavigator<RootStackParams>();
 

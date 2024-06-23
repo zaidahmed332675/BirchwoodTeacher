@@ -5,15 +5,15 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { colors } from '../../theme/colors';
-import { VIcon } from '../VIcon';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { GlroyBold } from '../GlroyBoldText';
-import { GrayMediumText } from '../GrayMediumText';
+import DropDownPicker from 'react-native-dropdown-picker';
+import aDot from '../../Assets/icons/absentDot.png';
 import dp1 from '../../Assets/icons/dp1.png';
 import pDot from '../../Assets/icons/presentDot.png';
-import aDot from '../../Assets/icons/absentDot.png';
+import { colors } from '../../theme/colors';
+import { GlroyBold } from '../GlroyBoldText';
+import { GrayMediumText } from '../GrayMediumText';
+import { VIcon } from '../VIcon';
 interface SearchModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -55,7 +55,7 @@ export const SearchModal = forwardRef(
   ) => {
     const [value, setValue] = useState<any>(selectedItems);
 
-    console.log(value, 'value is here');
+    // console.log(value, 'value is here');
 
     useImperativeHandle(
       ref,

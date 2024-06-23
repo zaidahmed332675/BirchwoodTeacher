@@ -1,24 +1,23 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Attendance } from '../Components/Attendance';
 import { BottomBackground } from '../Components/BottomBackground';
 import { Header } from '../Components/Header';
 import { LeaveForm } from '../Components/LeaveForm';
-import { Attendance } from '../Components/Attendance';
 import ChangePassword from '../Screens/ChangePassword';
 import HomeScreen from '../Screens/Home';
-import MyClass from '../Screens/MyClass';
+import { useAppSelector } from '../Stores/hooks';
+import { selectUserProfile } from '../Stores/slices/user.slice';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
-import { attendanceEnum, NavigationOptions } from '../Utils/options';
+import { NavigationOptions, attendanceEnum } from '../Utils/options';
+import { appShadow, colors } from '../theme/colors';
 import ActivityNavigator from './ActivityNavigator';
 import AttendanceNavigator from './AttendanceNavigator';
 import ChatNavigator from './ChatNavigator';
+import ClassNavigator from './ClassNavigator';
 import DiaryNavigator from './DiaryNavigator';
 import ProfileNavigator from './ProfileNavigator';
-import { appShadow, colors } from '../theme/colors';
-import StudentInfo from '../Screens/MyClass/StudentInfo';
-import { useAppSelector } from '../Stores/hooks';
-import { selectUserProfile } from '../Stores/slices/user.slice';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -41,7 +40,9 @@ const AppNavigator = () => {
     },
   });
 
-  if (!attendanceEnum[profile?.newAttendance?.status]) {
+  console.log(profile, 'userProfile')
+
+  if (!attendanceEnum[profile?.newAttendance?.status] && !profile.checkIn) {
     return (
       <View style={styles.container}>
         <Header />
@@ -70,8 +71,7 @@ const AppNavigator = () => {
         name={EMainStack.profileRoutes}
         component={ProfileNavigator}
       />
-      <Stack.Screen name={EMainStack.myClass} component={MyClass} />
-      <Stack.Screen name={EMainStack.studentInfo} component={StudentInfo} />
+      <Stack.Screen name={EMainStack.myClassRoutes} component={ClassNavigator} />
       <Stack.Screen
         name={EMainStack.activityRoutes}
         component={ActivityNavigator}

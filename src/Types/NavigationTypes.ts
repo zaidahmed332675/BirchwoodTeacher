@@ -32,26 +32,26 @@ export type AuthStackParams = {
 export enum EMainStack {
   home = 'home',
   profileRoutes = 'profileRoutes',
-  myClass = 'myClass',
-  studentInfo = 'studentInfo',
+  myClassRoutes = 'myClassRoutes',
   activityRoutes = 'activityRoutes',
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
   changePassword = 'changePassword',
+  checkOut = 'checkOut',
   logOut = 'logOut',
 }
 
 export type MainStackParams = {
   home: undefined;
   profileRoutes: undefined;
-  myClass: undefined;
-  studentInfo: undefined;
+  myClassRoutes: undefined;
   activityRoutes: undefined;
   diaryRoutes: undefined;
   chatRoutes: undefined;
   attendanceRoutes: undefined;
   changePassword: undefined;
+  checkOut: undefined;
   logOut: undefined;
 };
 
@@ -67,6 +67,16 @@ export type ProfileStackParams = {
   editPersonalInfo: undefined;
   editEducation: undefined;
   editExperience: undefined;
+};
+
+export enum EClassStack {
+  class = 'class',
+  studentInfo = 'studentInfo',
+}
+
+export type ClassStackParams = {
+  class: undefined;
+  studentInfo: undefined;
 };
 
 export enum EActivityStack {

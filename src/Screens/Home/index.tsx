@@ -1,23 +1,22 @@
+import { StackScreenProps } from '@react-navigation/stack';
+import React from 'react';
 import {
-  StyleSheet,
-  View,
-  Image,
   FlatList,
+  Image,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import React, { useCallback } from 'react';
-import { vh, vw } from '../../Utils/units';
-import { GlroyBold } from '../../Components/GlroyBoldText';
-import { colors } from '../../theme/colors';
-import { appShadow } from '../../theme/colors';
 import { featureIcons } from '../../Assets';
 import { icons } from '../../Assets/icons';
+import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
-import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
-import { StackScreenProps } from '@react-navigation/stack';
 import { Header } from '../../Components/Header';
-import { asyncSignOut } from '../../Stores/actions/user.action';
 import { store } from '../../Stores';
+import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.action';
+import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
+import { vh, vw } from '../../Utils/units';
+import { appShadow, colors } from '../../theme/colors';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -33,7 +32,7 @@ const HomeScreen = ({ navigation }: Props) => {
       id: 2,
       title: 'My Class',
       icon: featureIcons.profile,
-      route: EMainStack.myClass,
+      route: EMainStack.myClassRoutes,
     },
     {
       id: 3,
@@ -47,12 +46,6 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.assignment,
       route: EMainStack.diaryRoutes,
     },
-    // {
-    //   id: 5,
-    //   title: 'Chat',
-    //   icon: featureIcons.time_table,
-    //   route: EMainStack.chatRoutes,
-    // },
     {
       id: 5,
       title: 'Attendance',
@@ -65,7 +58,14 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 7, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
+    { id: 7, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut' },
+    { id: 8, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
+    // {
+    //   id: 5,
+    //   title: 'Chat',
+    //   icon: featureIcons.time_table,
+    //   route: EMainStack.chatRoutes,
+    // },
     // { id: 5, title: 'Time Table', icon: featureIcons.time_table, route: '' },
     // { id: 6, title: 'Events', icon: featureIcons.events, route: '' },
     // { id: 7, title: 'Ask Doubts', icon: featureIcons.ask_doubts, route: '' },
@@ -89,15 +89,16 @@ const HomeScreen = ({ navigation }: Props) => {
     // },
   ];
 
-  const handleUserLogOut = useCallback(async () => {
-    await store.dispatch(asyncSignOut()).unwrap();
-  }, []);
-
-  const handleNavigate = (route: keyof MainStackParams) => {
+  const handleNavigate = async (route: keyof MainStackParams) => {
     if (route === EMainStack.logOut) {
-      return handleUserLogOut();
+      return await store.dispatch(asyncSignOut()).unwrap();
+    } else if (route === EMainStack.checkOut) {
+      const date = new Date();
+      const checkOutDateTime = date.toISOString();
+      return await store.dispatch(asyncCheckOutUser({ checkOut: checkOutDateTime })).unwrap();
+    } else {
+      navigation.navigate(route);
     }
-    navigation.navigate(route);
   };
 
   const renderItem = ({

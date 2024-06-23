@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import dp1 from '../../Assets/icons/dp1.png';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { DiaryCard } from '../../Components/DiaryCard';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
@@ -16,9 +17,8 @@ import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
 import { dummyRecords } from '../../Utils/options';
-import { CustomHeader } from '../../Components/CustomHeader';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 

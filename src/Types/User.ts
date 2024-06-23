@@ -67,16 +67,20 @@ export interface ChangePasswordPayload {
   confirmPassword: string;
 }
 
-export interface UserCheckIn {
-  newAttendance: any;
+export interface UpdateUserProfilePayload {
+  city?: string;
+  state?: string;
+  address?: string;
+  image?: string;
 }
 
-export interface UserCheckInPayload {
-  checkIn: string;
-}
-
-export interface UserCheckInResponse {
-  [index: string]: any;
+export interface UserCheckInOutResponse {
+  teacher: Omit<User, 'newAttendance'>,
+  checkIn: string | null,
+  checkOut: string | null,
+  leaveReason: string,
+  sickDescription: string,
+  status: string,
 }
 
 export interface UserAttendance {

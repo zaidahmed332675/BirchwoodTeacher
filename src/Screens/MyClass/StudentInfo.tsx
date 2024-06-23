@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../Components/Button';
 import { CustomHeader } from '../../Components/CustomHeader';
@@ -7,13 +7,13 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
-import { colors } from '../../theme/colors';
-import { MainStackParams } from '../../Types/NavigationTypes';
+import { ClassStackParams } from '../../Types/NavigationTypes';
 import { vh } from '../../Utils/units';
+import { colors } from '../../theme/colors';
 
-type Props = StackScreenProps<MainStackParams, 'studentInfo'>;
+type Props = StackScreenProps<ClassStackParams, 'studentInfo'>;
 
-const StudentInfo = ({}: Props) => {
+const StudentInfo = ({ }: Props) => {
   const data = [
     {
       id: '1',
@@ -95,7 +95,7 @@ const StudentInfo = ({}: Props) => {
         </View>
         <AppButton
           title="View Report"
-          onPress={() => {}}
+          onPress={() => { }}
           btnStyle={{
             paddingVertical: 8,
             paddingHorizontal: 20,
@@ -133,7 +133,7 @@ const StudentInfo = ({}: Props) => {
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 8 }}>
-            <AppButton title="Check In" onPress={() => {}} />
+            <AppButton title="Check In" onPress={() => { }} />
           </View>
 
           <View

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Platform, SafeAreaView, StatusBar } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import AppRouting from './src/Navigation';
 import FlashMessage from 'react-native-flash-message';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
+import AppRouting from './src/Navigation';
 import { store } from './src/Stores';
 
 function App(): JSX.Element {

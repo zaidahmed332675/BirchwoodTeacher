@@ -8,22 +8,34 @@ export interface ResponseCallback<RD> {
   data?: RD;
 }
 
+/*
+* axios response format
+* {
+    "data": {
+        "data": {},
+        "message": "custom server message",
+        "status": true
+    },
+    "status": 200,
+    "statusText": undefined
+}
+*/
+
 export function responseCallback<RT>(
   res: AxiosResponse<ResponseCallback<RT>>
 ): ResponseCallback<RT> {
-  const message = res.data.message ?? res.statusText;
+  const message = res.data?.message ?? res.statusText ?? "Something Went Wrong!";
+  const status = res.data?.status ?? false
 
-  if ([500, 404, 401, 400, 409].includes(res?.status)) {
-    if (res.status === 401) {
-      store.dispatch(resetUserState());
-    }
+  console.log(res, 'checking response')
 
-    return {
-      ...(res?.data ?? {}),
-      message,
-      status: false,
-    };
+  if (res.status === 401) {
+    store.dispatch(resetUserState());
   }
 
-  return res?.data ?? {};
+  return {
+    ...(res?.data ?? {}),
+    message,
+    status
+  };
 }

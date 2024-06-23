@@ -75,7 +75,7 @@ export default function EditExperience({}: Props) {
     remove(index);
   };
 
-  console.log(errors, 'errors');
+  // console.log(errors, 'errors');
 
   return (
     <Layout customHeader={<CustomHeader title="Edit Experience" />}>

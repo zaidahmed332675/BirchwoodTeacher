@@ -1,23 +1,23 @@
 import { StackScreenProps } from '@react-navigation/stack';
+import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { AppDatePicker } from '../../Components/AppDatePicker';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { VIcon } from '../../Components/VIcon';
-import { ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
-import { CustomHeader } from '../../Components/CustomHeader';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { asyncShowError } from '../../Stores/actions/common.action';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
-import { GrayMediumText } from '../../Components/GrayMediumText';
-import { AppDatePicker } from '../../Components/AppDatePicker';
-import _ from 'lodash';
-import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { asyncUpdateEducation } from '../../Stores/actions/user.action';
+import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { ProfileStackParams } from '../../Types/NavigationTypes';
+import { isArrayOfObjectsEqual } from '../../Utils/options';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editEducation'>;
 

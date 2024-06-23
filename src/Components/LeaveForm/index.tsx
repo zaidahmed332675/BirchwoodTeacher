@@ -24,8 +24,8 @@ import { leaveTypeEnum } from '../../Utils/options';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 import { LeavePayload } from '../../types/User';
-import { AppSelect } from '../AppSelect';
 import { AppDatePicker } from '../AppDatePicker';
+import { AppSelect } from '../AppSelect';
 
 export const LeaveForm = ({}) => {
   const dispatch = useAppDispatch();

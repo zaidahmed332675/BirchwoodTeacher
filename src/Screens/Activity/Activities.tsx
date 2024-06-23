@@ -16,14 +16,14 @@ import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 // import { CustomSwitch } from '../../Components/Switch';
+import { AppButton } from '../../Components/Button';
+import { VIcon } from '../../Components/VIcon';
 import {
   ActivityStackParams,
   EActivityStack,
 } from '../../Types/NavigationTypes';
 import { capitalizeWords, dummyRecords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
-import { AppButton } from '../../Components/Button';
-import { VIcon } from '../../Components/VIcon';
 
 type Props = StackScreenProps<ActivityStackParams, 'activities'>;
 
@@ -36,7 +36,7 @@ const Activity = ({ navigation }: Props) => {
   const items = [...dummyRecords];
 
   useEffect(() => {
-    console.log(searchModalRef.current, 'student is here');
+    // console.log(searchModalRef.current, 'student is here');
     if (!isSearchModalOpen) {
       let item = searchModalRef.current?.selectedItem;
       if (item) {
@@ -46,7 +46,7 @@ const Activity = ({ navigation }: Props) => {
     }
   }, [isSearchModalOpen]);
 
-  console.log(searchModalRef.current, 'student is here');
+  // console.log(searchModalRef.current, 'student is here');
 
   return (
     <Layout

@@ -1,29 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
-import dp1 from '../../Assets/icons/dp1.png';
-import pDot from '../../Assets/icons/presentDot.png';
+import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import aDot from '../../Assets/icons/absentDot.png';
+import dp1 from '../../Assets/icons/dp1.png';
 import pendingDot from '../../Assets/icons/pendingDot.png';
+import pDot from '../../Assets/icons/presentDot.png';
 import { CustomHeader } from '../../Components/CustomHeader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
-import { dummyRecords } from '../../Utils/options';
-import { colors } from '../../theme/colors';
-import { TouchableOpacity } from 'react-native';
 import { VIcon } from '../../Components/VIcon';
 import {
+  ClassStackParams,
   EChatStack,
-  EMainStack,
-  MainStackParams,
+  EMainStack
 } from '../../Types/NavigationTypes';
-import { StackScreenProps } from '@react-navigation/stack';
+import { dummyRecords } from '../../Utils/options';
+import { colors } from '../../theme/colors';
 
-type Props = StackScreenProps<MainStackParams, 'myClass'>;
+type Props = StackScreenProps<ClassStackParams, 'class'>;
 
-const MyClass = ({}: Props) => {
-  const navigation = useNavigation();
+const MyClass = ({ }: Props) => {
+  const navigation = useNavigation<NavigationProp<ClassStackParams>>();
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity

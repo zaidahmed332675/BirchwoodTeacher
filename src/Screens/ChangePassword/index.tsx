@@ -1,24 +1,24 @@
+import { CommonActions } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
-import { MainStackParams } from '../../Types/NavigationTypes';
-import { vw } from '../../Utils/units';
-import { colors } from '../../theme/colors';
-import { CustomHeader } from '../../Components/CustomHeader';
-import { useAppDispatch } from '../../Stores/hooks';
-import { ChangePasswordPayload } from '../../types/User';
-import { Controller, useForm } from 'react-hook-form';
+import { store } from '../../Stores';
 import {
   asyncChangePassword,
   asyncSignOut,
 } from '../../Stores/actions/user.action';
-import { CommonActions } from '@react-navigation/native';
-import { store } from '../../Stores';
+import { useAppDispatch } from '../../Stores/hooks';
+import { MainStackParams } from '../../Types/NavigationTypes';
+import { vw } from '../../Utils/units';
+import { colors } from '../../theme/colors';
+import { ChangePasswordPayload } from '../../types/User';
 
 type Props = StackScreenProps<MainStackParams, 'changePassword'>;
 

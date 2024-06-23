@@ -1,5 +1,3 @@
-import { axios, axiosPrivate } from './axios';
-import { ResponseCallback, responseCallback } from './responseCallback';
 import {
   AxiosError,
   AxiosHeaders,
@@ -8,11 +6,12 @@ import {
   Method,
   RawAxiosRequestHeaders,
 } from 'axios';
+import { axios, axiosPrivate } from './axios';
+import { ResponseCallback, responseCallback } from './responseCallback';
 
-import { ApiPaths } from './apiPaths';
 import { store } from '../Stores';
-import { setLoading } from '../Stores/slices/common.slice';
 import { asyncSignOut } from '../Stores/actions/user.action';
+import { ApiPaths } from './apiPaths';
 
 export interface CallApi<T> {
   path?: ApiPaths;
@@ -57,17 +56,11 @@ export const callApi = async <RT, T = undefined>({
   if (axiosSecure) {
     const { token: userToken } = store.getState().user ?? {};
     if (userToken) {
-      token = userToken;
+      headers.Authorization = `Bearer ${userToken}`;
+    } else {
+      await store.dispatch(asyncSignOut()).unwrap();
+      return { status: false, message: 'Token Expired, Signing you out!' };
     }
-  }
-
-  if (token && axiosSecure) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  if (!token && axiosSecure) {
-    await store.dispatch(asyncSignOut()).unwrap();
-    return { status: false, message: 'Token Expired, Signing you out!' };
   }
 
   options.headers = { ...headers, ...customHeaders };
@@ -83,10 +76,13 @@ export const callApi = async <RT, T = undefined>({
   return axiosInstance(options)
     .then(responseCallback<RT>)
     .catch((err: AxiosError<ResponseCallback<RT>>) => {
-      console.log(err, 'api Error');
-      store.dispatch(setLoading(false));
       if (err.response) {
         return responseCallback<RT>(err.response);
+      } else {
+        return {
+          status: false,
+          message: "Something Went Wrong!"
+        }
       }
     }) as Promise<ResponseCallback<RT>>;
 };

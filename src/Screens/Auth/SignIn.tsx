@@ -20,10 +20,10 @@ import { MainLogo } from '../../Components/MainLogo';
 import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
 import { asyncLogin } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
-import { colors } from '../../theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { LoginUserPayload } from '../../Types/User';
 import { vh } from '../../Utils/units';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 
@@ -40,14 +40,13 @@ const SignIn = ({ navigation }: Props) => {
     formState: { errors },
   } = useForm<LoginUserPayload>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'zaidahmed332675@gmail.com',
+      password: 'Teacher@123456',
     },
   });
 
   const onSubmit = useCallback(
     async (body: LoginUserPayload) => {
-      console.log(body, 'body');
       const res = await dispatch(asyncLogin(body)).unwrap();
       if (res.status) {
         navigation.navigate(EAuthStack.main);
