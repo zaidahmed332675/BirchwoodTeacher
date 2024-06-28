@@ -1,13 +1,17 @@
-import { combineReducers, configureStore, Action } from '@reduxjs/toolkit';
+import { Action, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 
-import commonSlice from './slices/common.slice';
-import userSlice from './slices/user.slice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ClassSlice from './slices/class.slice';
+import CommonSlice from './slices/common.slice';
+import PostSlice from './slices/post.slice';
+import UserSlice from './slices/user.slice';
 
 const allreducers = combineReducers({
-  common: commonSlice,
-  user: userSlice,
+  common: CommonSlice,
+  user: UserSlice,
+  class: ClassSlice,
+  post: PostSlice,
 });
 
 const persistConfig = {

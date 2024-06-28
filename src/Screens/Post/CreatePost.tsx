@@ -2,21 +2,25 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CheckBox } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import profile from '../../Assets/images/profile_bg.png';
+import { StyleSheet, Text, View } from 'react-native';
+import { Asset } from 'react-native-image-picker';
 import { AppBottomSheet } from '../../Components/BottomSheet';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
-import { ActivityStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import { ImageBox } from '../../Components/UploadImage';
+import { asyncCreatePost } from '../../Stores/actions/post.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { dummyRecords } from '../../Utils/options';
-import { CustomHeader } from '../../Components/CustomHeader';
+import { colors } from '../../theme/colors';
 
-type Props = StackScreenProps<ActivityStackParams, 'createActivity'>;
+type Props = StackScreenProps<PostStackParams, 'createPost'>;
 
-const CreateActivityModalContent = ({
+const CreatePostModalContent = ({
   audience,
   setAudience,
   students,
@@ -92,35 +96,59 @@ const CreateActivityModalContent = ({
           items={items}
           selectedItems={students}
           ref={searchModalRef}
-          multipleText={`${students?.length} ${
-            students?.length > 1 ? 'children' : 'child'
-          } have been selected`}
+          multipleText={`${students?.length} ${students?.length > 1 ? 'children' : 'child'
+            } have been selected`}
         />
       )}
     </View>
   );
 };
 
-const CreateActivity = ({}: Props) => {
+const CreatePost = ({ navigation, route }: Props) => {
   const sheetRef = useRef<BottomSheetModal>(null);
+  const textEditorRef = useRef<{ getPostDataToSend: () => Promise<{ content: string, media: Asset | undefined }> } | null>(null);
+  let { activityId } = route?.params
 
   let [audience, setAudience] = useState(0);
   const [students, setStudents] = useState<any>();
   const [isSheetOpen, setSheetOpen] = useState(false);
 
+  const [_, createPost] = useLoaderDispatch(asyncCreatePost);
+  const profile = useAppSelector(selectUserProfile)
+
+  const handleSend = async () => {
+    let data = await textEditorRef.current?.getPostDataToSend()
+
+    const formData = new FormData();
+    formData.append('content', data?.content);
+    formData.append('activity', activityId);
+    formData.append('classroom', '6630e5f01364cb7fd294281c');
+    formData.append('type', 'CLASS');
+    formData.append('image[0]', {
+      uri: data?.media?.uri,
+      type: data?.media?.type,
+      filename: data?.media?.fileName,
+    });
+
+    let res = await createPost(formData)
+    if (res.status) {
+      navigation.navigate(EPostStack.posts)
+    }
+  }
+
   return (
-    <Layout customHeader={<CustomHeader title="Create Activity Post" />}>
+    <Layout customHeader={<CustomHeader title="Create Post" />}>
       <View style={styles.container}>
-        <Image style={styles.profilePic} source={profile} />
+        <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
         <View>
-          <Text style={styles.userName}>Anna Mary</Text>
+          <Text style={styles.userName}>{`${profile.firstName} ${profile.lastName}`}</Text>
           <AppButton
             title={
               !students?.length
                 ? 'Class'
                 : students?.length > 1
-                ? 'Children'
-                : 'Child'
+                  ? 'Children'
+                  : 'Child'
             }
             bordered
             suffix
@@ -138,7 +166,7 @@ const CreateActivity = ({}: Props) => {
           />
         </View>
       </View>
-      <RichTextEditor />
+      <RichTextEditor ref={textEditorRef} />
       <AppBottomSheet
         ref={sheetRef}
         enableDismissOnClose
@@ -151,7 +179,7 @@ const CreateActivity = ({}: Props) => {
         _sheetStyle={{
           backgroundColor: colors.theme.primary,
         }}>
-        <CreateActivityModalContent
+        <CreatePostModalContent
           audience={audience}
           setAudience={setAudience}
           students={students}
@@ -165,6 +193,7 @@ const CreateActivity = ({}: Props) => {
             sheetRef.current?.dismiss();
             setSheetOpen(false);
           } else {
+            handleSend();
           }
         }}
         btnStyle={{
@@ -192,6 +221,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 10,
+    borderWidth: 2,
+    borderColor: colors.theme.primary,
   },
   userName: {
     fontSize: 16,
@@ -207,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateActivity;
+export default CreatePost;

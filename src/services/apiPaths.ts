@@ -20,13 +20,31 @@ export enum ProfileApiPaths {
   updateExperience = 'teacher/profile/updateExperience',
 }
 
+export enum ClassApiPaths {
+  getChildrenByClassId = 'admin/children/getChildrenByClassroom/:classRoomId',
+  checkInChildByTeacher = '/children/attendance/markCheckIn',
+  createChat = '/chat/createChat',
+  getMessagesByChatRoomId = '/message/getChatMessages/:chatRoomId',
+  createChatRoomMessage = '/message/createMessage',
+}
+
+export enum PostApiPaths {
+  getActivities = '/activity/getAllActivities',
+  createPost = '/post/addPost',
+  getAllClassPosts = '/post/getAllClassPosts/:classRoomId',
+  getAllChildPosts = '/post/getAllChildPosts/:childId',
+  deletePost = '/post/deletePost/:postId',
+}
+
 export const AllApiPaths = Object.freeze({
   ...AuthApiPaths,
   ...ResetPasswordApiPaths,
   ...ProfileApiPaths,
+  ...ClassApiPaths,
+  ...PostApiPaths,
 });
 
-export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths;
+export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths | ClassApiPaths | PostApiPaths;
 
 class ApiPathHandler<T> {
   private paths: T;

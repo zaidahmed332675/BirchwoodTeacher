@@ -1,27 +1,59 @@
+import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import profile from '../../Assets/images/profile_bg.png';
-import postImage from '../../Assets/images/forgot_child.png';
+import { StyleSheet, Text, View } from 'react-native';
+import { useAppSelector } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { Post } from '../../Types/Post';
 import { colors } from '../../theme/colors';
 import { Comment } from '../Comment';
 import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
+import { ImageBox } from '../UploadImage';
 
-export const ActivityPost = () => {
+export const ActivityPost = ({ item: post }: { item: Post }) => {
+  const profile = useAppSelector(selectUserProfile)
+  const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.profilePic} source={profile} />
+        <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
         <View>
           <GrayMediumText _style={styles.userName} text="Anna Mary" />
-          <GrayMediumText _style={styles.timeStamp} text="2 hours ago" />
+          <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
         </View>
       </View>
       <Text style={styles.postText}>
-        Hey pals, guess what? 💥 I’ve just wrapped up crafting these
-        mind-blowing 3D wallpapers, drenched in the coolest of cool colors! 🎨
+        {post.content}
       </Text>
-      <Image style={styles.postImage} source={postImage} />
+      <ImageBox image={{ uri: post.images[0] }} _imageStyle={styles.postImage} />
+      <View style={{
+        flexDirection: 'row',
+        marginTop: 10,
+        gap: 20,
+      }}>
+        <GrayMediumText
+          text="2 Likes"
+          _style={{
+            fontWeight: 'normal',
+            fontSize: 12
+          }}
+        />
+        <GrayMediumText
+          text="2 Dislikes"
+          _style={{
+            fontWeight: 'normal',
+            fontSize: 12
+          }}
+        />
+        <GrayMediumText
+          text="2 Comments"
+          _style={{
+            fontWeight: 'normal',
+            fontSize: 12
+          }}
+        />
+      </View>
       <Reaction />
       <View style={styles.comments}>
         <Comment />

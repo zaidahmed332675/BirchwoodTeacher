@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../Components/Button';
 import { CustomHeader } from '../../Components/CustomHeader';
@@ -7,13 +7,20 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
+import { asyncCheckInChildByTeacher } from '../../Stores/actions/class.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChildById } from '../../Stores/slices/class.slice';
 import { ClassStackParams } from '../../Types/NavigationTypes';
 import { vh } from '../../Utils/units';
 import { colors } from '../../theme/colors';
 
-type Props = StackScreenProps<ClassStackParams, 'studentInfo'>;
+type Props = StackScreenProps<ClassStackParams, 'childInfo'>;
 
-const StudentInfo = ({ }: Props) => {
+const ChildInfo = ({ route }: Props) => {
+  const { childId } = route.params
+  const [_, checkInChildByTeacher] = useLoaderDispatch(asyncCheckInChildByTeacher);
+  const child = useAppSelector(selectChildById(childId));
+
   const data = [
     {
       id: '1',
@@ -60,17 +67,13 @@ const StudentInfo = ({ }: Props) => {
     },
   ];
 
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   class: '',
-  // });
+  const handleCheckIn = useCallback(async () => {
+    if (child.checkIn) return
 
-  // function handleChange(name, value) {
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   });
-  // }
+    const date = new Date();
+    const checkInDateTime = date.toISOString();
+    checkInChildByTeacher({ children: childId, checkIn: checkInDateTime })
+  }, [checkInChildByTeacher]);
 
   const reportsCards = (items: any, indx: number) => {
     return (
@@ -110,17 +113,17 @@ const StudentInfo = ({ }: Props) => {
   };
 
   return (
-    <Layout customHeader={<CustomHeader title={'Student Information'} />}>
+    <Layout customHeader={<CustomHeader title={'Child Information'} />}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           <View style={{ alignItems: 'center' }}>
-            <ImageBox image={{ uri: '' }} _imageStyle={styles.profilePhoto} />
+            <ImageBox image={{ uri: child.image }} _imageStyle={styles.profilePhoto} />
             <GlroyBold
-              text="Allien"
+              text={`${child.firstName} ${child.lastName}`}
               _style={{ marginVertical: 8, color: colors.theme.black }}
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <GrayMediumText text="Class XI-B" />
+              <GrayMediumText text={child.classroom.classroomName} />
               <GrayMediumText
                 text={'|'}
                 _style={{
@@ -128,12 +131,12 @@ const StudentInfo = ({ }: Props) => {
                   marginHorizontal: 5,
                 }}
               />
-              <GrayMediumText text="Roll no. 04" />
+              <GrayMediumText text={`Roll No: ${child.rollNumber}`} />
             </View>
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 8 }}>
-            <AppButton title="Check In" onPress={() => { }} />
+            <AppButton title={child.checkIn ? "Checked In" : "Check In"} onPress={handleCheckIn} btnStyle={child.checkIn ? styles.checkInBtn : {}} />
           </View>
 
           <View
@@ -212,6 +215,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: vh * 2.5,
   },
+  checkInBtn: {
+    backgroundColor: colors.theme.darkGreen,
+    borderColor: 'white'
+  },
   profilePhoto: {
     width: 100,
     height: 100,
@@ -258,4 +265,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default StudentInfo;
+export default ChildInfo;

@@ -1,18 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { GrayMediumText } from '../GrayMediumText';
 import { VIcon } from '../VIcon';
 
 export const Reaction = () => {
   return (
     <View style={styles.reaction}>
-      <GrayMediumText
-        text="3.4k Comments 46 Shares"
-        _style={{
-          fontWeight: 'normal',
-        }}
-      />
       <View style={styles.reactionActions}>
         <TouchableOpacity style={[styles.action, styles.actionSelected]}>
           <VIcon
@@ -48,11 +41,10 @@ export const Reaction = () => {
 
 const styles = StyleSheet.create({
   reaction: {
-    marginVertical: 20,
+    marginVertical: 10,
   },
   reactionActions: {
     flexDirection: 'row',
-    marginTop: 10,
     gap: 10,
   },
   action: {

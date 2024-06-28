@@ -33,7 +33,7 @@ export enum EMainStack {
   home = 'home',
   profileRoutes = 'profileRoutes',
   myClassRoutes = 'myClassRoutes',
-  activityRoutes = 'activityRoutes',
+  postRoutes = 'postRoutes',
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
@@ -46,7 +46,7 @@ export type MainStackParams = {
   home: undefined;
   profileRoutes: undefined;
   myClassRoutes: undefined;
-  activityRoutes: undefined;
+  postRoutes: undefined;
   diaryRoutes: undefined;
   chatRoutes: undefined;
   attendanceRoutes: undefined;
@@ -71,28 +71,30 @@ export type ProfileStackParams = {
 
 export enum EClassStack {
   class = 'class',
-  studentInfo = 'studentInfo',
+  childInfo = 'childInfo',
 }
 
 export type ClassStackParams = {
   class: undefined;
-  studentInfo: undefined;
-};
-
-export enum EActivityStack {
-  activities = 'activities',
-  activityList = 'activityList',
-  createActivity = 'createActivity',
-}
-
-export type ActivityStackParams = {
-  activities: undefined;
-  activityList: undefined;
-  createActivity: {
-    activityId: number;
-    activityName: string;
+  childInfo: {
+    childId: string;
   };
 };
+
+export enum EPostStack {
+  posts = 'posts',
+  activityList = 'activityList',
+  createPost = 'createPost',
+}
+
+export type PostStackParams = {
+  posts: undefined;
+  activityList: undefined;
+  createPost: {
+    activityId: string;
+    classRoomId: string;
+  };
+}
 
 export enum EDiaryStack {
   diary = 'diary',
@@ -112,8 +114,8 @@ export enum EChatStack {
 export type ChatStackParams = {
   chat: undefined;
   createChat: {
-    parentId: number;
-    parentName: string;
+    childId: string;
+    chatRoomId: string;
   };
 };
 

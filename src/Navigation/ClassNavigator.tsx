@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import MyClass from '../Screens/MyClass';
-import StudentInfo from '../Screens/MyClass/StudentInfo';
+import ChildInfo from '../Screens/MyClass/ChildInfo';
 import { ClassStackParams, EClassStack } from '../Types/NavigationTypes';
 import { NavigationOptions } from '../Utils/options';
 
@@ -13,7 +13,7 @@ const ClassNavigator = () => {
             initialRouteName={EClassStack.class}
             screenOptions={NavigationOptions}>
             <Stack.Screen name={EClassStack.class} component={MyClass} />
-            <Stack.Screen name={EClassStack.studentInfo} component={StudentInfo} />
+            <Stack.Screen name={EClassStack.childInfo} component={ChildInfo} />
         </Stack.Navigator>
     );
 };

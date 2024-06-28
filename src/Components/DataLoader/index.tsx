@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { GrayMediumText } from '../GrayMediumText';
-import { colors } from '../../theme/colors';
 import { vh } from '../../Utils/units';
-import { Layout } from '../Layout';
+import { colors } from '../../theme/colors';
 import { CustomHeader } from '../CustomHeader';
+import { GrayMediumText } from '../GrayMediumText';
+import { Layout } from '../Layout';
 
 export const DataLoader = ({ text = 'Loading Data' }) => {
   return (

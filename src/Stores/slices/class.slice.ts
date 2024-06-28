@@ -1,57 +1,112 @@
 import {
   PayloadAction,
   createDraftSafeSelector,
-  createSlice,
+  createSlice
 } from '@reduxjs/toolkit';
-import { User, UserAttendance } from '../../types/User';
-import { RootState } from '../index';
+import { RootState } from '..';
+import { Child, ClassResponse, Message, MessagesResponse } from '../../Types/Class';
 
-interface UserSliceState {
-  user: User;
-  attendance: UserAttendance;
-  token: string | null;
+interface ClassSliceState {
+  children: Record<string, Child>;
+  pagination: {
+    totalDocs: number,
+    limit: number,
+    page: number,
+    totalPages: number,
+    pagingCounter: number,
+    hasPrevPage: boolean,
+    hasNextPage: boolean,
+    prevPage: number | null,
+    nextPage: number | null
+  },
+  chatRooms: Record<string, {
+    messages: Record<string, Message>,
+    messagePagination: any
+  }>;
 }
 
-const initialState: UserSliceState = {
-  user: {} as User,
-  attendance: {} as UserAttendance,
-  token: null,
+const initialState: ClassSliceState = {
+  children: {},
+  pagination: {
+    totalDocs: 0,
+    limit: 0,
+    page: 0,
+    totalPages: 0,
+    pagingCounter: 1,
+    hasPrevPage: false,
+    hasNextPage: false,
+    prevPage: null,
+    nextPage: null
+  },
+  chatRooms: {}
 };
 
-export const userSlice = createSlice({
-  name: 'User',
+const ClassSlice = createSlice({
+  name: 'Class',
   initialState,
   reducers: {
-    setUserState: (_, { payload }: PayloadAction<UserSliceState>) => payload,
-    setUser: (
-      state,
-      { payload }: PayloadAction<Partial<User>>
-    ) => {
-      state.user = { ...state.user, ...payload };
+    setChildren: (state, { payload }: PayloadAction<ClassResponse>) => {
+      const { docs, ...pagination } = payload;
+      state.children = docs.reduce((acc, curr) => {
+        acc["child_" + curr._id] = curr;
+        return acc;
+      }, {} as Record<string, Child>);
+      state.pagination = pagination;
     },
-    setUserAttendance: (state, { payload }: PayloadAction<UserAttendance>) => {
-      state.attendance = payload;
+    setChild: (state, { payload }: PayloadAction<Partial<Child>>) => {
+      state.children["child_" + payload._id] = { ...state.children["child_" + payload._id], ...payload };
     },
-    resetUserState: _ => initialState,
+    setChatRoom: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
+      const { chatRoomId, docs, ...pagination } = payload;
+      const chatRoomKey = `chatRoom_${chatRoomId}`;
+      state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
+      docs.forEach((message) => {
+        state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
+          ...message, user: {
+            _id: "6673fe3a586f9969aa07e034",
+            name: 'Waqas Mumtaz',
+          },
+        };
+      });
+      state.chatRooms[chatRoomKey].messagePagination = pagination;
+    },
+    setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
+      const { chatRoomId, message } = payload;
+      const chatRoomKey = `chatRoom_${chatRoomId}`;
+      state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = message;
+    },
+    removeChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, messageId: string }>) => {
+      const { chatRoomId, messageId } = payload;
+      const chatRoomKey = `chatRoom_${chatRoomId}`;
+      delete state.chatRooms[chatRoomKey].messages[`message_${messageId}`];
+    },
+    resetClassState: _ => initialState,
   },
 });
 
-export const { setUserState, setUser, setUserAttendance, resetUserState } =
-  userSlice.actions;
+export const { setChildren, setChild, setChatRoom, setChatRoomMessage, resetClassState } =
+  ClassSlice.actions;
 
-export default userSlice.reducer;
+export default ClassSlice.reducer;
 
-export const selectUserToken = createDraftSafeSelector(
-  [(state: RootState) => state.user],
-  state => state.token
+export const selectChildren = createDraftSafeSelector(
+  [(state: RootState) => state.class],
+  state => Object.values(state.children) as Child[]
 );
 
-export const selectUserProfile = createDraftSafeSelector(
-  [(state: RootState) => state.user],
-  state => state.user
+export const selectChildrens = createDraftSafeSelector(
+  [(state: RootState) => state.class],
+  state => state.children
 );
 
-export const selectUserAttendance = createDraftSafeSelector(
-  [(state: RootState) => state.user],
-  state => state.attendance
-);
+export const selectChildById = (childId: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.class.children],
+    children => children["child_" + childId] as Child
+  );
+
+export const selectChatRoomMessages = (chatRoomId: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.class.chatRooms],
+    chatRooms => Object.values(chatRooms?.["chatRoom_" + chatRoomId]?.messages || {})
+  );

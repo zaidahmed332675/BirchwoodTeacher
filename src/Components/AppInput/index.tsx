@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import {
-  View,
-  TextInput,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   KeyboardTypeOptions,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { colors } from '../../theme/colors';
 import { vh } from '../../Utils/units';
+import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
-interface AppInputProps {
+interface AppInputProps extends TextInputProps {
   label: string;
   placeholder: string;
   placeholderSize?: Number;
@@ -19,7 +20,7 @@ interface AppInputProps {
   required?: boolean;
   isPassword?: boolean;
   isMultiple?: boolean;
-  onChange: (value: string) => void;
+  // onChange: (value: string) => void;
   inputStyle?: object;
   numberOfLines?: number;
   keyboardType?: KeyboardTypeOptions;
@@ -37,11 +38,12 @@ export const AppInput = ({
   inputStyle,
   numberOfLines = 1,
   keyboardType = 'default',
+  ...props
 }: AppInputProps) => {
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
   return (
-    <View style={{ marginVertical: 10 }}>
+    <View style={{ marginVertical: 40 }}>
       <Text style={styles.labelStyle}>
         {label} {required && <Text style={{ color: 'red' }}>*</Text>}
       </Text>
@@ -63,6 +65,7 @@ export const AppInput = ({
           value={value}
           secureTextEntry={secureTextEntry}
           onChangeText={onChange}
+          {...props}
         />
         {isPassword && (
           <TouchableOpacity

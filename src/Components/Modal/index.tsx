@@ -1,9 +1,9 @@
 import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, ModalProps, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
-interface AppModalProps {
+interface AppModalProps extends ModalProps {
   isModalVisible: boolean;
   children: React.ReactNode;
   _styleContent?: object;
@@ -17,13 +17,16 @@ export const AppModal = ({
   _styleContent,
   _styleBackground,
   onClose,
+  ...props
 }: AppModalProps) => {
   return (
     <Modal
       transparent={true}
       animationType="slide"
       visible={isModalVisible}
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+      {...props}
+    >
       <View style={[styles.modalBackground, _styleBackground]}>
         <View style={[styles.modalContent, _styleContent]}>
           <View style={styles.header}>

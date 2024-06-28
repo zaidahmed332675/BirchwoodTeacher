@@ -138,7 +138,7 @@ export const ImageBox = ({
         }
         alt="User Profile Image"
         style={[styles.userImage, _imageStyle]}
-        resizeMode="cover"
+        resizeMode="contain"
       />
       <View
         style={[

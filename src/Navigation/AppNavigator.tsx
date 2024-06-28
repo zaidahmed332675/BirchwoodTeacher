@@ -12,11 +12,11 @@ import { selectUserProfile } from '../Stores/slices/user.slice';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
 import { NavigationOptions, attendanceEnum } from '../Utils/options';
 import { appShadow, colors } from '../theme/colors';
-import ActivityNavigator from './ActivityNavigator';
 import AttendanceNavigator from './AttendanceNavigator';
 import ChatNavigator from './ChatNavigator';
 import ClassNavigator from './ClassNavigator';
 import DiaryNavigator from './DiaryNavigator';
+import PostNavigator from './PostNavigator';
 import ProfileNavigator from './ProfileNavigator';
 
 const Stack = createStackNavigator<MainStackParams>();
@@ -39,8 +39,6 @@ const AppNavigator = () => {
       ...appShadow(4),
     },
   });
-
-  console.log(profile, 'userProfile')
 
   if (!attendanceEnum[profile?.newAttendance?.status] && !profile.checkIn) {
     return (
@@ -73,8 +71,8 @@ const AppNavigator = () => {
       />
       <Stack.Screen name={EMainStack.myClassRoutes} component={ClassNavigator} />
       <Stack.Screen
-        name={EMainStack.activityRoutes}
-        component={ActivityNavigator}
+        name={EMainStack.postRoutes}
+        component={PostNavigator}
       />
       <Stack.Screen name={EMainStack.diaryRoutes} component={DiaryNavigator} />
       <Stack.Screen name={EMainStack.chatRoutes} component={ChatNavigator} />

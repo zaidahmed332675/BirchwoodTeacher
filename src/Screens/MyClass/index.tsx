@@ -1,33 +1,49 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import aDot from '../../Assets/icons/absentDot.png';
-import dp1 from '../../Assets/icons/dp1.png';
 import pendingDot from '../../Assets/icons/pendingDot.png';
 import pDot from '../../Assets/icons/presentDot.png';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { DataLoader } from '../../Components/DataLoader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
+import { ImageBox } from '../../Components/UploadImage';
 import { VIcon } from '../../Components/VIcon';
+import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChildren } from '../../Stores/slices/class.slice';
+import { Child } from '../../Types/Class';
 import {
   ClassStackParams,
   EChatStack,
   EMainStack
 } from '../../Types/NavigationTypes';
-import { dummyRecords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
 
 const MyClass = ({ }: Props) => {
   const navigation = useNavigation<NavigationProp<ClassStackParams>>();
+  const [loading, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
+  let children = useAppSelector(selectChildren);
 
-  const renderItem = ({ item }: any) => (
+  useEffect(() => {
+    getChildrenByClassId()
+  }, [getChildrenByClassId]);
+
+  if (loading) {
+    return <DataLoader />;
+  }
+
+  const renderItem = ({ item }: { item: Child }) => (
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate('studentInfo')}>
+      onPress={() => navigation.navigate('childInfo', {
+        childId: item._id
+      })}>
       <View
         style={{
           alignSelf: 'flex-start',
@@ -36,12 +52,15 @@ const MyClass = ({ }: Props) => {
           source={item.isPresent ? pDot : item.isOnLeave ? pendingDot : aDot}
           style={styles.attendanceIcon}
         />
-        <Image source={dp1} style={styles.dpStyle} />
+        <ImageBox
+          image={{ uri: item.image }}
+          _imageStyle={styles.dpStyle}
+        />
       </View>
       <View style={{ marginLeft: 10, flex: 1 }}>
-        <GlroyBold text={item.label} _style={{ color: colors.text.black }} />
+        <GlroyBold text={`${item.firstName} ${item.lastName}`} _style={{ color: colors.text.black }} />
         <GrayMediumText
-          text={`Class ${item.class} | Roll no: ${item.rollNumber}`}
+          text={`Grade: ${item.classroom?.classroomGrade} | Roll No: ${item.rollNumber}`}
           _style={{ fontSize: 12 }}
         />
         <View>
@@ -72,8 +91,9 @@ const MyClass = ({ }: Props) => {
           navigation.navigate(EMainStack.chatRoutes, {
             screen: EChatStack.createChat,
             params: {
-              parentId: item.parentData?.parentId,
-              parentName: item.parentData?.parentName,
+              childId: item._id,
+              chatRoomId: item.chatRoomId
+              // parentId: item.parent?._id,
             },
           });
         }}
@@ -106,7 +126,7 @@ const MyClass = ({ }: Props) => {
   return (
     <Layout customHeader={<CustomHeader title={'My Class'} />}>
       <FlatList
-        data={[...dummyRecords]}
+        data={[...children]}
         keyExtractor={item => item._id.toString()}
         renderItem={renderItem}
       />

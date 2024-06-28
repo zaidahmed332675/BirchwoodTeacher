@@ -1,33 +1,34 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  // Image,
-  ScrollView,
   StyleSheet,
-  // Text,
-  // TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 // import dp1 from '../../Assets/icons/dp1.png';
-import { ActivityPost } from '../../Components/ActivityPost';
 import { CustomHeader } from '../../Components/CustomHeader';
 // import { GlroyBold } from '../../Components/GlroyBoldText';
 // import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 // import { CustomSwitch } from '../../Components/Switch';
+import { FlatList } from 'react-native';
+import { ActivityPost } from '../../Components/ActivityPost';
 import { AppButton } from '../../Components/Button';
+import { DataLoader } from '../../Components/DataLoader';
 import { VIcon } from '../../Components/VIcon';
+import { asyncGetAllClassPosts } from '../../Stores/actions/post.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectPosts } from '../../Stores/slices/post.slice';
 import {
-  ActivityStackParams,
-  EActivityStack,
+  EPostStack,
+  PostStackParams,
 } from '../../Types/NavigationTypes';
 import { capitalizeWords, dummyRecords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
-type Props = StackScreenProps<ActivityStackParams, 'activities'>;
+type Props = StackScreenProps<PostStackParams, 'posts'>;
 
-const Activity = ({ navigation }: Props) => {
+const Post = ({ navigation }: Props) => {
   const searchModalRef = useRef();
 
   const [tabIndex, setTabIndex] = useState<number>(1);
@@ -35,8 +36,11 @@ const Activity = ({ navigation }: Props) => {
   const [student, setStudent] = useState<string>('');
   const items = [...dummyRecords];
 
+  // const navigation = useNavigation<NavigationProp<ClassStackParams>>();
+  const [loading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
+  let posts = useAppSelector(selectPosts);
+
   useEffect(() => {
-    // console.log(searchModalRef.current, 'student is here');
     if (!isSearchModalOpen) {
       let item = searchModalRef.current?.selectedItem;
       if (item) {
@@ -46,7 +50,13 @@ const Activity = ({ navigation }: Props) => {
     }
   }, [isSearchModalOpen]);
 
-  // console.log(searchModalRef.current, 'student is here');
+  useEffect(() => {
+    getAllClassPosts()
+  }, [getAllClassPosts]);
+
+  if (loading) {
+    return <DataLoader />;
+  }
 
   return (
     <Layout
@@ -55,7 +65,7 @@ const Activity = ({ navigation }: Props) => {
           title="Activities"
           isActionEnbl={true}
           onPress={() => {
-            navigation.navigate(EActivityStack.activityList);
+            navigation.navigate(EPostStack.activityList);
           }}
         />
       }>
@@ -170,12 +180,17 @@ const Activity = ({ navigation }: Props) => {
           display: 'none',
         }}
       />
-      <ScrollView
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => <ActivityPost item={item} />}
+        keyExtractor={item => item._id.toString()}
+      />
+      {/* <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         <ActivityPost />
         <ActivityPost />
-      </ScrollView>
+      </ScrollView> */}
     </Layout>
   );
 };
@@ -190,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Activity;
+export default Post;

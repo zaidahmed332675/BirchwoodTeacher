@@ -18,7 +18,7 @@ const initialState: UserSliceState = {
   token: null,
 };
 
-export const userSlice = createSlice({
+const UserSlice = createSlice({
   name: 'User',
   initialState,
   reducers: {
@@ -37,9 +37,9 @@ export const userSlice = createSlice({
 });
 
 export const { setUserState, setUser, setUserAttendance, resetUserState } =
-  userSlice.actions;
+  UserSlice.actions;
 
-export default userSlice.reducer;
+export default UserSlice.reducer;
 
 export const selectUserToken = createDraftSafeSelector(
   [(state: RootState) => state.user],
