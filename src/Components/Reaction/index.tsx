@@ -1,34 +1,42 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Post } from '../../Types/Post';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
-export const Reaction = () => {
+interface ReactionProps {
+  handleLike: () => void;
+  handleLove: () => void;
+  toggleComments?: () => void;
+  post: Post
+}
+
+export const Reaction = ({ post, handleLike, handleLove, toggleComments }: ReactionProps) => {
   return (
     <View style={styles.reaction}>
       <View style={styles.reactionActions}>
-        <TouchableOpacity style={[styles.action, styles.actionSelected]}>
+        <TouchableOpacity style={[styles.action]} onPress={handleLike}>
           <VIcon
-            type="FontAwesome6"
-            name="thumbs-up"
+            type="FontAwesome"
+            name={post.likes.length ? "thumbs-up" : "thumbs-o-up"}
             size={16}
             color={colors.theme.white}
             style={styles.moreAction}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity style={styles.action} onPress={handleLove}>
+          <VIcon
+            type="FontAwesome"
+            name={post.loves.length ? "heart" : "heart-o"}
+            size={16}
+            color={colors.theme.white}
+            style={styles.moreAction}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.action} onPress={toggleComments}>
           <VIcon
             type="Ionicons"
-            name="chatbubble-ellipses"
-            size={16}
-            color={colors.theme.white}
-            style={styles.moreAction}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.action}>
-          <VIcon
-            type="FontAwesome6"
-            name="share"
+            name="chatbubble-ellipses-outline"
             size={16}
             color={colors.theme.white}
             style={styles.moreAction}
@@ -41,14 +49,15 @@ export const Reaction = () => {
 
 const styles = StyleSheet.create({
   reaction: {
-    marginVertical: 10,
+    marginBottom: 20,
+    marginTop: 10,
   },
   reactionActions: {
     flexDirection: 'row',
     gap: 10,
   },
   action: {
-    backgroundColor: colors.theme.secondary,
+    backgroundColor: colors.theme.primary,
     width: 40,
     height: 40,
     borderRadius: 50,

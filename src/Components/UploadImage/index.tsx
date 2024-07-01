@@ -112,18 +112,20 @@ export const UploadImage = ({
 export const ImageBox = ({
   image,
   imagePlaceholder,
+  _containerStyle,
   _imageStyle = {},
   _indicatorStyle = {},
 }: {
   image: Asset;
   imagePlaceholder?: ImageProps;
+  _containerStyle?: object;
   _imageStyle?: object;
   _indicatorStyle?: object;
 }) => {
   const [imageLoader, setImageLoader] = useState(false);
 
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+    <View style={[{ alignItems: 'center', justifyContent: 'center' }, _containerStyle]}>
       <Image
         onLoadStart={() => {
           setImageLoader(true);

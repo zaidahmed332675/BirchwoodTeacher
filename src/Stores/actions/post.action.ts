@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GetActivities, GetAllClassPosts, Post } from '../../Types/Post';
+import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } from '../../Types/Post';
 import { callApi } from '../../services/api';
 import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
-import { setActivities, setPosts } from '../slices/post.slice';
+import { setActivities, setComment, setComments, setLike, setLove, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncGetAllActivities = createAsyncThunk(
@@ -75,27 +75,94 @@ export const asyncCreatePost = createAsyncThunk(
   }
 );
 
-// export const asyncGetChildrenByClassId = createAsyncThunk(
-//   'getChildrenByClassId',
-//   async (_, { dispatch }) => {
-//     dispatch(setLoading(true));
+export const asyncLikePost = createAsyncThunk(
+  'likePost',
+  async ({ postId }: { postId: string }, { getState, dispatch }) => {
+    const userId = getState().user.user?._id
+    const res = await callApi({
+      path: allApiPaths.getPath('likePost', {
+        postId
+      }),
+    });
 
-//     const res = await callApi<ClassResponse>({
-//       path: allApiPaths.getPath('getChildrenByClassId'),
-//     });
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setLike({ _id: postId, userId }))
+      dispatch(asyncShowSuccess(res.message))
+    }
+    return res;
+  }
+);
 
-//     if (!res.status) {
-//       dispatch(asyncShowError(res.message));
-//     } else {
-//       dispatch(
-//         setChildren(res.data!)
-//       );
-//     }
+export const asyncLovePost = createAsyncThunk(
+  'lovePost',
+  async ({ postId }: { postId: string }, { getState, dispatch }) => {
+    const userId = getState().user.user?._id
+    const res = await callApi({
+      path: allApiPaths.getPath('lovePost', {
+        postId
+      }),
+    });
 
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setLove({ _id: postId, userId }))
+      dispatch(asyncShowSuccess(res.message))
+    }
+    return res;
+  }
+);
+
+export const asyncGetCommentsByPostId = createAsyncThunk(
+  'getCommentsByPostId',
+  async ({ postId }: { postId: string }, { dispatch }) => {
+    const res = await callApi<GetAllPostComments>({
+      path: allApiPaths.getPath('getAllPostComments', {
+        postId
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setComments({ postId, ...res.data! })
+      );
+    }
+
+    return res;
+  }
+);
+
+export const asyncCreatePostComment = createAsyncThunk(
+  'createPostComment',
+  async (data: { postId: string, comment: { content: string } }, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<{ newComment: Comment }, { content: string }>({
+      method: "POST",
+      path: allApiPaths.getPath('createPostComment', {
+        postId: data.postId
+      }),
+      body: { ...data.comment }
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setComment({
+        postId: data.postId,
+        comment: res.data?.newComment!
+      }))
+      dispatch(asyncShowSuccess(res.message));
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
 
 // export const asyncCheckInChildByTeacher = createAsyncThunk(
 //   'checkInChildByTeacher',

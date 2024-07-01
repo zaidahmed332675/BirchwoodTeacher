@@ -25,7 +25,7 @@ import { GrayMediumText } from '../GrayMediumText';
 import { AppModal } from '../Modal';
 import { VIcon } from '../VIcon';
 
-export const RichTextEditor = forwardRef<unknown, { enableToolbar: boolean }>(({ enableToolbar = true }, ref) => {
+export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>(({ enableToolbar = true }, ref) => {
   // const RichText = useRef(null);
 
   const videoPlayer = useRef<Video | null>(null);

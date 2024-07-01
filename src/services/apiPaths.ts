@@ -33,6 +33,10 @@ export enum PostApiPaths {
   createPost = '/post/addPost',
   getAllClassPosts = '/post/getAllClassPosts/:classRoomId',
   getAllChildPosts = '/post/getAllChildPosts/:childId',
+  likePost = '/post/likePost/:postId',
+  lovePost = '/post/lovePost/:postId',
+  createPostComment = '/post/commentPost/:postId',
+  getAllPostComments = '/post/getAllPostComments/:postId',
   deletePost = '/post/deletePost/:postId',
 }
 

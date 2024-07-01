@@ -26,6 +26,15 @@ export interface Post {
   updatedAt: string;
 }
 
+export interface Comment {
+  _id: string;
+  content: string;
+  post: string;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface GetActivities extends PaginationProps {
   docs: Activity[];
 }
@@ -44,3 +53,6 @@ export interface GetAllClassPosts extends PaginationProps {
   docs: Post[]
 }
 
+export interface GetAllPostComments extends PaginationProps {
+  docs: Comment[]
+}

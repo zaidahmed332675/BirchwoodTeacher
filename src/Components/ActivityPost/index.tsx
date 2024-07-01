@@ -1,25 +1,67 @@
 import { formatDistanceToNow } from 'date-fns';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useAppSelector } from '../../Stores/hooks';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { asyncCreatePostComment, asyncGetCommentsByPostId, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectPostComments } from '../../Stores/slices/post.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { Post } from '../../Types/Post';
 import { colors } from '../../theme/colors';
+import { AppInput } from '../AppInput';
 import { Comment } from '../Comment';
 import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
+import { VIcon } from '../VIcon';
 
 export const ActivityPost = ({ item: post }: { item: Post }) => {
+  const [likeLoading, likePost] = useLoaderDispatch(asyncLikePost, false);
+  const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
+  const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId, false);
+  const [_, createPostComment] = useLoaderDispatch(asyncCreatePostComment, false);
+
   const profile = useAppSelector(selectUserProfile)
+  const comments = useAppSelector(selectPostComments(post._id))
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+  const [toggleComments, setToggleComments] = useState(false)
+
+  const handleLike = () => {
+    if (likeLoading) return
+    likePost({ postId: post._id })
+  }
+
+  const handleLove = () => {
+    if (loveLoading) return
+    lovePost({ postId: post._id })
+  }
+
+  const handleGetComments = () => {
+    setToggleComments((state) => !state)
+    if (toggleComments || commentLoading) return
+    getPostComments({ postId: post._id })
+  }
+
+  const {
+    control,
+    handleSubmit,
+  } = useForm<any>({
+    defaultValues: {
+      content: '',
+    },
+  });
+
+  const handleOnCommmentSubmit = (comment: Record<'content', string>) => {
+    console.log(comment)
+    createPostComment({ postId: post._id, comment })
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
         <View>
-          <GrayMediumText _style={styles.userName} text="Anna Mary" />
+          <GrayMediumText _style={styles.userName} text={`${profile.firstName} ${profile.lastName}`} />
           <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
         </View>
       </View>
@@ -30,35 +72,65 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
       <View style={{
         flexDirection: 'row',
         marginTop: 10,
-        gap: 20,
+        gap: 10,
       }}>
         <GrayMediumText
-          text="2 Likes"
+          text={`${post.likes.length} Likes`}
           _style={{
             fontWeight: 'normal',
             fontSize: 12
           }}
         />
         <GrayMediumText
-          text="2 Dislikes"
+          text={`${post.loves.length} Loved`}
           _style={{
             fontWeight: 'normal',
             fontSize: 12
           }}
         />
         <GrayMediumText
-          text="2 Comments"
+          text={`${comments.length} Comments`}
           _style={{
             fontWeight: 'normal',
             fontSize: 12
           }}
         />
       </View>
-      <Reaction />
-      <View style={styles.comments}>
-        <Comment />
-        <Comment />
-      </View>
+      <Reaction post={post} handleLike={handleLike} handleLove={handleLove} toggleComments={handleGetComments} />
+      {toggleComments && <View style={styles.comments}>
+        {!commentLoading ? comments.length ? comments.map((comment) => {
+          return <Comment key={comment._id} comment={comment} />
+        }) : <GrayMediumText _style={styles.timeStamp} text={"No Comments Found!"} />
+          : <GrayMediumText _style={styles.timeStamp} text={"Loading Comments!"} />}
+        <Controller
+          name="content"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <AppInput
+                label=''
+                placeholder="Write a comment..."
+                value={value}
+                onChange={onChange}
+                _containerStyle={{ marginVertical: 0, flex: 1 }}
+              />
+              <View>
+                <TouchableOpacity onPress={handleSubmit(handleOnCommmentSubmit)}>
+                  <VIcon
+                    type="MaterialCommunityIcons"
+                    name={"send-circle"}
+                    size={45}
+                    color={colors.theme.primary}
+                    style={{
+                      marginLeft: 5
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+      </View>}
     </View>
   );
 };
@@ -66,7 +138,8 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
 const styles = StyleSheet.create({
   container: {
     borderColor: colors.theme.greyAlt,
-    paddingVertical: 20,
+    paddingTop: 20,
+    borderBottomWidth: 0.5,
   },
   header: {
     flexDirection: 'row',
@@ -77,6 +150,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: colors.theme.greyAlt2,
   },
   userName: {
     fontSize: 16,
@@ -95,12 +170,13 @@ const styles = StyleSheet.create({
   postImage: {
     width: '100%',
     height: 200,
-    resizeMode: 'contain',
     borderWidth: 1,
     borderRadius: 20,
   },
   comments: {
+    paddingVertical: 20,
     borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
+    gap: 20,
   },
 });

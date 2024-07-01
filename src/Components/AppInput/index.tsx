@@ -6,7 +6,7 @@ import {
   TextInput,
   TextInputProps,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { vh } from '../../Utils/units';
 import { colors } from '../../theme/colors';
@@ -24,6 +24,7 @@ interface AppInputProps extends TextInputProps {
   inputStyle?: object;
   numberOfLines?: number;
   keyboardType?: KeyboardTypeOptions;
+  _containerStyle?: object;
 }
 
 export const AppInput = ({
@@ -38,15 +39,16 @@ export const AppInput = ({
   inputStyle,
   numberOfLines = 1,
   keyboardType = 'default',
+  _containerStyle = {},
   ...props
 }: AppInputProps) => {
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
   return (
-    <View style={{ marginVertical: 40 }}>
-      <Text style={styles.labelStyle}>
+    <View style={[{ marginVertical: 10 }, _containerStyle]}>
+      {label && <Text style={styles.labelStyle}>
         {label} {required && <Text style={{ color: 'red' }}>*</Text>}
-      </Text>
+      </Text>}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
           keyboardType={keyboardType}

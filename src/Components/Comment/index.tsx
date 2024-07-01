@@ -1,26 +1,25 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import workerImage from '../../Assets/images/worker.png';
+import { Comment as CommentProps } from '../../Types/Post';
+import { formatCommentTime } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
+import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 
-export const Comment = () => {
+export const Comment = ({ comment }: { comment: CommentProps }) => {
   return (
     <View style={styles.comment}>
-      <Image style={styles.commentPic} source={workerImage} />
+      <ImageBox _imageStyle={styles.commentPic} image={workerImage} _containerStyle={styles.commentPicContainer} />
       <View style={styles.commentData}>
-        <GrayMediumText text="Mark Ramos" _style={styles.commentUserName} />
+        <GrayMediumText text="Waqas Mumtaz" _style={styles.commentUserName} />
         <GrayMediumText
           _style={styles.commentText}
-          text="Great work! Well done girl. Great work! Well done girl. Great
-              work! Well done girl. Great work! Well done girl. Great work! Well
-              done girl. Great work! Well done girl.👏🏽"
+          text={comment.content}
         />
         <View style={styles.commentAction}>
-          <GrayMediumText text="Like" />
-          <GrayMediumText text="Reply" />
-          <GrayMediumText text="2m" />
+          <GrayMediumText text={formatCommentTime(comment.createdAt)} />
         </View>
       </View>
       <VIcon
@@ -37,7 +36,9 @@ export const Comment = () => {
 const styles = StyleSheet.create({
   comment: {
     flexDirection: 'row',
-    marginTop: 20,
+  },
+  commentPicContainer: {
+    justifyContent: 'flex-start',
   },
   commentPic: {
     width: 30,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   },
   commentAction: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 5,
     gap: 10,
   },
   moreAction: {

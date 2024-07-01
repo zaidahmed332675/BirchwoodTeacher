@@ -1,3 +1,4 @@
+import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 import _ from 'lodash';
 import { create } from 'react-native-pixel-perfect';
 
@@ -293,3 +294,24 @@ export const isArrayOfObjectsEqual = (
   // const yProps = y.map(obj => pickProps(obj, keys));
   return _.isEqual(xProps, y);
 };
+
+export const formatCommentTime = (commentDate) => {
+  const now = new Date();
+  const seconds = differenceInSeconds(now, commentDate);
+  const minutes = differenceInMinutes(now, commentDate);
+  const hours = differenceInHours(now, commentDate);
+  const days = differenceInDays(now, commentDate);
+
+  if (seconds < 60) {
+    return `${seconds}s`;
+  } else if (minutes < 60) {
+    return `${minutes}m`;
+  } else if (hours < 24) {
+    return `${hours}h`;
+  } else if (days < 7) {
+    return `${days}d`;
+  } else {
+    // For dates older than 7 days, you can use formatDistanceToNow or another format
+    return formatDistanceToNow(commentDate, { addSuffix: true });
+  }
+}
