@@ -94,10 +94,10 @@ export const selectChildren = createDraftSafeSelector(
   state => Object.values(state.children) as Child[]
 );
 
-export const selectChildrens = createDraftSafeSelector(
-  [(state: RootState) => state.class],
-  state => state.children
-);
+// export const selectChildrens = createDraftSafeSelector(
+//   [(state: RootState) => state.class],
+//   state => state.children
+// );
 
 export const selectChildById = (childId: string) =>
   createDraftSafeSelector(

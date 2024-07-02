@@ -45,15 +45,17 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const {
     control,
     handleSubmit,
+    reset
   } = useForm<any>({
     defaultValues: {
       content: '',
     },
   });
 
-  const handleOnCommmentSubmit = (comment: Record<'content', string>) => {
-    console.log(comment)
-    createPostComment({ postId: post._id, comment })
+  const handleOnCommmentSubmit = async (comment: Record<'content', string>) => {
+    if (!comment.content) return
+    let response = await createPostComment({ postId: post._id, comment })
+    if (response.status) reset()
   }
 
   return (
@@ -68,7 +70,9 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
       <Text style={styles.postText}>
         {post.content}
       </Text>
-      <ImageBox image={{ uri: post.images[0] }} _imageStyle={styles.postImage} />
+      {post.images?.length ? post.images.map((image) => {
+        return <ImageBox key={image} image={{ uri: image }} _imageStyle={styles.postImage} />
+      }) : null}
       <View style={{
         flexDirection: 'row',
         marginTop: 10,
@@ -171,7 +175,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   comments: {
     paddingVertical: 20,

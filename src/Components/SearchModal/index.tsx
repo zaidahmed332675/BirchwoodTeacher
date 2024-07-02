@@ -10,6 +10,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import aDot from '../../Assets/icons/absentDot.png';
 import dp1 from '../../Assets/icons/dp1.png';
 import pDot from '../../Assets/icons/presentDot.png';
+import { Child } from '../../Types/Class';
 import { colors } from '../../theme/colors';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
@@ -17,8 +18,9 @@ import { VIcon } from '../VIcon';
 interface SearchModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  items: Record<string, any>[];
+  children: Child[];
   isMultiple?: boolean;
+  selectedItems: any;
   _style?: object;
 }
 
@@ -45,7 +47,7 @@ export const SearchModal = forwardRef(
     {
       open,
       setOpen,
-      items,
+      children,
       selectedItems,
       isMultiple = false,
       _style,
@@ -54,9 +56,6 @@ export const SearchModal = forwardRef(
     ref
   ) => {
     const [value, setValue] = useState<any>(selectedItems);
-
-    // console.log(value, 'value is here');
-
     useImperativeHandle(
       ref,
       () => ({
@@ -77,9 +76,9 @@ export const SearchModal = forwardRef(
         loading={false}
         multiple={isMultiple}
         min={0}
-        max={items.length}
+        max={children?.length ?? 0}
         searchable={true}
-        items={items}
+        items={children}
         value={value}
         setOpen={setOpen}
         setValue={setValue}
@@ -87,7 +86,7 @@ export const SearchModal = forwardRef(
           maxLength: 15,
         }}
         {...rest}
-        renderListItem={props => {
+        renderListItem={(props) => {
           return (
             <TouchableOpacity
               onPress={() => {
@@ -106,7 +105,7 @@ export const SearchModal = forwardRef(
               }}>
               <View>
                 <Image
-                  source={props.item?.isPresent ? pDot : aDot}
+                  source={props.item.checkIn ? pDot : aDot}
                   style={{
                     height: 10,
                     width: 10,
@@ -130,7 +129,7 @@ export const SearchModal = forwardRef(
               </View>
               <View style={{ marginLeft: 10, flex: 1 }}>
                 <GlroyBold
-                  text={props.label}
+                  text={`${props.label}`}
                   _style={{
                     color: props.isSelected
                       ? colors.theme.white

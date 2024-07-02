@@ -11,11 +11,12 @@ import { Layout } from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
 import { ImageBox } from '../../Components/UploadImage';
+import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncCreatePost } from '../../Stores/actions/post.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
-import { dummyRecords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<PostStackParams, 'createPost'>;
@@ -29,7 +30,7 @@ const CreatePostModalContent = ({
   const searchModalRef = useRef();
 
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
-  const items = [...dummyRecords];
+  let children = useAppSelector(selectChildren);
 
   useEffect(() => {
     let item = searchModalRef.current?.selectedItem;
@@ -93,7 +94,15 @@ const CreatePostModalContent = ({
           isMultiple={true}
           open={isSearchModalOpen}
           setOpen={setSearchModalOpen}
-          items={items}
+          children={children.map(child => {
+            let { parent, ...childData } = child
+            return ({
+              label: `${child.firstName} ${child.lastName}`,
+              value: child._id,
+              parentData: parent,
+              ...childData,
+            })
+          })}
           selectedItems={students}
           ref={searchModalRef}
           multipleText={`${students?.length} ${students?.length > 1 ? 'children' : 'child'
@@ -112,7 +121,7 @@ const CreatePost = ({ navigation, route }: Props) => {
   let [audience, setAudience] = useState(0);
   const [students, setStudents] = useState<any>();
   const [isSheetOpen, setSheetOpen] = useState(false);
-
+  const dispatch = useAppDispatch()
   const [_, createPost] = useLoaderDispatch(asyncCreatePost);
   const profile = useAppSelector(selectUserProfile)
 
@@ -122,13 +131,21 @@ const CreatePost = ({ navigation, route }: Props) => {
     const formData = new FormData();
     formData.append('content', data?.content);
     formData.append('activity', activityId);
-    formData.append('classroom', '6630e5f01364cb7fd294281c');
-    formData.append('type', 'CLASS');
-    formData.append('image[0]', {
+
+    formData.append('type', audience === 0 ? 'CLASS' : 'CHILD');
+
+    formData.append('image', {
       uri: data?.media?.uri,
       type: data?.media?.type,
-      filename: data?.media?.fileName,
+      name: data?.media?.fileName,
     });
+
+    if (audience === 1) {
+      if (students?.length) {
+        formData.append('children', JSON.stringify(students))
+      }
+      else dispatch(asyncShowError('Please select atleast one child!'))
+    } else formData.append('classroom', '6630e5f01364cb7fd294281c');
 
     let res = await createPost(formData)
     if (res.status) {
@@ -144,7 +161,7 @@ const CreatePost = ({ navigation, route }: Props) => {
           <Text style={styles.userName}>{`${profile.firstName} ${profile.lastName}`}</Text>
           <AppButton
             title={
-              !students?.length
+              audience === 0
                 ? 'Class'
                 : students?.length > 1
                   ? 'Children'
@@ -169,6 +186,7 @@ const CreatePost = ({ navigation, route }: Props) => {
       <RichTextEditor ref={textEditorRef} />
       <AppBottomSheet
         ref={sheetRef}
+        snapPoints={['50%', '75%']}
         enableDismissOnClose
         onDismiss={() => {
           setSheetOpen(false);

@@ -16,8 +16,9 @@ import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
+import { useAppSelector } from '../../Stores/hooks';
+import { selectChildren } from '../../Stores/slices/class.slice';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
-import { dummyRecords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
@@ -28,7 +29,7 @@ const Diary = ({ navigation }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [student, setStudent] = useState<Record<string, any>>();
-  const items = [...dummyRecords];
+  let children = useAppSelector(selectChildren);
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
@@ -118,7 +119,15 @@ const Diary = ({ navigation }: Props) => {
       <SearchModal
         open={isSearchModalOpen}
         setOpen={setSearchModalOpen}
-        items={items}
+        children={children.map(child => {
+          let { parent, ...childData } = child
+          return ({
+            label: `${child.firstName} ${child.lastName}`,
+            value: child._id,
+            parentData: parent,
+            ...childData,
+          })
+        })}
         ref={searchModalRef}
         _style={{
           display: 'none',

@@ -18,12 +18,13 @@ import { DataLoader } from '../../Components/DataLoader';
 import { VIcon } from '../../Components/VIcon';
 import { asyncGetAllClassPosts } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectPosts } from '../../Stores/slices/post.slice';
 import {
   EPostStack,
   PostStackParams,
 } from '../../Types/NavigationTypes';
-import { capitalizeWords, dummyRecords } from '../../Utils/options';
+import { capitalizeWords } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
@@ -34,11 +35,11 @@ const Post = ({ navigation }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [student, setStudent] = useState<string>('');
-  const items = [...dummyRecords];
 
   // const navigation = useNavigation<NavigationProp<ClassStackParams>>();
   const [loading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
   let posts = useAppSelector(selectPosts);
+  let children = useAppSelector(selectChildren);
 
   useEffect(() => {
     if (!isSearchModalOpen) {
@@ -174,7 +175,15 @@ const Post = ({ navigation }: Props) => {
       <SearchModal
         open={isSearchModalOpen}
         setOpen={setSearchModalOpen}
-        items={items}
+        children={children.map(child => {
+          let { parent, ...childData } = child
+          return ({
+            label: `${child.firstName} ${child.lastName}`,
+            value: child._id,
+            parentData: parent,
+            ...childData,
+          })
+        })}
         ref={searchModalRef}
         _style={{
           display: 'none',

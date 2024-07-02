@@ -6,13 +6,14 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import profile from '../../Assets/images/profile_bg.png';
 import { AppBottomSheet } from '../../Components/BottomSheet';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
 import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
+import { useAppSelector } from '../../Stores/hooks';
+import { selectChildren } from '../../Stores/slices/class.slice';
 import { DiaryStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import { dummyRecords } from '../../Utils/options';
-import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<DiaryStackParams, 'createDiary'>;
 
@@ -22,8 +23,7 @@ const CreateDiaryModalContent = () => {
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [audience, setAudience] = useState(0);
   const [student, setStudent] = useState<Record<string, any>>();
-
-  const [items] = useState([...dummyRecords]);
+  let children = useAppSelector(selectChildren);
 
   useEffect(() => {
     let item = searchModalRef.current?.selectedItem;
@@ -83,7 +83,15 @@ const CreateDiaryModalContent = () => {
         <SearchModal
           open={isSearchModalOpen}
           setOpen={setSearchModalOpen}
-          items={items}
+          children={children.map(child => {
+            let { parent, ...childData } = child
+            return ({
+              label: `${child.firstName} ${child.lastName}`,
+              value: child._id,
+              parentData: parent,
+              ...childData,
+            })
+          })}
           ref={searchModalRef}
         />
       )}

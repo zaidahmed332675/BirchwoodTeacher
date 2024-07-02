@@ -113,8 +113,6 @@ export const asyncGetMessagesByChatRoomId = createAsyncThunk(
       }),
     });
 
-    console.log(res, 'cheko response of messages')
-
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {

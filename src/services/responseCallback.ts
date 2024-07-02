@@ -27,7 +27,7 @@ export function responseCallback<RT>(
   const message = res.data?.message ?? res.statusText ?? "Something Went Wrong!";
   const status = res.data?.status ?? false
 
-  // console.log(res, 'checking response')
+  // console.log(res, 'checking API response')
 
   if (res.status === 401) {
     store.dispatch(resetUserState());

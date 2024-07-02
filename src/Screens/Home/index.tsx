@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -13,7 +13,9 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Header } from '../../Components/Header';
 import { store } from '../../Stores';
+import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
 import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.action';
+import { useLoaderDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vh, vw } from '../../Utils/units';
 import { appShadow, colors } from '../../theme/colors';
@@ -21,6 +23,13 @@ import { appShadow, colors } from '../../theme/colors';
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+
+  const [loading, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
+
+  useEffect(() => {
+    getChildrenByClassId()
+  }, [getChildrenByClassId]);
+
   const data = [
     {
       id: 1,

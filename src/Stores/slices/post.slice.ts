@@ -58,7 +58,6 @@ const PostSlice = createSlice({
       });
     },
     setComment: (state, { payload }: PayloadAction<{ postId: string, comment: Comment }>) => {
-      console.log(payload, 'yooo')
       const { postId, comment } = payload;
       state.postsComments["post_" + postId].comments[`comment_${comment._id}`] = comment;
     },
@@ -86,7 +85,7 @@ const PostSlice = createSlice({
   },
 });
 
-export const { setPosts, setLike, setLove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
+export const { setPosts, setPost, setLike, setLove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
   PostSlice.actions;
 
 export default PostSlice.reducer;

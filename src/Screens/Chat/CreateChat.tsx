@@ -77,8 +77,6 @@ const CreateChat = ({ route }: Props) => {
   const profile = useAppSelector(selectUserProfile);
   const messagess = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chatRoomId));
 
-  console.log(messagess, 'hmm sahi')
-
   useLayoutEffect(() => {
     if (chatRoomId) {
       setCreateChatLoader(false)

@@ -3,7 +3,7 @@ import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } fr
 import { callApi } from '../../services/api';
 import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
-import { setActivities, setComment, setComments, setLike, setLove, setPosts } from '../slices/post.slice';
+import { setActivities, setComment, setComments, setLike, setLove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncGetAllActivities = createAsyncThunk(
@@ -67,6 +67,7 @@ export const asyncCreatePost = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
+      dispatch(setPost(res.data?.newPost!))
       dispatch(asyncShowSuccess(res.message))
     }
 

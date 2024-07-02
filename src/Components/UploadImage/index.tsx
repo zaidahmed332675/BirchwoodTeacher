@@ -1,3 +1,4 @@
+import { useAnimations } from '@react-native-media-console/reanimated';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { Asset } from 'react-native-image-picker';
+import VideoPlayer from 'react-native-media-console';
 import profile from '../../Assets/images/avatar.jpg';
 import {
   insertImageFromCamera,
@@ -24,7 +26,7 @@ interface UploadImageProps {
   _imageStyle?: Record<string, any>;
   _indicatorStyle?: Record<string, any>;
   originalImage: string | undefined;
-  handleImage?: (param: Asset & { status?: boolean; message?: string }) => void;
+  handleImage?: (asset: Asset) => void;
   style?: object;
 }
 
@@ -37,7 +39,7 @@ export const UploadImage = ({
   originalImage,
   handleImage,
 }: UploadImageProps) => {
-  // console.log(originalImage, 'casdasdas');
+
   const selectOptionIMG = () => {
     Alert.alert(
       'Select Image',
@@ -58,10 +60,10 @@ export const UploadImage = ({
   const handleImageUpload = async (mediaType: String) => {
     let method =
       mediaType === 'camera' ? insertImageFromCamera : insertImageFromGallery;
-    let media = await method();
+    let media = await method({ selectionLimit: 1 });
 
-    if (media.status) {
-      handleImage?.(media);
+    if (media.status && media.assets?.length) {
+      handleImage?.(media.assets[0]);
     }
   };
 
@@ -83,8 +85,6 @@ export const UploadImage = ({
               onPress={() =>
                 handleImage?.({
                   uri: originalImage
-                    ? getImagePath(originalImage)
-                    : originalImage,
                 })
               }>
               <VIcon
@@ -157,6 +157,47 @@ export const ImageBox = ({
     </View>
   );
 };
+
+export const VideoBox = ({ media }) => {
+  const [videoLoader, setVideoLoader] = useState(true);
+
+  return (<View style={[{ alignItems: 'center', justifyContent: 'center' }]}>
+    <VideoPlayer
+      useAnimations={useAnimations}
+      disableBack
+      paused={true}
+      onLoadStart={() => {
+        setVideoLoader(true);
+      }}
+      onLoad={() => {
+        setVideoLoader(false);
+      }}
+      poster={media.uri}
+      source={{
+        uri: media?.uri,
+      }}
+      resizeMode='contain'
+      containerStyle={{
+        borderRadius: 10
+      }}
+      style={{
+        height: 250,
+      }}
+    />
+    <View
+      style={[
+        styles.userImage,
+        { position: 'absolute', justifyContent: 'center' },
+      ]}>
+      <ActivityIndicator
+        animating={videoLoader}
+        size="large"
+        color={colors.theme.primary}
+      />
+    </View>
+  </View>
+  )
+}
 
 const styles = StyleSheet.create({
   userImage: {
