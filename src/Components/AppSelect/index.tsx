@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
-import { Text } from 'react-native';
 
 interface AppSelectProps {
   data: any[];
+  defaultValue?: string;
   label?: string;
   icon?: string;
   placeholder?: string;
@@ -22,8 +22,10 @@ export const AppSelect = ({
   onSelect,
   label,
   placeholder = 'Please Select',
+  defaultValue = '',
   required = true,
   style,
+  ...rest
 }: AppSelectProps) => {
   return (
     <View style={[styles.appInput, style]}>
@@ -32,6 +34,7 @@ export const AppSelect = ({
       </Text>
       <View style={styles.inputView}>
         <SelectDropdown
+          defaultValue={defaultValue}
           data={data}
           onSelect={onSelect}
           renderButton={(selectedItem, isOpened) => {
@@ -41,7 +44,7 @@ export const AppSelect = ({
                   style={[
                     styles.dropdownButtonTxtStyle,
                     selectedItem &&
-                      selectedItem.title && { color: colors.theme.black },
+                    selectedItem.title && { color: colors.theme.black },
                   ]}>
                   {(selectedItem && selectedItem.title) || placeholder}
                 </Text>

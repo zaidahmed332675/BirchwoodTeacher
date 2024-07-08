@@ -1,23 +1,21 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Image,
-  ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import dp1 from '../../Assets/icons/dp1.png';
+// import dp1 from '../../Assets/icons/dp1.png';
+import { FlatList } from 'react-native-gesture-handler';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { DataLoader } from '../../Components/DataLoader';
 import { DiaryCard } from '../../Components/DiaryCard';
-import { GlroyBold } from '../../Components/GlroyBoldText';
-import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
-import { SearchModal } from '../../Components/SearchModal';
+import { NotFound } from '../../Components/NotFound';
 import { CustomSwitch } from '../../Components/Switch';
-import { useAppSelector } from '../../Stores/hooks';
+import { asyncGetAllHomeWorks } from '../../Stores/actions/diary.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
+import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
@@ -29,6 +27,10 @@ const Diary = ({ navigation }: Props) => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [student, setStudent] = useState<Record<string, any>>();
+
+  const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks);
+
+  let homeworks = useAppSelector(selectHomeWorks);
   let children = useAppSelector(selectChildren);
 
   const onSelectSwitch = (index: number) => {
@@ -44,6 +46,15 @@ const Diary = ({ navigation }: Props) => {
       setStudent(item);
     }
   }, [isSearchModalOpen]);
+
+  useEffect(() => {
+    getAllHomeWorks()
+  }, [getAllHomeWorks]);
+
+
+  if (loading) {
+    return <DataLoader />;
+  }
 
   return (
     <Layout
@@ -66,7 +77,7 @@ const Diary = ({ navigation }: Props) => {
           selectionColor={colors.theme.primary}
         />
       </View>
-      {tabIndex > 1 && student && (
+      {/* {tabIndex > 1 && student && (
         <View
           style={{
             borderColor: colors.theme.secondary,
@@ -114,9 +125,9 @@ const Diary = ({ navigation }: Props) => {
             </Text>
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
 
-      <SearchModal
+      {/* <SearchModal
         open={isSearchModalOpen}
         setOpen={setSearchModalOpen}
         children={children.map(child => {
@@ -132,37 +143,18 @@ const Diary = ({ navigation }: Props) => {
         _style={{
           display: 'none',
         }}
-      />
+      /> */}
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-        <View style={styles.diaryRecord}>
-          <DiaryCard />
-        </View>
-      </ScrollView>
-    </Layout>
+      {homeworks.length ? <FlatList
+        contentContainerStyle={{
+          paddingBottom: 10
+        }}
+        data={homeworks}
+        renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} /></View>}
+        keyExtractor={item => item._id.toString()}
+      /> : <NotFound text={`No home work available\nPlease add a new home work`} />}
+
+    </Layout >
   );
 };
 
@@ -172,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   diaryRecord: {
-    marginVertical: 10,
+    marginVertical: 6,
   },
 });
 

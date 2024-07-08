@@ -1,12 +1,17 @@
+import { useAnimations } from '@react-native-media-console/reanimated';
 import { formatDistanceToNow } from 'date-fns';
+import lodash from 'lodash';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { asyncCreatePostComment, asyncGetCommentsByPostId, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
+import VideoPlayer from 'react-native-media-console';
+import { asyncCreatePostComment, asyncDeletePost, asyncGetCommentsByPostId, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectPostComments } from '../../Stores/slices/post.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { Post } from '../../Types/Post';
+import { isImage, isVideo } from '../../Utils/options';
+import { getImagePath } from '../../services/axios';
 import { colors } from '../../theme/colors';
 import { AppInput } from '../AppInput';
 import { Comment } from '../Comment';
@@ -19,7 +24,8 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const [likeLoading, likePost] = useLoaderDispatch(asyncLikePost, false);
   const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
   const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId, false);
-  const [_, createPostComment] = useLoaderDispatch(asyncCreatePostComment, false);
+  const [createCommentLoading, createPostComment] = useLoaderDispatch(asyncCreatePostComment, false);
+  const [deletePostLoading, deletePost] = useLoaderDispatch(asyncDeletePost, false);
 
   const profile = useAppSelector(selectUserProfile)
   const comments = useAppSelector(selectPostComments(post._id))
@@ -58,21 +64,69 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
     if (response.status) reset()
   }
 
+  const handlePostDelete = () => {
+    deletePost({ postId: post._id })
+  }
+
+  const media = lodash.shuffle([...post.images, ...post.videos]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
+        <View style={styles.author}>
+          <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
+          <View>
+            <GrayMediumText _style={styles.userName} text={`${profile.firstName} ${profile.lastName}`} />
+            <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
+          </View>
+        </View>
         <View>
-          <GrayMediumText _style={styles.userName} text={`${profile.firstName} ${profile.lastName}`} />
-          <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
+          <TouchableOpacity onPress={handlePostDelete}>
+            <VIcon
+              type="EvilIcons"
+              name={"close"}
+              size={30}
+              color={colors.theme.black}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <Text style={styles.postText}>
         {post.content}
       </Text>
-      {post.images?.length ? post.images.map((image) => {
-        return <ImageBox key={image} image={{ uri: image }} _imageStyle={styles.postImage} />
-      }) : null}
+      {media.length ? <View style={{
+        gap: 10
+      }}>
+        {
+          media.map((media, index) => {
+            if (isImage(media)) {
+              return <ImageBox key={`${media}_${index}`} image={{ uri: media }} _imageStyle={styles.postImage} />
+            }
+            else if (isVideo(media)) {
+              return <VideoPlayer
+                key={`${media}_${index}`}
+                useAnimations={useAnimations}
+                disableBack
+                paused={true}
+                poster={getImagePath(media)}
+                source={{
+                  uri: getImagePath(media),
+                }}
+                resizeMode='contain'
+                containerStyle={{
+                  borderRadius: 10
+                }}
+                style={{
+                  height: 250,
+                  width: '100%'
+                }}
+              />
+            } else {
+              return <></>
+            }
+          })
+        }
+      </View> : null}
       <View style={{
         flexDirection: 'row',
         marginTop: 10,
@@ -146,6 +200,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  author: {
     flexDirection: 'row',
     alignItems: 'center',
   },

@@ -1,89 +1,81 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { format, getMonth, getYear } from 'date-fns';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { AppCalender } from '../../Components/AppCalender';
 import { AttendanceCard } from '../../Components/AttendanceCard';
 import { CustomHeader } from '../../Components/CustomHeader';
-import { DataLoader } from '../../Components/DataLoader';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { HolidayCard } from '../../Components/HolidayCard';
 import { Layout } from '../../Components/Layout';
+import { NotFound } from '../../Components/NotFound';
 import { CustomSwitch } from '../../Components/Switch';
-import { asyncUserMonthlyAttendance } from '../../Stores/actions/user.action';
+import { asyncGetAllHolidays, asyncUserMonthlyAttendance } from '../../Stores/actions/user.action';
 import {
-  useAppDispatch,
   useAppSelector,
-  useLoaderDispatch,
+  useLoaderDispatch
 } from '../../Stores/hooks';
-import { selectUserAttendance } from '../../Stores/slices/user.slice';
-import { colors } from '../../theme/colors';
-import { format, getMonth, getYear } from 'date-fns';
-import { setLoading } from '../../Stores/slices/common.slice';
+import { selectHolidaysMonthWise, selectUserAttendance } from '../../Stores/slices/user.slice';
 import { attendanceEnum } from '../../Utils/options';
+import { colors } from '../../theme/colors';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(1);
   const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
-  const [_, getUserMonthlyAttendnace] = useLoaderDispatch(
-    asyncUserMonthlyAttendance
-  );
+
+  const [attendanceLoader, getUserMonthlyAttendnace] = useLoaderDispatch(asyncUserMonthlyAttendance);
+  const [holidayLoader, getAllHolidays] = useLoaderDispatch(asyncGetAllHolidays);
+
   const userAttendance = useAppSelector(selectUserAttendance);
-  const dispatch = useAppDispatch();
+  const monthWiseHolidays = useAppSelector(selectHolidaysMonthWise(format(calenderMonthYear, 'yyyy-MM')));
 
   useEffect(() => {
-    dispatch(setLoading(true));
-  }, [dispatch]);
-
-  const loadData = useCallback(async () => {
-    let res = await getUserMonthlyAttendnace({
+    if (tabIndex === 1) getUserMonthlyAttendnace({
       month: getMonth(calenderMonthYear),
       year: getYear(calenderMonthYear),
     });
-    if (res.status) {
-      dispatch(setLoading(false));
-    }
-  }, [calenderMonthYear, getUserMonthlyAttendnace, dispatch]);
+  }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace]);
 
+
+  const [isHolidayCalled, setIsHolidayCalled] = useState(false)
   useEffect(() => {
-    loadData();
-  }, [loadData]);
 
-  const holidaysData = [
-    {
-      id: 1,
-      title: 'Easter',
-      date: '11th november',
-    },
-    {
-      id: 2,
-      title: 'Good Friday',
-      date: '14th november',
-    },
-    {
-      id: 3,
-      title: 'Chritsmas',
-      date: '25th november',
-    },
-  ];
+    const loadData = async () => {
+      let res = await getAllHolidays()
+      if (res.status) setIsHolidayCalled(true)
+    }
+
+    if (tabIndex === 2 && !isHolidayCalled) {
+      loadData()
+    }
+  }, [tabIndex, getAllHolidays])
+
+  // const holidaysData = [
+  //   {
+  //     id: 1,
+  //     title: 'Easter',
+  //     date: '11th november',
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Good Friday',
+  //     date: '14th november',
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Chritsmas',
+  //     date: '25th november',
+  //   },
+  // ];
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
   };
 
-  // const renderItems = ({ item }: any) => {
-  //   if (tabIndex > 1) {
-  //     return <HolidayCard item={item} />;
-  //   } else {
-  //     return <AttendanceCard item={item} />;
-  //   }
-  // };
-
-  // const ItemSeperator = useCallback(() => <View style={{ margin: 10 }} />, []);
-
   const handleMonthChange = (date: Date) => {
     setCalenderMonthYear(date);
   };
 
-  // if (true) {
+  // if (attendanceLoader || holidayLoader) {
   //   return <DataLoader />;
   // }
 
@@ -98,6 +90,21 @@ const Attendance = () => {
       },
     };
   }, []);
+
+  const holidaysData = monthWiseHolidays?.reduce((acc, curr) => {
+    let formatedDate = format(new Date(curr.date), 'yyyy-MM-dd');
+    return {
+      ...acc,
+      [formatedDate]: {
+        ...curr,
+        checkInDate: formatedDate,
+        checkIn: true,
+      },
+    };
+  }, []);
+
+  // console.log(attendanceData, 'checking attendance')
+  console.log(holidaysData, 'checking holidays yar')
 
   return (
     <Layout
@@ -114,7 +121,7 @@ const Attendance = () => {
         />
       </View>
       <View>
-        {tabIndex > 1 ? (
+        {tabIndex === 1 ? (
           <AppCalender
             data={attendanceData}
             calenderMonthYear={calenderMonthYear}
@@ -122,12 +129,12 @@ const Attendance = () => {
           />
         ) : (
           <AppCalender
-            data={attendanceData}
+            data={holidaysData}
             calenderMonthYear={calenderMonthYear}
             handleMonthChange={handleMonthChange}
           />
         )}
-        {tabIndex > 1 && (
+        {tabIndex === 2 && (
           <GrayMediumText
             text="List of Holidays"
             _style={{
@@ -139,24 +146,29 @@ const Attendance = () => {
         )}
       </View>
 
-      {tabIndex > 1 ? (
-        <HolidayCard item={holidaysData[0]} />
+      {tabIndex === 2 ? (
+        monthWiseHolidays.length ? <FlatList
+          contentContainerStyle={{ gap: 10, paddingBottom: 15 }}
+          data={monthWiseHolidays}
+          renderItem={({ item }) => <HolidayCard holiday={item} />}
+          keyExtractor={item => item._id}
+        /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} _textStyle={{ fontSize: 18 }} text={"Currently, there are no holidays available for this month."} />
       ) : (
-        <View style={{ marginTop: 30, rowGap: 10 }}>
+        <View style={{ marginTop: 30, gap: 10 }}>
           <AttendanceCard
             type={attendanceEnum.PRESENT}
             title="Present"
-            count={userAttendance.stats.PRESENT}
+            count={userAttendance.stats?.PRESENT}
           />
           <AttendanceCard
             type={attendanceEnum.ABSENT}
             title="Absent"
-            count={userAttendance.stats.ABSENT}
+            count={userAttendance.stats?.ABSENT}
           />
           <AttendanceCard
             type={attendanceEnum.LEAVE}
             title="Leave"
-            count={userAttendance.stats.LEAVE}
+            count={userAttendance.stats?.LEAVE}
           />
         </View>
       )}

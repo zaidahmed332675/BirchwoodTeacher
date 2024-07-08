@@ -66,18 +66,14 @@ export const AppCalender = ({
         }}
         customDatesStyles={date => {
           let calenderDate = format(date, 'yyyy-MM-dd');
-          let calenderDateUserEntry = data[calenderDate];
+          let calenderDateUserEntry = data?.[calenderDate];
 
           const isDateMatched =
             !isNaN(
               compareAsc(calenderDate, calenderDateUserEntry?.checkInDate)
             ) || undefined;
 
-          if (date.getDay() === 0) {
-            return {
-              style: styles.weekEndDaysStyle,
-            };
-          } else if (isDateMatched && calenderDateUserEntry?.checkIn) {
+          if (isDateMatched && calenderDateUserEntry?.checkIn) {
             return {
               style: styles.presentDaysStyle,
               textStyle: styles.textStyle,
@@ -87,7 +83,12 @@ export const AppCalender = ({
               style: styles.absentDaysStyle,
               textStyle: styles.textStyle,
             };
-          } else {
+          } else if (date.getDay() === 0) {
+            return {
+              style: styles.weekEndDaysStyle,
+            };
+          }
+          else {
             return { textStyle: styles.daysLabelStyle };
           }
         }}

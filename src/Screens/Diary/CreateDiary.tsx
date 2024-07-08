@@ -1,177 +1,291 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CheckBox } from '@rneui/themed';
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import profile from '../../Assets/images/profile_bg.png';
-import { AppBottomSheet } from '../../Components/BottomSheet';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { AppDatePicker } from '../../Components/AppDatePicker';
+import { AppInput } from '../../Components/AppInput';
+import { AppSelect } from '../../Components/AppSelect';
 import { AppButton } from '../../Components/Button';
 import { CustomHeader } from '../../Components/CustomHeader';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
-import { RichTextEditor } from '../../Components/RichTextEditor';
 import { SearchModal } from '../../Components/SearchModal';
-import { useAppSelector } from '../../Stores/hooks';
+import { asyncCreateHomeWork } from '../../Stores/actions/diary.action';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
+import { CreateHomeWorkPayload } from '../../Types/Diary';
 import { DiaryStackParams } from '../../Types/NavigationTypes';
+import { HomeWorkTypeEnum } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<DiaryStackParams, 'createDiary'>;
 
-const CreateDiaryModalContent = () => {
-  const searchModalRef = useRef();
+const CreateDiaryNew = ({ }: Props) => {
+    const [isSearchModalOpen, setSearchModalOpen] = useState(false);
 
-  const [isSearchModalOpen, setSearchModalOpen] = useState(false);
-  const [audience, setAudience] = useState(0);
-  const [student, setStudent] = useState<Record<string, any>>();
-  let children = useAppSelector(selectChildren);
+    const [_, createHomeWorks] = useLoaderDispatch(asyncCreateHomeWork, false);
 
-  useEffect(() => {
-    let item = searchModalRef.current?.selectedItem;
-    if (item) {
-      setStudent(item);
-    }
-  }, [isSearchModalOpen]);
+    let children = useAppSelector(selectChildren);
 
-  return (
-    <View style={styles.contentContainer}>
-      <Text
-        style={{
-          marginVertical: 20,
-          color: colors.text.white,
-          fontWeight: 'bold',
-          fontSize: 18,
-        }}>
-        Choose Audience
-      </Text>
-      <View>
-        <CheckBox
-          checked={audience === 0}
-          title="Class"
-          textStyle={{
-            fontSize: 16,
-            color: colors.text.white,
-          }}
-          checkedIcon="dot-circle-o"
-          uncheckedIcon="circle-o"
-          containerStyle={{
-            backgroundColor: 'transparent',
-            padding: 0,
-            marginVertical: 8,
-          }}
-          checkedColor={colors.theme.white}
-          onIconPress={() => setAudience(0)}
-        />
-        <CheckBox
-          checked={audience === 1}
-          title="Child"
-          textStyle={{
-            fontSize: 16,
-            color: colors.text.white,
-          }}
-          checkedIcon="dot-circle-o"
-          uncheckedIcon="circle-o"
-          containerStyle={{
-            backgroundColor: 'transparent',
-            marginVertical: 8,
-            padding: 0,
-          }}
-          checkedColor={colors.theme.white}
-          onIconPress={() => setAudience(1)}
-        />
-      </View>
-      {audience === 1 && (
-        <SearchModal
-          open={isSearchModalOpen}
-          setOpen={setSearchModalOpen}
-          children={children.map(child => {
-            let { parent, ...childData } = child
-            return ({
-              label: `${child.firstName} ${child.lastName}`,
-              value: child._id,
-              parentData: parent,
-              ...childData,
-            })
-          })}
-          ref={searchModalRef}
-        />
-      )}
-    </View>
-  );
-};
+    const {
+        control,
+        handleSubmit,
+        formState: { defaultValues, errors },
+        watch,
+        resetField
+    } = useForm<any>({
+        defaultValues: {
+            title: '',
+            description: '',
+            assignee: '',
+            classroom: '',
+            children: [],
+            type: '',
+            dueDate: '',
+        },
+    });
 
-const CreateDiary = ({}: Props) => {
-  const sheetRef = useRef<BottomSheetModal>(null);
-  const [isOpen, setIsOpen] = useState(false);
+    const isChildren = watch("assignee", "CLASS") === "CHILD";
 
-  return (
-    <Layout customHeader={<CustomHeader title="Create Diary" />}>
-      <View style={styles.container}>
-        <Image style={styles.profilePic} source={profile} />
-        <View>
-          <Text style={styles.userName}>Anna Mary</Text>
-          <Text style={styles.timeStamp}>Class Post</Text>
-        </View>
-      </View>
-      <RichTextEditor enableToolbar={false} />
-      <AppBottomSheet
-        ref={sheetRef}
-        enableDismissOnClose
-        onDismiss={() => {
-          setIsOpen(false);
-        }}
-        _handleStyle={{
-          backgroundColor: colors.theme.greyAlt2,
-        }}
-        _sheetStyle={{
-          backgroundColor: colors.theme.greyAlt2,
-        }}>
-        <CreateDiaryModalContent />
-      </AppBottomSheet>
+    const onSubmit = useCallback((data: CreateHomeWorkPayload) => {
+        if (isChildren) delete data.classroom
+        if (!isChildren) delete data.children
+        createHomeWorks(data)
+    }, [createHomeWorks, isChildren]);
 
-      <AppButton
-        title={isOpen ? 'Done' : 'Post Now'}
-        onPress={() => {
-          sheetRef.current?.present();
-          setIsOpen(true);
-        }}
-        btnStyle={{
-          width: '95%',
-          height: 50,
-          marginTop: 0,
-          backgroundColor: colors.theme.secondary,
-          borderWidth: 0,
-          marginVertical: 10,
-        }}
-      />
-    </Layout>
-  );
-};
+    return (
+        <Layout customHeader={<CustomHeader title="Create Home Work" />}>
+            <ScrollView>
+                <View style={styles.container}>
+                    <ScrollView>
+                        <Controller
+                            name="title"
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Please write your thoughts!',
+                                },
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <AppInput
+                                    isMultiple={true}
+                                    required={true}
+                                    label='Title'
+                                    textAlignVertical="top"
+                                    placeholder={"What's in your mind?...."}
+                                    placeholderTextColor={colors.text.altGrey}
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+
+                        {errors.title?.message && (
+                            <GrayMediumText
+                                text={errors.title.message}
+                                _style={{ color: colors.theme.lightRed }}
+                            />
+                        )}
+
+                        <Controller
+                            name="description"
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Description is required',
+                                },
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <AppInput
+                                    label="Description"
+                                    placeholder="Enter description"
+                                    value={value}
+                                    required
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+
+                        {errors.description?.message && (
+                            <GrayMediumText
+                                text={errors.description.message}
+                                _style={{ color: colors.theme.lightRed }}
+                            />
+                        )}
+
+                        <Controller
+                            name="type"
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Type is required',
+                                },
+                            }}
+                            render={({ field: { onChange } }) => (
+                                <AppSelect
+                                    data={Array.from(Object.keys(HomeWorkTypeEnum ?? {}), key => ({
+                                        title: key.slice(0, 1) + key.slice(1).toLowerCase(),
+                                        value: key,
+                                    }))}
+                                    label="Home Work Type"
+                                    placeholder='Please select'
+                                    onSelect={item => onChange(item.value)}
+                                />
+                            )}
+                        />
+
+                        {errors.type?.message && (
+                            <GrayMediumText
+                                _style={{ color: colors.theme.lightRed }}
+                                text={errors.type.message}
+                            />
+                        )}
+
+                        <Controller
+                            name="assignee"
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Assign to is required',
+                                },
+                            }}
+                            render={({ field: { onChange } }) => (
+                                <AppSelect
+                                    defaultValue={defaultValues?.assignee}
+                                    data={Array.from(Object.keys({ CLASS: "CLASS", CHILD: "CHILD" } ?? {}), key => ({
+                                        title: key.slice(0, 1) + key.slice(1).toLowerCase(),
+                                        value: key,
+                                    }))}
+                                    label="Assign To"
+                                    placeholder='Please select'
+                                    onSelect={item => {
+                                        if (item.value === "CLASS") resetField('children')
+                                        onChange(item.value)
+                                    }}
+                                />
+                            )}
+                        />
+
+                        {errors.assignee?.message && (
+                            <GrayMediumText
+                                _style={{ color: colors.theme.lightRed }}
+                                text={errors.assignee.message}
+                            />
+                        )}
+
+                        {isChildren &&
+                            <>
+                                <Controller
+                                    name="children"
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: 'Child is required',
+                                        },
+                                    }}
+                                    render={({ field: { onChange, value } }) => {
+                                        return (
+                                            <SearchModal
+                                                label="Select Children"
+                                                placeholder="Please select"
+                                                value={value?.length ? value : []}
+                                                onChange={(callback: any) => onChange(callback(value))}
+                                                isMultiple={true}
+                                                required={true}
+                                                open={isSearchModalOpen}
+                                                setOpen={setSearchModalOpen}
+                                                children={children.map(child => {
+                                                    let { parent, ...childData } = child
+                                                    return ({
+                                                        label: `${child.firstName} ${child.lastName}`,
+                                                        value: child._id,
+                                                        parentData: parent,
+                                                        ...childData,
+                                                    })
+                                                })}
+                                                _style={{
+                                                    borderColor: colors.input.background,
+                                                    backgroundColor: colors.input.background,
+                                                    borderRadius: 10,
+                                                }}
+                                                multipleText={`${value?.length} ${value?.length > 1 ? 'children' : 'child'
+                                                    } have been selected`}
+                                            />
+                                        )
+                                    }}
+                                />
+
+                                {errors.children?.message && (
+                                    <GrayMediumText
+                                        _style={{ color: colors.theme.lightRed }}
+                                        text={errors.children.message}
+                                    />
+                                )}
+                            </>
+                        }
+
+                        <Controller
+                            name="dueDate"
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Due Date is required',
+                                },
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <AppDatePicker
+                                    label="Due Date"
+                                    onChange={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+
+                        {errors.dueDate?.message && (
+                            <GrayMediumText
+                                _style={{ color: colors.theme.lightRed }}
+                                text={errors.dueDate.message}
+                            />
+                        )}
+
+                        <AppButton
+                            title={'Submit'}
+                            btnStyle={{
+                                marginVertical: 10,
+                            }}
+                            onPress={handleSubmit(onSubmit)}
+                        />
+                    </ScrollView>
+                </View>
+            </ScrollView>
+        </Layout>
+    );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 15,
-    backgroundColor: colors.theme.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  userName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.text.dimBlack,
-  },
-  timeStamp: {
-    fontSize: 12,
-    color: '#888',
-  },
-  contentContainer: {
-    backgroundColor: 'transparent',
-  },
+    container: {
+        flex: 1,
+        paddingVertical: 20,
+    },
+    profileGrid: {
+        marginBottom: 24,
+    },
+    profile: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingHorizontal: 13,
+        width: '100%',
+    },
+    profilePhoto: {
+        borderWidth: 3,
+        borderColor: colors.theme.primary,
+    },
 });
 
-export default CreateDiary;
+export default CreateDiaryNew

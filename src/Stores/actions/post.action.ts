@@ -3,7 +3,7 @@ import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } fr
 import { callApi } from '../../services/api';
 import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
-import { setActivities, setComment, setComments, setLike, setLove, setPost, setPosts } from '../slices/post.slice';
+import { removePost, setActivities, setComment, setComments, setLike, setLove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncGetAllActivities = createAsyncThunk(
@@ -68,6 +68,28 @@ export const asyncCreatePost = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(setPost(res.data?.newPost!))
+      dispatch(asyncShowSuccess(res.message))
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncDeletePost = createAsyncThunk(
+  'deletePost',
+  async ({ postId }: { postId: string }, { dispatch }) => {
+    dispatch(setLoading(true));
+    const res = await callApi({
+      path: allApiPaths.getPath('deletePost', {
+        postId
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(removePost({ _id: postId }))
       dispatch(asyncShowSuccess(res.message))
     }
 

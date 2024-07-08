@@ -5,20 +5,11 @@ import {
 } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { Child, ClassResponse, Message, MessagesResponse } from '../../Types/Class';
+import { PaginationProps } from '../../Types/Common';
 
 interface ClassSliceState {
   children: Record<string, Child>;
-  pagination: {
-    totalDocs: number,
-    limit: number,
-    page: number,
-    totalPages: number,
-    pagingCounter: number,
-    hasPrevPage: boolean,
-    hasNextPage: boolean,
-    prevPage: number | null,
-    nextPage: number | null
-  },
+  pagination: PaginationProps,
   chatRooms: Record<string, {
     messages: Record<string, Message>,
     messagePagination: any

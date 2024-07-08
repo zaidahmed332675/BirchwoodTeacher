@@ -282,6 +282,14 @@ export const leaveTypeEnum = {
   readonly [index: string]: string;
 };
 
+export const HomeWorkTypeEnum = {
+  HOMEWORK: 'HOMEWORK',
+  NOTICE: 'NOTICE',
+  WARNING: 'WARNING',
+} as const as {
+  readonly [index: string]: string;
+};
+
 export const isArrayOfObjectsEqual = (
   x: Record<string, any>[],
   y: Record<string, any>[],
@@ -315,3 +323,16 @@ export const formatCommentTime = (commentDate) => {
     return formatDistanceToNow(commentDate, { addSuffix: true });
   }
 }
+
+export const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
+export const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
+
+export const isImage = (fileName: string): boolean => {
+  const extension = fileName.split('.').pop()?.toLowerCase();
+  return imageExtensions.includes(extension || '');
+};
+
+export const isVideo = (fileName: string): boolean => {
+  const extension = fileName.split('.').pop()?.toLowerCase();
+  return videoExtensions.includes(extension || '');
+};

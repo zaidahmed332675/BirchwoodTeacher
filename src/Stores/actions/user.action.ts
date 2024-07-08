@@ -5,6 +5,7 @@ import {
   ChangePasswordPayload,
   EmailVerificationPayload,
   EmailVerificationResponse,
+  Holiday,
   LoginUserPayload,
   LoginUserResponse,
   OtpVerificationPayload,
@@ -18,6 +19,7 @@ import {
 import { setLoading } from '../slices/common.slice';
 import {
   resetUserState,
+  setHolidays,
   setUser,
   setUserAttendance,
   setUserState,
@@ -302,19 +304,36 @@ export const asyncUserLeave = createAsyncThunk(
 export const asyncUserMonthlyAttendance = createAsyncThunk(
   'monthlyAttendance',
   async ({ month, year }: any, { dispatch }) => {
-    dispatch(setLoading(true));
-
     const res = await callApi<UserAttendanceResponse>({
       path: (allApiPaths.getPath('monthlyAttendance') +
         `?month=${month}&year=${year}`) as ApiPaths,
     });
+
+    console.log(res, 'checking attendance response')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(setUserAttendance(res.data ?? ({} as UserAttendanceResponse)));
     }
-    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncGetAllHolidays = createAsyncThunk(
+  'getAllHolidays',
+  async (_, { dispatch }) => {
+    const res = await callApi<{ holidays: Holiday[] }>({
+      path: allApiPaths.getPath('getAllHolidays')
+    });
+
+    console.log(res, 'checking holiday response')
+
+    if (!res?.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setHolidays(res.data?.holidays!));
+    }
     return res;
   }
 );

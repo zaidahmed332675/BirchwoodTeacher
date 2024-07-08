@@ -50,6 +50,9 @@ const PostSlice = createSlice({
     setPost: (state, { payload }: PayloadAction<Partial<Post>>) => {
       state.posts["post_" + payload._id] = { ...state.posts["post_" + payload._id], ...payload };
     },
+    removePost: (state, { payload }: PayloadAction<{ _id: string }>) => {
+      delete state.posts["post_" + payload._id];
+    },
     setComments: (state, { payload }: PayloadAction<{ docs: Comment[] } & { postId: string }>) => {
       const { docs, postId } = payload;
       state.postsComments["post_" + postId] = state.postsComments["post_" + postId] || { comments: {}, commentPagination: {} };
@@ -85,7 +88,7 @@ const PostSlice = createSlice({
   },
 });
 
-export const { setPosts, setPost, setLike, setLove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
+export const { setPosts, setPost, removePost, setLike, setLove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
   PostSlice.actions;
 
 export default PostSlice.reducer;

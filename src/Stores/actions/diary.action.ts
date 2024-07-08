@@ -1,0 +1,74 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { CreateHomeWorkPayload, GetAllHomeWorks, HomeWork } from '../../Types/Diary';
+import { callApi } from '../../services/api';
+import { allApiPaths } from '../../services/apiPaths';
+import { setLoading } from '../slices/common.slice';
+import { removeHomeWork, setHomeWork, setHomeWorks } from '../slices/diary.slice';
+import { asyncShowError, asyncShowSuccess } from './common.action';
+
+export const asyncGetAllHomeWorks = createAsyncThunk(
+  'getAllHomeWork',
+  async (_, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<GetAllHomeWorks>({
+      path: allApiPaths.getPath('getAllHomeWork'),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setHomeWorks(res.data!)
+      );
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncCreateHomeWork = createAsyncThunk(
+  'createHomeWork',
+  async (data: CreateHomeWorkPayload, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<{ homework: HomeWork }, CreateHomeWorkPayload>({
+      method: "POST",
+      path: allApiPaths.getPath('createHomeWork'),
+      body: data
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setHomeWork(res.data?.homework!))
+      dispatch(asyncShowSuccess(res.message))
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncDeleteHomeWork = createAsyncThunk(
+  'deleteHomeWork',
+  async ({ homeWorkId }: { homeWorkId: string }, { dispatch }) => {
+    dispatch(setLoading(true));
+    const res = await callApi({
+      path: allApiPaths.getPath('deleteHomeWork', {
+        homeWorkId
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(removeHomeWork({ _id: homeWorkId }))
+      dispatch(asyncShowSuccess(res.message))
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);

@@ -4,6 +4,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ClassSlice from './slices/class.slice';
 import CommonSlice from './slices/common.slice';
+import DiarySlice from './slices/diary.slice';
 import PostSlice from './slices/post.slice';
 import UserSlice from './slices/user.slice';
 
@@ -12,6 +13,7 @@ const allreducers = combineReducers({
   user: UserSlice,
   class: ClassSlice,
   post: PostSlice,
+  diary: DiarySlice,
 });
 
 const persistConfig = {

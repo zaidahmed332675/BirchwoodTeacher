@@ -1,29 +1,23 @@
+import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { vw } from '../../Utils/units';
 import { colors } from '../../theme/colors';
+import { Holiday } from '../../types/User';
 import { GrayMediumText } from '../GrayMediumText';
 
-export const HolidayCard = ({ item }: any) => {
+export const HolidayCard = ({ holiday }: { holiday: Holiday }) => {
   return (
     <View style={styles.container}>
       <GrayMediumText
-        text={item.title}
+        text={holiday.name}
         _style={{ color: colors.theme.black }}
       />
       <View style={styles.contentBody}>
-        <View style={{ flex: 1 }}>
-          <GrayMediumText
-            text={item.date}
-            _style={{ color: colors.theme.grey }}
-          />
-        </View>
-        <View>
-          <GrayMediumText
-            text="Tuesday"
-            _style={{ color: colors.theme.grey }}
-          />
-        </View>
+        <GrayMediumText
+          text={format(holiday.date, 'do MMMM yy')}
+          _style={{ color: colors.theme.grey }}
+        />
       </View>
     </View>
   );
@@ -37,18 +31,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  head: {
-    fontWeight: 'bold',
-    marginVertical: 10,
-    marginHorizontal: vw * 3.7,
-  },
   contentBody: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-  },
-  title: {
-    fontWeight: 'bold',
+    paddingTop: 10,
   },
   date: {
     fontSize: 12,

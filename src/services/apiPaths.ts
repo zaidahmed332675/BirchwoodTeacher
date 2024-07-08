@@ -16,6 +16,7 @@ export enum ProfileApiPaths {
   checkOut = 'teacher/attendance/markCheckOut',
   leave = 'teacher/attendance/markLeave',
   monthlyAttendance = 'teacher/attendance/getAttendanceByMonth',
+  getAllHolidays = 'holiday/getAllHolidays',
   updateEducation = 'teacher/profile/updateEducation',
   updateExperience = 'teacher/profile/updateExperience',
 }
@@ -40,15 +41,25 @@ export enum PostApiPaths {
   deletePost = '/post/deletePost/:postId',
 }
 
+export enum DiaryApiPaths {
+  createHomeWork = '/homework/addHomework',
+  getAllHomeWork = '/homework/getAllHomework',
+  getAllChildHomework = '/homework/getAllChildHomework/:childId',
+  getHomeworkById = '/homework/getHomeworkById/:homeWorkId',
+  deleteHomeWork = '/homework/deleteHomework/:homeWorkId',
+  updateHomeWork = '/homework/updateHomework/:homeWorkId'
+}
+
 export const AllApiPaths = Object.freeze({
   ...AuthApiPaths,
   ...ResetPasswordApiPaths,
   ...ProfileApiPaths,
   ...ClassApiPaths,
   ...PostApiPaths,
+  ...DiaryApiPaths,
 });
 
-export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths | ClassApiPaths | PostApiPaths;
+export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths | ClassApiPaths | PostApiPaths | DiaryApiPaths;
 
 class ApiPathHandler<T> {
   private paths: T;

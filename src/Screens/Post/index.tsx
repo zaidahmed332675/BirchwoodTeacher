@@ -15,6 +15,7 @@ import { FlatList } from 'react-native';
 import { ActivityPost } from '../../Components/ActivityPost';
 import { AppButton } from '../../Components/Button';
 import { DataLoader } from '../../Components/DataLoader';
+import { NotFound } from '../../Components/NotFound';
 import { VIcon } from '../../Components/VIcon';
 import { asyncGetAllClassPosts } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
@@ -63,7 +64,7 @@ const Post = ({ navigation }: Props) => {
     <Layout
       customHeader={
         <CustomHeader
-          title="Activities"
+          title="Posts"
           isActionEnbl={true}
           onPress={() => {
             navigation.navigate(EPostStack.activityList);
@@ -189,17 +190,12 @@ const Post = ({ navigation }: Props) => {
           display: 'none',
         }}
       />
-      <FlatList
+
+      {posts.length ? <FlatList
         data={posts}
         renderItem={({ item }) => <ActivityPost item={item} />}
         keyExtractor={item => item._id.toString()}
-      />
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        <ActivityPost />
-        <ActivityPost />
-      </ScrollView> */}
+      /> : <NotFound text={`No posts available\nPlease add a new post`} />}
     </Layout>
   );
 };

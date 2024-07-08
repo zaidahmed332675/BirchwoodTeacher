@@ -98,6 +98,14 @@ export interface UserAttendanceResponse extends UserAttendance {
   [index: string]: any;
 }
 
+export interface Holiday {
+  _id: string;
+  name: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface LeavePayload {
   leaveType: string;
   leaveReason: string;
