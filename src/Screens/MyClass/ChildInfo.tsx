@@ -1,5 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback } from 'react';
+import { addDays, format, getMonth, getYear, isSameDay, startOfWeek } from 'date-fns';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../Components/Button';
 import { CustomHeader } from '../../Components/CustomHeader';
@@ -7,19 +8,35 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
-import { asyncCheckInChildByTeacher } from '../../Stores/actions/class.action';
+import { asyncCheckInChildByTeacher, asyncChildMonthlyAttendance } from '../../Stores/actions/class.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectChildById } from '../../Stores/slices/class.slice';
+import { selectChildById, selectCurrentWeekAttendance } from '../../Stores/slices/class.slice';
+import { colors } from '../../theme/colors';
+import { ChildCheckInOutResponse } from '../../Types/Class';
 import { ClassStackParams } from '../../Types/NavigationTypes';
 import { vh } from '../../Utils/units';
-import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ClassStackParams, 'childInfo'>;
 
 const ChildInfo = ({ route }: Props) => {
   const { childId } = route.params
+  const [calenderMonthYear] = useState(new Date());
+
   const [_, checkInChildByTeacher] = useLoaderDispatch(asyncCheckInChildByTeacher);
+  const [attendanceLoader, getChildMonthlyAttendnace] = useLoaderDispatch(asyncChildMonthlyAttendance);
+
   const child = useAppSelector(selectChildById(childId));
+  const currentWeekAttendance = useAppSelector(selectCurrentWeekAttendance(childId, startOfWeek(calenderMonthYear, { weekStartsOn: 1 })))
+
+  console.log(getMonth(calenderMonthYear), calenderMonthYear)
+
+  useEffect(() => {
+    getChildMonthlyAttendnace({
+      childId,
+      month: getMonth(calenderMonthYear) + 1,
+      year: getYear(calenderMonthYear),
+    });
+  }, [childId, calenderMonthYear, getChildMonthlyAttendnace]);
 
   const data = [
     {
@@ -74,6 +91,8 @@ const ChildInfo = ({ route }: Props) => {
     const checkInDateTime = date.toISOString();
     checkInChildByTeacher({ children: childId, checkIn: checkInDateTime })
   }, [checkInChildByTeacher]);
+
+  console.log(currentWeekAttendance)
 
   const reportsCards = (items: any, indx: number) => {
     return (
@@ -168,7 +187,13 @@ const ChildInfo = ({ route }: Props) => {
               })}
             </View>
             <View style={{ margin: 1 }} />
-            {data.map((item, indx) => {
+
+            {Array.from({ length: 5 }).map((_, indx) => {
+              let weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
+              const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item.createdAt)) || {} as ChildCheckInOutResponse
+              let checkIn = day.checkIn ? format(new Date(day.checkIn), "hh:mm a") : 'N/A'
+              let checkOut = day.checkOut ? format(new Date(day.checkOut), "hh:mm a") : 'N/A'
+
               return (
                 <View
                   style={[
@@ -177,15 +202,15 @@ const ChildInfo = ({ route }: Props) => {
                   ]}
                   key={indx}>
                   <GrayMediumText
-                    text={item.date}
+                    text={format(weekDay, 'cccc')}
                     _style={styles.attendanceItem}
                   />
                   <GrayMediumText
-                    text={item.checkIn}
+                    text={checkIn}
                     _style={styles.attendanceItem}
                   />
                   <GrayMediumText
-                    text={item.checkOut}
+                    text={checkOut}
                     _style={styles.attendanceItem}
                   />
                 </View>

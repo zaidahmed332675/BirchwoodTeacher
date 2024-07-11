@@ -6,6 +6,7 @@ import ClassSlice from './slices/class.slice';
 import CommonSlice from './slices/common.slice';
 import DiarySlice from './slices/diary.slice';
 import PostSlice from './slices/post.slice';
+import TimeTableSlice from './slices/timeTable.slice';
 import UserSlice from './slices/user.slice';
 
 const allreducers = combineReducers({
@@ -14,6 +15,7 @@ const allreducers = combineReducers({
   class: ClassSlice,
   post: PostSlice,
   diary: DiarySlice,
+  timeTable: TimeTableSlice,
 });
 
 const persistConfig = {

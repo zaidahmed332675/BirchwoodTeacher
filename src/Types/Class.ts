@@ -102,4 +102,16 @@ export interface ChildCheckInOutResponse {
   leaveReason: string;
   sickDescription: string;
   status: string;
+  createdAt: string;
+}
+
+export interface ChildAttendance {
+  [index: string]: any;
+  attendance: ChildCheckInOutResponse[];
+  stats: {
+    PRESENT: number;
+    ABSENT: number;
+    LEAVE: number;
+    HOLIDAY: number;
+  };
 }

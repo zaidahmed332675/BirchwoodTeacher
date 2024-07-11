@@ -12,12 +12,12 @@ import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncUpdateProfile } from '../../Stores/actions/user.action';
 import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { ProfileStackParams } from '../../Types/NavigationTypes';
+import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 
-export default function EditPersonalInfo({ }: Props) {
+export default function EditPersonalInfo({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
@@ -43,18 +43,15 @@ export default function EditPersonalInfo({ }: Props) {
     async (data: any) => {
       let formData = new FormData();
       let body: any = {};
-      // console.log('Data Profile Edit >>', data);
 
       if (data.firstName !== user?.firstName) {
         body.firstName = data.firstName;
         formData.append('firstName', data.firstName);
       }
-
       if (data.lastName !== user?.lastName) {
         body.lastName = data.lastName;
         formData.append('lastName', data.lastName);
       }
-
       if (data.phone !== user?.phone) {
         body.phone = data.phone;
         formData.append('phone', data.phone);
@@ -78,7 +75,6 @@ export default function EditPersonalInfo({ }: Props) {
 
       if (data.image?.fileName) {
         body.image = data.image.uri;
-
         formData.append('image', {
           uri: data.image.uri,
           type: data.image.type,
@@ -86,12 +82,11 @@ export default function EditPersonalInfo({ }: Props) {
         });
       }
 
-      // console.log('Body Data >>>', body);
-
       if (Object.keys(body).length === 0) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
         await dispatch(asyncUpdateProfile(formData)).unwrap();
+        navigation.navigate(EProfileStack.profile)
       }
     },
     [dispatch, user]

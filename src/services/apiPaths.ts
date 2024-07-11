@@ -14,7 +14,7 @@ export enum ProfileApiPaths {
   changePassword = 'profile/changePassword',
   checkIn = 'teacher/attendance/markCheckIn',
   checkOut = 'teacher/attendance/markCheckOut',
-  leave = 'teacher/attendance/markLeave',
+  markLeave = 'teacher/attendance/markLeave',
   monthlyAttendance = 'teacher/attendance/getAttendanceByMonth',
   getAllHolidays = 'holiday/getAllHolidays',
   updateEducation = 'teacher/profile/updateEducation',
@@ -22,32 +22,41 @@ export enum ProfileApiPaths {
 }
 
 export enum ClassApiPaths {
+  getClassRoomById = 'classroom/getClassroomById/:classRoomId',
   getChildrenByClassId = 'admin/children/getChildrenByClassroom/:classRoomId',
-  checkInChildByTeacher = '/children/attendance/markCheckIn',
-  createChat = '/chat/createChat',
-  getMessagesByChatRoomId = '/message/getChatMessages/:chatRoomId',
-  createChatRoomMessage = '/message/createMessage',
+  checkInChildByTeacher = 'children/attendance/markCheckIn',
+  childMonthlyAttendance = 'children/attendance/getAttendanceByMonth/:childId',
+  createChat = 'chat/createChat',
+  getMessagesByChatRoomId = 'message/getChatMessages/:chatRoomId',
+  createChatRoomMessage = 'message/createMessage',
 }
 
 export enum PostApiPaths {
-  getActivities = '/activity/getAllActivities',
-  createPost = '/post/addPost',
-  getAllClassPosts = '/post/getAllClassPosts/:classRoomId',
-  getAllChildPosts = '/post/getAllChildPosts/:childId',
-  likePost = '/post/likePost/:postId',
-  lovePost = '/post/lovePost/:postId',
-  createPostComment = '/post/commentPost/:postId',
-  getAllPostComments = '/post/getAllPostComments/:postId',
-  deletePost = '/post/deletePost/:postId',
+  getActivities = 'activity/getAllActivities',
+  createPost = 'post/addPost',
+  getAllClassPosts = 'post/getAllClassPosts/:classRoomId',
+  getAllChildPosts = 'post/getAllChildPosts/:childId',
+  likePost = 'post/likePost/:postId',
+  lovePost = 'post/lovePost/:postId',
+  createPostComment = 'post/commentPost/:postId',
+  getAllPostComments = 'post/getAllPostComments/:postId',
+  deletePost = 'post/deletePost/:postId',
 }
 
 export enum DiaryApiPaths {
-  createHomeWork = '/homework/addHomework',
-  getAllHomeWork = '/homework/getAllHomework',
-  getAllChildHomework = '/homework/getAllChildHomework/:childId',
-  getHomeworkById = '/homework/getHomeworkById/:homeWorkId',
-  deleteHomeWork = '/homework/deleteHomework/:homeWorkId',
-  updateHomeWork = '/homework/updateHomework/:homeWorkId'
+  createHomeWork = 'homework/addHomework',
+  getAllHomeWork = 'homework/getAllHomework',
+  getAllChildHomework = 'homework/getAllChildHomework/:childId',
+  getHomeworkById = 'homework/getHomeworkById/:homeWorkId',
+  deleteHomeWork = 'homework/deleteHomework/:homeWorkId',
+  updateHomeWork = 'homework/updateHomework/:homeWorkId'
+}
+
+export enum TimeTableApiPaths {
+  getAllClassTimeTable = 'timetable/getAllClassTimetables/:classId',
+  createTimeTable = 'timetable/addTimetable',
+  deleteTimeTableRecord = 'timetable/deleteTimetable/:timeTableRecordId',
+  updateTimeTableRecord = 'timetable/updateTimetable/:timeTableRecordId'
 }
 
 export const AllApiPaths = Object.freeze({
@@ -57,9 +66,10 @@ export const AllApiPaths = Object.freeze({
   ...ClassApiPaths,
   ...PostApiPaths,
   ...DiaryApiPaths,
+  ...TimeTableApiPaths
 });
 
-export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths | ClassApiPaths | PostApiPaths | DiaryApiPaths;
+export type ApiPaths = AuthApiPaths | ResetPasswordApiPaths | ProfileApiPaths | ClassApiPaths | PostApiPaths | DiaryApiPaths | TimeTableApiPaths;
 
 class ApiPathHandler<T> {
   private paths: T;

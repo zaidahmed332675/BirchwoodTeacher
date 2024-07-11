@@ -12,9 +12,9 @@ import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
 import { VIcon } from '../../Components/VIcon';
-import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
+import { asyncGetClassRoomById } from '../../Stores/actions/class.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectChildren } from '../../Stores/slices/class.slice';
+import { selectChildren, selectClassRoom } from '../../Stores/slices/class.slice';
 import { Child } from '../../Types/Class';
 import {
   ClassStackParams,
@@ -27,12 +27,13 @@ type Props = StackScreenProps<ClassStackParams, 'class'>;
 
 const MyClass = ({ }: Props) => {
   const navigation = useNavigation<NavigationProp<ClassStackParams>>();
-  const [loading, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
+  const [loading, getClassRoom] = useLoaderDispatch(asyncGetClassRoomById);
+  let classRoom = useAppSelector(selectClassRoom);
   let children = useAppSelector(selectChildren);
 
   useEffect(() => {
-    getChildrenByClassId()
-  }, [getChildrenByClassId]);
+    getClassRoom()
+  }, [getClassRoom]);
 
   if (loading) {
     return <DataLoader />;
@@ -49,7 +50,7 @@ const MyClass = ({ }: Props) => {
           alignSelf: 'flex-start',
         }}>
         <Image
-          source={item.isPresent ? pDot : item.isOnLeave ? pendingDot : aDot}
+          source={item.checkIn ? pDot : item.newAttendance?.status === 'LEAVE' ? pendingDot : aDot}
           style={styles.attendanceIcon}
         />
         <ImageBox
@@ -60,16 +61,16 @@ const MyClass = ({ }: Props) => {
       <View style={{ marginLeft: 10, flex: 1 }}>
         <GlroyBold text={`${item.firstName} ${item.lastName}`} _style={{ color: colors.text.black }} />
         <GrayMediumText
-          text={`Grade: ${item.classroom?.classroomGrade} | Roll No: ${item.rollNumber}`}
+          text={`Roll No: ${item.rollNumber}`}
           _style={{ fontSize: 12 }}
         />
         <View>
-          <GrayMediumText
+          {/* <GrayMediumText
             text="Attendance: 20 | Absents: 2 | Leaves: 5"
             _style={{ fontSize: 12 }}
-          />
-          {!item.isPresent && !item.isOnLeave && (
-            <TouchableOpacity
+          /> */}
+          {item.checkIn && !(item.newAttendance?.status === 'LEAVE') && (
+            <View
               style={{
                 marginTop: 10,
                 alignSelf: 'flex-start',
@@ -79,10 +80,10 @@ const MyClass = ({ }: Props) => {
                 backgroundColor: colors.theme.primary,
               }}>
               <GrayMediumText
-                text="Mark Attendance"
+                text="Mark Student Check-In"
                 _style={{ fontSize: 10, color: colors.theme.white }}
               />
-            </TouchableOpacity>
+            </View>
           )}
         </View>
       </View>
@@ -93,7 +94,6 @@ const MyClass = ({ }: Props) => {
             params: {
               childId: item._id,
               chatRoomId: item.chatRoomId
-              // parentId: item.parent?._id,
             },
           });
         }}
@@ -103,28 +103,18 @@ const MyClass = ({ }: Props) => {
           alignItems: 'center',
           padding: 10,
         }}>
-        {/* <Text
-          style={{
-            fontSize: 10,
-            fontWeight: 'bold',
-            marginHorizontal: 3,
-            color: colors.text.black,
-          }}>
-          View
-        </Text> */}
         <VIcon
           type="Ionicons"
           name="chatbubbles-outline"
           size={20}
           color="black"
         />
-        {/* <Image source={edit} style={styles.editIcon} /> */}
       </TouchableOpacity>
     </TouchableOpacity>
   );
 
   return (
-    <Layout customHeader={<CustomHeader title={'My Class'} />}>
+    <Layout customHeader={<CustomHeader title={`${classRoom.classroomName} - Grade ${classRoom.classroomGrade} (${classRoom.classroomBatch})`} />}>
       <FlatList
         data={[...children]}
         keyExtractor={item => item._id.toString()}
@@ -137,7 +127,6 @@ const MyClass = ({ }: Props) => {
 export default MyClass;
 
 const styles = StyleSheet.create({
-  card: {},
   item: {
     borderRadius: 2,
     paddingVertical: 15,

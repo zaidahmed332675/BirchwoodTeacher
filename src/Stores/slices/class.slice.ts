@@ -3,13 +3,16 @@ import {
   createDraftSafeSelector,
   createSlice
 } from '@reduxjs/toolkit';
+import { isSameWeek } from 'date-fns';
 import { RootState } from '..';
-import { Child, ClassResponse, Message, MessagesResponse } from '../../Types/Class';
+import { Child, ChildAttendance, ClassResponse, ClassRoom, Message, MessagesResponse } from '../../Types/Class';
 import { PaginationProps } from '../../Types/Common';
 
 interface ClassSliceState {
+  classRoom: ClassRoom;
+  attendances: Record<string, ChildAttendance>;
   children: Record<string, Child>;
-  pagination: PaginationProps,
+  pagination: PaginationProps;
   chatRooms: Record<string, {
     messages: Record<string, Message>,
     messagePagination: any
@@ -17,7 +20,9 @@ interface ClassSliceState {
 }
 
 const initialState: ClassSliceState = {
+  classRoom: {} as ClassRoom,
   children: {},
+  attendances: {},
   pagination: {
     totalDocs: 0,
     limit: 0,
@@ -36,6 +41,9 @@ const ClassSlice = createSlice({
   name: 'Class',
   initialState,
   reducers: {
+    setClassRoom: (state, { payload }: PayloadAction<ClassRoom>) => {
+      state.classRoom = payload;
+    },
     setChildren: (state, { payload }: PayloadAction<ClassResponse>) => {
       const { docs, ...pagination } = payload;
       state.children = docs.reduce((acc, curr) => {
@@ -46,6 +54,9 @@ const ClassSlice = createSlice({
     },
     setChild: (state, { payload }: PayloadAction<Partial<Child>>) => {
       state.children["child_" + payload._id] = { ...state.children["child_" + payload._id], ...payload };
+    },
+    setAttendances: (state, { payload }: PayloadAction<Partial<ChildAttendance>>) => {
+      state.attendances[payload._id] = { ...state.attendances[payload._id], ...payload };
     },
     setChatRoom: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
       const { chatRoomId, docs, ...pagination } = payload;
@@ -75,20 +86,20 @@ const ClassSlice = createSlice({
   },
 });
 
-export const { setChildren, setChild, setChatRoom, setChatRoomMessage, resetClassState } =
+export const { setClassRoom, setChildren, setChild, setAttendances, setChatRoom, setChatRoomMessage, resetClassState } =
   ClassSlice.actions;
 
 export default ClassSlice.reducer;
+
+export const selectClassRoom = createDraftSafeSelector(
+  [(state: RootState) => state.class],
+  state => state.classRoom
+);
 
 export const selectChildren = createDraftSafeSelector(
   [(state: RootState) => state.class],
   state => Object.values(state.children) as Child[]
 );
-
-// export const selectChildrens = createDraftSafeSelector(
-//   [(state: RootState) => state.class],
-//   state => state.children
-// );
 
 export const selectChildById = (childId: string) =>
   createDraftSafeSelector(
@@ -96,8 +107,21 @@ export const selectChildById = (childId: string) =>
     children => children["child_" + childId] as Child
   );
 
+export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.class.attendances],
+    attendances => {
+      return attendances?.[_id]?.attendance?.map((attendance => {
+        console.log(isSameWeek(attendance.createdAt, weekStart))
+        if (isSameWeek(attendance.createdAt, weekStart))
+          return attendance
+      }))
+    }
+  );
+
 export const selectChatRoomMessages = (chatRoomId: string) =>
   createDraftSafeSelector(
     [(state: RootState) => state.class.chatRooms],
     chatRooms => Object.values(chatRooms?.["chatRoom_" + chatRoomId]?.messages || {})
   );
+

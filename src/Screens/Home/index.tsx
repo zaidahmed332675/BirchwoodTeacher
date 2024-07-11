@@ -63,12 +63,18 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     {
       id: 6,
+      title: 'Time Table',
+      icon: featureIcons.time_table,
+      route: EMainStack.timeTableRoutes,
+    },
+    {
+      id: 7,
       title: 'Change Password',
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 7, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut' },
-    { id: 8, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
+    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut' },
+    { id: 9, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // {
     //   id: 5,
     //   title: 'Chat',

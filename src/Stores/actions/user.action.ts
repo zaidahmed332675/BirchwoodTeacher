@@ -10,7 +10,6 @@ import {
   LoginUserResponse,
   OtpVerificationPayload,
   OtpVerificationResponse,
-  UpdateUserProfilePayload,
   User,
   UserAttendance,
   UserAttendanceResponse,
@@ -43,9 +42,9 @@ export const asyncLogin = createAsyncThunk(
     } else {
       dispatch(
         setUserState({
-          user: res?.data?.user!,
-          token: res?.data?.token!,
-          attendance: {} as UserAttendance,
+          ...res.data!,
+          holidays: {},
+          attendance: {} as UserAttendance
         })
       );
     }
@@ -166,10 +165,10 @@ export const asyncGetUserProfile = createAsyncThunk(
 
 export const asyncUpdateProfile = createAsyncThunk(
   'updateProfile',
-  async (data: UpdateUserProfilePayload, { dispatch }) => {
+  async (data: FormData, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<User, UpdateUserProfilePayload>({
+    const res = await callApi<User, FormData>({
       method: 'POST',
       path: allApiPaths.getPath('updateProfile'),
       isFormData: true,
@@ -284,11 +283,9 @@ export const asyncUserLeave = createAsyncThunk(
 
     const res = await callApi<{}, User>({
       method: 'POST',
-      path: allApiPaths.getPath('leave'),
+      path: allApiPaths.getPath('markLeave'),
       body: data,
     });
-
-    // console.log(res, 'leave response')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
@@ -308,8 +305,6 @@ export const asyncUserMonthlyAttendance = createAsyncThunk(
       path: (allApiPaths.getPath('monthlyAttendance') +
         `?month=${month}&year=${year}`) as ApiPaths,
     });
-
-    console.log(res, 'checking attendance response')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));

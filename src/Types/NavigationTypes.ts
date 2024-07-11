@@ -37,6 +37,7 @@ export enum EMainStack {
   diaryRoutes = 'diaryRoutes',
   chatRoutes = 'chatRoutes',
   attendanceRoutes = 'attendanceRoutes',
+  timeTableRoutes = 'timeTableRoutes',
   changePassword = 'changePassword',
   checkOut = 'checkOut',
   logOut = 'logOut',
@@ -50,6 +51,7 @@ export type MainStackParams = {
   diaryRoutes: undefined;
   chatRoutes: undefined;
   attendanceRoutes: undefined;
+  timeTableRoutes: undefined;
   changePassword: undefined;
   checkOut: undefined;
   logOut: undefined;
@@ -125,4 +127,17 @@ export enum EAttendanceStack {
 
 export type AttendanceStackParams = {
   attendance: undefined;
+};
+
+export enum ETimeTableStack {
+  timeTable = 'timeTable',
+  createTimeTable = 'createTimeTable',
+}
+
+export type TimeTableStackParams = {
+  timeTable: undefined;
+  createTimeTable: {
+    timeTableRecordId?: string
+    day?: string
+  };
 };

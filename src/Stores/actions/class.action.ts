@@ -1,10 +1,34 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, CreateChatPayload, CreateChatResponse, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
+import { ChildAttendance, ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, ClassRoom, CreateChatPayload, CreateChatResponse, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { callApi } from '../../services/api';
-import { allApiPaths } from '../../services/apiPaths';
-import { setChatRoom, setChatRoomMessage, setChild, setChildren } from '../slices/class.slice';
+import { allApiPaths, ApiPaths } from '../../services/apiPaths';
+import { setAttendances, setChatRoom, setChatRoomMessage, setChild, setChildren, setClassRoom } from '../slices/class.slice';
 import { setLoading } from '../slices/common.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+
+export const asyncGetClassRoomById = createAsyncThunk(
+  'getClassRoomById',
+  async (_, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<{ classroom: ClassRoom }>({
+      path: allApiPaths.getPath('getClassRoomById', {
+        classRoomId: "6630e5f01364cb7fd294281c"
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setClassRoom(res.data?.classroom!)
+      );
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
 
 export const asyncGetChildrenByClassId = createAsyncThunk(
   'getChildrenByClassId',
@@ -51,6 +75,25 @@ export const asyncCheckInChildByTeacher = createAsyncThunk(
     }
 
     dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncChildMonthlyAttendance = createAsyncThunk(
+  'childMonthlyAttendance',
+  async ({ childId, month, year }: any, { dispatch }) => {
+    const res = await callApi<ChildAttendance>({
+      path: (allApiPaths.getPath('childMonthlyAttendance', { childId }) +
+        `?month=${month}&year=${year}`) as ApiPaths,
+    });
+
+    console.log(res.data)
+
+    if (!res?.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setAttendances({ _id: childId, ...res.data! }));
+    }
     return res;
   }
 );

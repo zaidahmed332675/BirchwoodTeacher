@@ -35,7 +35,6 @@ const Attendance = () => {
     });
   }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace]);
 
-
   const [isHolidayCalled, setIsHolidayCalled] = useState(false)
   useEffect(() => {
 
@@ -49,24 +48,6 @@ const Attendance = () => {
     }
   }, [tabIndex, getAllHolidays])
 
-  // const holidaysData = [
-  //   {
-  //     id: 1,
-  //     title: 'Easter',
-  //     date: '11th november',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Good Friday',
-  //     date: '14th november',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Chritsmas',
-  //     date: '25th november',
-  //   },
-  // ];
-
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
   };
@@ -74,10 +55,6 @@ const Attendance = () => {
   const handleMonthChange = (date: Date) => {
     setCalenderMonthYear(date);
   };
-
-  // if (attendanceLoader || holidayLoader) {
-  //   return <DataLoader />;
-  // }
 
   const attendanceData = userAttendance?.attendance?.reduce((acc, curr) => {
     let formatedDate = format(new Date(curr.checkIn), 'yyyy-MM-dd');

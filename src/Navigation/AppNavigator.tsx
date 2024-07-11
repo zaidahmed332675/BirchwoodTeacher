@@ -18,6 +18,7 @@ import ClassNavigator from './ClassNavigator';
 import DiaryNavigator from './DiaryNavigator';
 import PostNavigator from './PostNavigator';
 import ProfileNavigator from './ProfileNavigator';
+import TimetableNavigator from './TimetableNavigator';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -79,6 +80,10 @@ const AppNavigator = () => {
       <Stack.Screen
         name={EMainStack.attendanceRoutes}
         component={AttendanceNavigator}
+      />
+      <Stack.Screen
+        name={EMainStack.timeTableRoutes}
+        component={TimetableNavigator}
       />
       <Stack.Screen
         name={EMainStack.changePassword}

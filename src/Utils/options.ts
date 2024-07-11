@@ -290,6 +290,16 @@ export const HomeWorkTypeEnum = {
   readonly [index: string]: string;
 };
 
+export const DaysEnum = {
+  MON: 'MON',
+  TUE: 'TUE',
+  WED: 'WED',
+  THU: 'THU',
+  FRI: 'FRI',
+} as const as {
+  readonly [index: string]: string;
+};
+
 export const isArrayOfObjectsEqual = (
   x: Record<string, any>[],
   y: Record<string, any>[],
@@ -303,7 +313,7 @@ export const isArrayOfObjectsEqual = (
   return _.isEqual(xProps, y);
 };
 
-export const formatCommentTime = (commentDate) => {
+export const formatCommentTime = (commentDate: string) => {
   const now = new Date();
   const seconds = differenceInSeconds(now, commentDate);
   const minutes = differenceInMinutes(now, commentDate);

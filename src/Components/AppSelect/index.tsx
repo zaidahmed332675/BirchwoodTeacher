@@ -34,6 +34,7 @@ export const AppSelect = ({
       </Text>
       <View style={styles.inputView}>
         <SelectDropdown
+          {...rest}
           defaultValue={defaultValue}
           data={data}
           onSelect={onSelect}

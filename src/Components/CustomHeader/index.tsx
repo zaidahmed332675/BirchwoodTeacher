@@ -33,7 +33,7 @@ export const CustomHeader = ({
             color: colors.text.white,
             marginLeft: 10,
             fontSize: 18,
-            flexBasis: '55%',
+            flexBasis: isActionEnbl ? '55%' : '88%',
           }}
         />
       </View>

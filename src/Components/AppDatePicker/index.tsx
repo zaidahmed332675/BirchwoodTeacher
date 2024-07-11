@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { colors } from '../../theme/colors';
-import { Text } from 'react-native';
-import DatePicker from 'react-native-date-picker';
 import { format, isValid } from 'date-fns';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import DatePicker from 'react-native-date-picker';
+import { colors } from '../../theme/colors';
 
 interface AppSelectProps {
   label?: string;
+  pickerTitle?: string;
+  pickerMode?: 'date' | 'time' | 'datetime';
+  dateTimeFormat?: string;
   style?: object;
   required?: boolean;
   onChange: any;
@@ -15,6 +17,9 @@ interface AppSelectProps {
 
 export const AppDatePicker = ({
   label,
+  pickerTitle = 'Select Date',
+  pickerMode = 'date',
+  dateTimeFormat = 'eeee, MMMM d, yyyy',
   required = true,
   onChange,
   value,
@@ -38,15 +43,15 @@ export const AppDatePicker = ({
               paddingHorizontal: 7,
             }}>
             {isValid(value)
-              ? format(new Date(value), 'eeee, MMMM d, yyyy')
+              ? format(new Date(value), dateTimeFormat)
               : 'Please Select'}
           </Text>
           <DatePicker
             modal
-            mode="date"
+            mode={pickerMode}
             open={open}
             date={new Date()}
-            title={'Select Start Date'}
+            title={pickerTitle}
             minimumDate={new Date()}
             onConfirm={selectedDate => {
               onChange(selectedDate);
