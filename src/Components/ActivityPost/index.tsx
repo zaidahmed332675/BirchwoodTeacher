@@ -1,4 +1,5 @@
 import { useAnimations } from '@react-native-media-console/reanimated';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { formatDistanceToNow } from 'date-fns';
 import lodash from 'lodash';
 import React, { useState } from 'react';
@@ -9,6 +10,7 @@ import { asyncCreatePostComment, asyncDeletePost, asyncGetCommentsByPostId, asyn
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectPostComments } from '../../Stores/slices/post.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { Post } from '../../Types/Post';
 import { isImage, isVideo } from '../../Utils/options';
 import { getImagePath } from '../../services/axios';
@@ -21,6 +23,8 @@ import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 
 export const ActivityPost = ({ item: post }: { item: Post }) => {
+  const navigation = useNavigation<NavigationProp<PostStackParams>>()
+
   const [likeLoading, likePost] = useLoaderDispatch(asyncLikePost, false);
   const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
   const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId, false);
@@ -31,6 +35,7 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const comments = useAppSelector(selectPostComments(post._id))
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
   const [toggleComments, setToggleComments] = useState(false)
+
 
   const handleLike = () => {
     if (likeLoading) return
@@ -80,13 +85,31 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
             <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
           </View>
         </View>
-        <View>
+        <View style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 5,
+          top: 5,
+          right: 5,
+        }}>
+          <TouchableOpacity onPress={() => navigation.navigate(EPostStack.createPost, {
+            activityId: '',
+            postId: post?._id
+          })}>
+            <VIcon
+              type="Feather"
+              name={"edit-3"}
+              size={20}
+              color={colors.theme.darkGreen}
+            />
+          </TouchableOpacity>
           <TouchableOpacity onPress={handlePostDelete}>
             <VIcon
-              type="EvilIcons"
-              name={"close"}
-              size={30}
-              color={colors.theme.black}
+              type="AntDesign"
+              name={"delete"}
+              size={20}
+              color={colors.theme.darkRed}
             />
           </TouchableOpacity>
         </View>
@@ -100,7 +123,9 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
         {
           media.map((media, index) => {
             if (isImage(media)) {
-              return <ImageBox key={`${media}_${index}`} image={{ uri: media }} _imageStyle={styles.postImage} />
+              return <ImageBox key={`${media}_${index}`} image={{ uri: media }} _imageStyle={styles.postImage} _containerStyle={{
+                height: 200
+              }} />
             }
             else if (isVideo(media)) {
               return <VideoPlayer
@@ -232,9 +257,9 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 200,
-    borderWidth: 1,
-    borderRadius: 10,
+    height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover'
   },
   comments: {
     paddingVertical: 20,

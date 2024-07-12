@@ -1,3 +1,4 @@
+import { ClassRoom } from "./Class";
 import { PaginationProps } from "./Common";
 
 export interface Activity {
@@ -17,8 +18,8 @@ export interface Post {
   images: string[];
   videos: string[];
   activity: Activity;
-  classroom?: string;
-  children?: string;
+  classroom?: ClassRoom;
+  children?: string[];
   type: string;
   likes: string[];
   loves: string[];

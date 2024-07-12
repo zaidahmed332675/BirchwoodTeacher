@@ -77,6 +77,8 @@ const CreateChat = ({ route }: Props) => {
   const profile = useAppSelector(selectUserProfile);
   const messagess = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chatRoomId));
 
+  console.log(messagess, 'messsages')
+
   useLayoutEffect(() => {
     if (chatRoomId) {
       setCreateChatLoader(false)
@@ -160,7 +162,7 @@ const CreateChat = ({ route }: Props) => {
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}
         renderAvatar={null}
-        messages={messagess}
+        messages={messages}
         // renderMessageText={(test) => <Text>{}</Text>}
         renderInputToolbar={props => (
           <InputToolbar

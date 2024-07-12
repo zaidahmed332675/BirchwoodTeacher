@@ -110,6 +110,7 @@ export const asyncCreateChat = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
+      // When trying to create again it does not have chat property with message 'Already Exists'
       if (res.data?._id) {
         dispatch(setChild({ _id: childId, chatRoomId: res.data._id }));
       }

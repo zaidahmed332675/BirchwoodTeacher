@@ -54,7 +54,7 @@ export const asyncGetAllClassPosts = createAsyncThunk(
 
 export const asyncCreatePost = createAsyncThunk(
   'createPost',
-  async (data: FormData | undefined, { dispatch }) => {
+  async (data: FormData, { dispatch }) => {
     dispatch(setLoading(true));
 
     const res = await callApi<{ newPost: Post }, FormData>({
@@ -68,6 +68,30 @@ export const asyncCreatePost = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(setPost(res.data?.newPost!))
+      dispatch(asyncShowSuccess(res.message))
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncUpdatePost = createAsyncThunk(
+  'createPost',
+  async ({ postId, data }: { postId: string, data: FormData }, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<Post, FormData>({
+      method: "POST",
+      path: allApiPaths.getPath('updatePost', { postId }),
+      isFormData: true,
+      body: data
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setPost(res.data!))
       dispatch(asyncShowSuccess(res.message))
     }
 
@@ -186,102 +210,3 @@ export const asyncCreatePostComment = createAsyncThunk(
     return res;
   }
 );
-
-// export const asyncCheckInChildByTeacher = createAsyncThunk(
-//   'checkInChildByTeacher',
-//   async (data: any, { dispatch }) => {
-//     dispatch(setLoading(true));
-
-//     const res = await callApi<{ newAttendance: ChildCheckInOutResponse }, ChildCheckInOutPayload>({
-//       method: 'POST',
-//       path: allApiPaths.getPath('checkInChildByTeacher'),
-//       body: data,
-//     });
-
-//     if (!res?.status) {
-//       dispatch(asyncShowError(res.message));
-//     } else {
-//       if (res.data?.newAttendance?.children) {
-//         dispatch(setChild({ _id: res.data.newAttendance.children, newAttendance: res.data.newAttendance }));
-//       }
-//       dispatch(asyncShowSuccess(res.message));
-//     }
-
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );
-
-// export const asyncCreateChat = createAsyncThunk(
-//   'createChat',
-//   async ({ childId, data }: { childId: string, data: CreateChatPayload }, { dispatch }) => {
-//     const res = await callApi<CreateChatResponse, CreateChatPayload>({
-//       method: 'POST',
-//       path: allApiPaths.getPath('createChat'),
-//       body: data,
-//     });
-
-//     if (!res?.status) {
-//       dispatch(asyncShowError(res.message));
-//     } else {
-//       if (res.data?._id) {
-//         dispatch(setChild({ _id: childId, chatRoomId: res.data._id }));
-//       }
-//       if (res.data?.chat?._id) {
-//         dispatch(setChild({ _id: childId, chatRoomId: res.data.chat._id }));
-//       }
-//     }
-
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );
-
-// export const asyncCreateChatRoomMessage = createAsyncThunk(
-//   'createChatRoomMessage',
-//   async (data: CreateChatRoomMessagePayload, { dispatch }) => {
-//     const res = await callApi<CreateChatRoomMessageResponse, CreateChatRoomMessagePayload>({
-//       method: 'POST',
-//       path: allApiPaths.getPath('createChat'),
-//       body: data,
-//     });
-
-//     if (!res?.status) {
-//       dispatch(asyncShowError(res.message));
-//     } else {
-//       if (res.data?.message?._id) {
-//         dispatch(setChatRoomMessage({ chatRoomId: res.data.message.chat, message: res.data.message }));
-//       }
-//     }
-
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );
-
-// export const asyncGetMessagesByChatRoomId = createAsyncThunk(
-//   'getMessagesByChatRoomId',
-//   async ({ chatRoomId }: { chatRoomId: string }, { dispatch }) => {
-//     dispatch(setLoading(true));
-
-//     const res = await callApi<MessagesResponse>({
-//       path: allApiPaths.getPath('getMessagesByChatRoomId', {
-//         chatRoomId
-//       }),
-//     });
-
-//     console.log(res, 'cheko response of messages')
-
-//     if (!res?.status) {
-//       dispatch(asyncShowError(res.message));
-//     } else {
-//       if (res.data?.docs?.length) {
-//         dispatch(setChatRoom({ chatRoomId, ...res.data }));
-//       }
-//       dispatch(asyncShowSuccess(res.message));
-//     }
-
-//     dispatch(setLoading(false));
-//     return res;
-//   }
-// );

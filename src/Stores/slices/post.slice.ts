@@ -98,6 +98,12 @@ export const selectPosts = createDraftSafeSelector(
   state => Object.values(state.posts ?? {}) as Post[]
 );
 
+export const selectPostById = (postId: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.post],
+    state => state.posts[`post_${postId}`]
+  );
+
 export const selectActivities = createDraftSafeSelector(
   [(state: RootState) => state.post],
   state => Object.values(state.activities ?? {}) as Activity[]

@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
+import { ImageBox } from '../../Components/UploadImage';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import { ImageBox } from '../../Components/UploadImage';
-import { CustomHeader } from '../../Components/CustomHeader';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 
@@ -103,6 +103,7 @@ const chatList = [
 ];
 
 const Chat = ({ navigation }: Props) => {
+
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       style={styles.item}

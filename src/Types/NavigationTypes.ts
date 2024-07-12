@@ -94,7 +94,7 @@ export type PostStackParams = {
   activityList: undefined;
   createPost: {
     activityId: string;
-    classRoomId: string;
+    postId: string;
   };
 }
 

@@ -55,15 +55,26 @@ export const DiaryCard = ({ item }: { item: HomeWork }) => {
         </View>
         <View style={{
           position: 'absolute',
-          top: 0,
-          right: 0,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 5,
+          top: 5,
+          right: 5,
         }}>
+          <TouchableOpacity>
+            <VIcon
+              type="Feather"
+              name={"edit-3"}
+              size={20}
+              color={colors.theme.darkGreen}
+            />
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleHomeWorkDelete}>
             <VIcon
-              type="Ionicons"
-              name={"close-circle-outline"}
-              size={25}
-              color={colors.theme.primary}
+              type="AntDesign"
+              name={"delete"}
+              size={20}
+              color={colors.theme.darkRed}
             />
           </TouchableOpacity>
         </View>

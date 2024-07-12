@@ -1,3 +1,4 @@
+import { useAnimations } from '@react-native-media-console/reanimated';
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import {
     KeyboardAvoidingView,
@@ -8,8 +9,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-// import { RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
-import { useAnimations } from '@react-native-media-console/reanimated';
 import VideoPlayer from 'react-native-media-console';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -20,6 +19,7 @@ import {
     insertVideoFromCamera,
     insertVideoFromGallery,
 } from '../../Utils/cameraOptions';
+import { isImage, isVideo } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 import { AppInput } from '../AppInput';
 import { GrayMediumText } from '../GrayMediumText';
@@ -27,12 +27,11 @@ import { AppModal } from '../Modal';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 
-export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>(({ enableToolbar = true }, ref) => {
-    // const RichText = useRef(null);
-
+export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, selectionLimit?: number }>(({ enableToolbar = true, selectionLimit = 1 }, ref) => {
     // const videoPlayerRef = useRef<typeof VideoPlayer | null>(null);
     const [contentHeight, setContentHeight] = useState(0);
     const [media, setMedia] = useState<Asset[]>([]);
+    const [deletedMedia, setDeletedMedia] = useState<Record<string, string[]>>({ images: [], videos: [] })
     const [mediaType, setMediaType] = useState<string | null>(null);
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -40,6 +39,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
         control,
         handleSubmit,
         formState: { errors },
+        setValue
     } = useForm<any>({
         defaultValues: {
             content: 'Post 001',
@@ -54,6 +54,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                 await new Promise<void>((resolve) => {
                     handleSubmit((data) => {
                         data['media'] = media;
+                        data['deletedMedia'] = deletedMedia;
                         finalData = data;
                         resolve();
                     })();
@@ -63,45 +64,43 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
             }
             return finalData;
         },
+        editMedia: async (media: Asset[]) => {
+            setMedia(media)
+        },
+        setContent: async (content: string) => {
+            setValue('content', content)
+        }
     }), [media?.length, mediaType]);
 
-    // 'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4'
-    // 'https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4'
+    const handleMediaDelete = (mediaObj: Asset) => {
+        if (mediaObj.fileName) return setMedia((prevMedia) => prevMedia.filter((media) => media.fileName !== mediaObj.fileName))
+        setDeletedMedia((prevItems) => isImage(mediaObj.uri!) ? {
+            ...prevItems,
+            ['images']: [...prevItems['images'], mediaObj.uri!]
+        } : isVideo(mediaObj.uri!) ? {
+            ...prevItems,
+            ['videos']: [...prevItems['videos'], mediaObj.uri!]
+        } : prevItems);
+    }
 
-    // function editorInitializedCallback() {
-    //   RichText.current?.registerToolbar(function (items) {
-    //     console.log(
-    //       'Toolbar click, selected items (insert end callback):',
-    //       items
-    //     );
-    //   });
-    // }
-
-    async function insertFromCamera() {
+    const insertFromCamera = async () => {
         setModalVisible(false);
         let method =
             mediaType === 'image' ? insertImageFromCamera : insertVideoFromCamera;
-        let media = await method();
+        let media = await method({ selectionLimit });
         if (media.status) {
             setMedia((prevMedia) => [...prevMedia, ...media.assets]);
         }
-        // RichText.current?.insertVideo(
-        // 'https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4'
-        // );
     }
 
-    async function insertFromGallery() {
+    const insertFromGallery = async () => {
         setModalVisible(false);
         let method =
             mediaType === 'image' ? insertImageFromGallery : insertVideoFromGallery;
-        let media = await method({ selectionLimit: 1 });
+        let media = await method({ selectionLimit });
         if (media.status) {
             setMedia((prevMedia) => [...prevMedia, ...media.assets]);
         }
-        // RichText.current?.insertImage(
-        //   'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png',
-        //   'width: 250px; height: 250px;'
-        // );
     }
 
     return (
@@ -109,17 +108,6 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
             <ScrollView style={{ flex: 1 }} disableScrollViewPanResponder={false} >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                    {/* <TextInput
-            multiline
-            style={[styles.editor, { height: Math.max(60, contentHeight) }]}
-            textAlignVertical="top"
-            placeholder={"What's in your mind?...."}
-            placeholderTextColor={colors.text.altGrey}
-            onContentSizeChange={event => {
-              setContentHeight(event.nativeEvent.contentSize.height);
-            }}
-          /> */}
-
                     <Controller
                         name="content"
                         control={control}
@@ -145,23 +133,41 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                             />
                         )}
                     />
-
                     {errors.content?.message && (
                         <GrayMediumText
                             text={errors.content.message}
                             _style={{ color: colors.theme.lightRed }}
                         />
                     )}
-
                     {media.length ? <View style={{
-                        gap: 10
+                        gap: 10,
                     }}>
                         {
                             media.map((media, index) => {
-                                if (media.type?.includes('image/')) {
-                                    return <ImageBox key={`${media.fileName}_${index}`} image={media} _imageStyle={{ height: 250, borderRadius: 8, }} />
+                                if (isImage(media.fileName! || media.uri!)) {
+                                    return <View key={`${media.fileName || media.uri}_${index}`} style={{ height: 200 }}>
+                                        <ImageBox image={media} _imageStyle={{ height: '100%', width: '100%', resizeMode: 'cover', borderRadius: 8 }} />
+                                        <TouchableOpacity onPress={handleMediaDelete} style={{
+                                            position: 'absolute',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            gap: 5,
+                                            top: -3,
+                                            right: -4,
+                                            padding: 5,
+                                            backgroundColor: colors.theme.white,
+                                            borderRadius: 200
+                                        }}>
+                                            <VIcon
+                                                type="AntDesign"
+                                                name={"close"}
+                                                size={15}
+                                                color={colors.theme.darkRed}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 }
-                                else if (media.type?.includes('video/')) {
+                                else if (isVideo(media.fileName! || media.uri!)) {
                                     return <VideoPlayer
                                         key={`${media.fileName}_${index}`}
                                         useAnimations={useAnimations}
@@ -176,7 +182,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                                             borderRadius: 10
                                         }}
                                         style={{
-                                            height: 250,
+                                            height: 200,
                                             width: '100%'
                                         }}
                                     />
@@ -186,22 +192,8 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                             })
                         }
                     </View> : null}
-
-                    {/* <RichEditor
-            style={styles.rich}
-            ref={RichText}
-            placeholder={"What's in your mind?...."}
-            initialFocus={false}
-            disabled={false}
-            useContainer
-            editorInitializedCallback={editorInitializedCallback}
-            onHeightChange={e => {
-              console.log(e, 'aasd');
-            }}
-          /> */}
                 </KeyboardAvoidingView>
             </ScrollView>
-
             {enableToolbar && (
                 <View style={styles.richBar}>
                     <TouchableOpacity
@@ -230,7 +222,6 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                     </TouchableOpacity>
                 </View>
             )}
-
             <AppModal
                 onClose={() => setModalVisible(false)}
                 isModalVisible={isModalVisible}
@@ -255,35 +246,6 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean }>((
                     <Text>Open Camera</Text>
                 </TouchableOpacity>
             </AppModal>
-
-            {/* <RichToolbar
-        style={[styles.richBar1]}
-        editor={RichText}
-        disabled={false}
-        iconTint={colors.theme.primary}
-        selectedIconTint={colors.theme.secondary}
-        disabledIconTint={colors.theme.secondary}
-        iconSize={30}
-        actions={['insertVideo', 'insertImage']}
-        iconMap={{
-          ['insertVideo']: () => (
-            <Ionicon
-              name="videocam-outline"
-              size={30}
-              color={colors.theme.primary}
-            />
-          ),
-          ['insertImage']: () => (
-            <Ionicon
-              name="image-outline"
-              size={30}
-              color={colors.theme.primary}
-            />
-          ),
-        }}
-        insertVideo={insertVideo}
-        insertImage={insertImage}
-      /> */}
         </View>
     );
 });

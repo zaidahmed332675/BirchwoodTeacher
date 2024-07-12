@@ -43,7 +43,7 @@ const ActivityList = ({ navigation }: Props) => {
         onPress={() =>
           navigation.navigate(EPostStack.createPost, {
             activityId: item._id,
-            classRoomId: '6630e5f01364cb7fd294281c'
+            postId: ''
           })
         }>
         <View style={styles.iconContainer}>

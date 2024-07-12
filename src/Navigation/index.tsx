@@ -5,7 +5,6 @@ import { AppLoader } from '../Components/AppLoader';
 import { useAppSelector } from '../Stores/hooks';
 import { selectAppLoader } from '../Stores/slices/common.slice';
 import {
-  // selectUserProfile,
   selectUserToken,
 } from '../Stores/slices/user.slice';
 import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
@@ -17,10 +16,7 @@ const Stack = createStackNavigator<RootStackParams>();
 
 const AppRouting = () => {
   const token = useAppSelector(selectUserToken);
-  // const user = useAppSelector(selectUserProfile);
   const loader = useAppSelector(selectAppLoader);
-
-  // console.log('user:', user);
 
   return (
     <NavigationContainer>
