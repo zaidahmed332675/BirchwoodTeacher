@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { isSameWeek } from 'date-fns';
 import { RootState } from '..';
-import { Child, ChildAttendance, ClassResponse, ClassRoom, Message, MessagesResponse } from '../../Types/Class';
+import { Child, ChildAttendance, ClassResponse, ClassRoom, CreateChatRoomRes, Message, MessagesResponse } from '../../Types/Class';
 import { PaginationProps } from '../../Types/Common';
 
 interface ClassSliceState {
@@ -16,7 +16,7 @@ interface ClassSliceState {
   chatRooms: Record<string, {
     messages: Record<string, Message>,
     messagePagination: any
-  }>;
+  } & CreateChatRoomRes>;
 }
 
 const initialState: ClassSliceState = {
@@ -58,15 +58,18 @@ const ClassSlice = createSlice({
     setAttendances: (state, { payload }: PayloadAction<Partial<ChildAttendance>>) => {
       state.attendances[payload._id] = { ...state.attendances[payload._id], ...payload };
     },
-    setChatRoom: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
+    setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
       const { chatRoomId, docs, ...pagination } = payload;
+
       const chatRoomKey = `chatRoom_${chatRoomId}`;
       state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
       docs.forEach((message) => {
         state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
-          ...message, user: {
-            _id: "6673fe3a586f9969aa07e034",
-            name: 'Waqas Mumtaz',
+          ...message,
+          text: message.content,
+          user: {
+            _id: message.sender,
+            name: 'Sender Name',
           },
         };
       });
@@ -75,7 +78,14 @@ const ClassSlice = createSlice({
     setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
       const { chatRoomId, message } = payload;
       const chatRoomKey = `chatRoom_${chatRoomId}`;
-      state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = message;
+      state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
+        ...message,
+        text: message.content,
+        user: {
+          _id: message.sender,
+          name: 'Sender Name',
+        },
+      };
     },
     removeChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, messageId: string }>) => {
       const { chatRoomId, messageId } = payload;
@@ -86,7 +96,7 @@ const ClassSlice = createSlice({
   },
 });
 
-export const { setClassRoom, setChildren, setChild, setAttendances, setChatRoom, setChatRoomMessage, resetClassState } =
+export const { setClassRoom, setChildren, setChild, setAttendances, setChatRoomMessages, setChatRoomMessage, resetClassState } =
   ClassSlice.actions;
 
 export default ClassSlice.reducer;
@@ -112,7 +122,7 @@ export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
     [(state: RootState) => state.class.attendances],
     attendances => {
       return attendances?.[_id]?.attendance?.map((attendance => {
-        console.log(isSameWeek(attendance.createdAt, weekStart))
+        // console.log(isSameWeek(attendance.createdAt, weekStart))
         if (isSameWeek(attendance.createdAt, weekStart))
           return attendance
       }))

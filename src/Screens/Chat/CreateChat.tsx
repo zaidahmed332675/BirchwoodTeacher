@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   Bubble,
@@ -67,17 +67,14 @@ const CustomChatHeader = ({ title }: { title: string }) => {
 };
 
 const CreateChat = ({ route }: Props) => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<{ childId: string, data: CreateChatPayload }, CreateChatResponse>(asyncCreateChat);
+  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, CreateChatResponse>(asyncCreateChat);
   const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
   const [messageLoader, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
   const { childId, chatRoomId } = route.params
 
   const child = useAppSelector(selectChildById(childId));
   const profile = useAppSelector(selectUserProfile);
-  const messagess = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chatRoomId));
-
-  console.log(messagess, 'messsages')
+  const messages = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chatRoomId));
 
   useLayoutEffect(() => {
     if (chatRoomId) {
@@ -85,52 +82,16 @@ const CreateChat = ({ route }: Props) => {
     }
   }, [])
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 3,
-        text: 'When are you comming to pick me up?',
-        createdAt: new Date(),
-        user: {
-          _id: profile?._id,
-          name: 'Waqas Mumtaz',
-          avatar: 'https://picsum.photos/seed/picsum/200/300',
-        },
-      },
-      {
-        _id: 2,
-        text: 'I am outside of your appartment, be ready.',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'Waqas Mumtaz',
-          avatar: 'https://picsum.photos/seed/picsum/200/300',
-        },
-      },
-      {
-        _id: 1,
-        text: 'I am coming to pick you up, be ready.',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'Waqas Mumtaz',
-          avatar: 'https://picsum.photos/seed/picsum/200/300',
-        },
-      },
-    ]);
-  }, []);
-
-  const onSend = useCallback((msgs: IMessage[] = []) => {
-    console.log(msgs)
-    // await createMessage()
-    // setMessages(previousMessages => GiftedChat.append(previousMessages, msgs));
-  }, []);
+  const onSend = useCallback(async (msg: IMessage[]) => {
+    console.log(msg)
+    await createMessage({ chatId: child?.chatRoomId, content: msg[0].text })
+  }, [child?.chatRoomId]);
 
   const handleCreateChatAndLoadMessages = useCallback(async () => {
     let RoomId = chatRoomId || child.chatRoomId
 
     if (!RoomId) {
-      const createRes = await createChat({ childId, data: { parent: child.parent, teacher: child.classroom.teacher } })
+      const createRes = await createChat({ parent: child.parent, teacher: child.classroom.teacher, childId })
 
       if (createRes.status && createRes.data) {
         RoomId = createRes.data._id || createRes.data?.chat?._id
@@ -140,7 +101,6 @@ const CreateChat = ({ route }: Props) => {
     if (RoomId) {
       getMessages({ chatRoomId: RoomId })
     }
-
   }, [])
 
   useEffect(() => {
@@ -157,13 +117,12 @@ const CreateChat = ({ route }: Props) => {
 
   return (
     <Layout
-      customHeader={<CustomChatHeader title={child.parent?.parentName || "Waqas Mumtaz"} />}>
+      customHeader={<CustomChatHeader title={child.parent?.parentName || "Parent Name"} />}>
       <GiftedChat
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}
         renderAvatar={null}
         messages={messages}
-        // renderMessageText={(test) => <Text>{}</Text>}
         renderInputToolbar={props => (
           <InputToolbar
             {...props}
@@ -177,8 +136,9 @@ const CreateChat = ({ route }: Props) => {
             )}
           />
         )}
-        // renderMessage={(data) => <View>{}</View>}
-        // renderMessageText={(message) => <Text>{message?.}</Text>}
+        keyboardShouldPersistTaps="handled"
+        inverted={false}
+        alwaysShowSend={true}
         showAvatarForEveryMessage={true}
         onSend={msgs => onSend(msgs)}
         renderBubble={props => {
@@ -195,6 +155,9 @@ const CreateChat = ({ route }: Props) => {
               }}
             />
           );
+        }}
+        listViewProps={{
+          onEndReachedThreshold: 0.5
         }}
         user={{
           _id: profile?._id,

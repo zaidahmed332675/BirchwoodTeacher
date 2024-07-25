@@ -49,8 +49,7 @@ const DiarySlice = createSlice({
   },
 });
 
-export const { setHomeWorks, setHomeWork, removeHomeWork } =
-  DiarySlice.actions;
+export const { setHomeWorks, setHomeWork, removeHomeWork } = DiarySlice.actions;
 
 export default DiarySlice.reducer;
 
@@ -58,3 +57,10 @@ export const selectHomeWorks = createDraftSafeSelector(
   [(state: RootState) => state.diary],
   state => Object.values(state.homeworks ?? {}) as HomeWork[]
 );
+
+export const selectHomeWorkById = (homeWorkId: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.diary.homeworks],
+    homeworks => homeworks["homework_" + homeWorkId] as HomeWork
+  );
+

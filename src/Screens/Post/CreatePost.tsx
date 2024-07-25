@@ -93,7 +93,7 @@ const CreatePost = ({ navigation, route }: Props) => {
     }
   }
 
-  console.log(post, 'post to edit')
+  // console.log(post, 'post to edit')
 
   useEffect(() => {
     if (isEdit) {

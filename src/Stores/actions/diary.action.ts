@@ -51,6 +51,29 @@ export const asyncCreateHomeWork = createAsyncThunk(
   }
 );
 
+export const asyncUpdateHomeWork = createAsyncThunk(
+  'updateHomeWork',
+  async ({ homeWorkId, data }: { homeWorkId: string, data: CreateHomeWorkPayload }, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<HomeWork, CreateHomeWorkPayload>({
+      method: "POST",
+      path: allApiPaths.getPath('updateHomeWork', { homeWorkId }),
+      body: data
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(setHomeWork(res.data!))
+      dispatch(asyncShowSuccess(res.message))
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
 export const asyncDeleteHomeWork = createAsyncThunk(
   'deleteHomeWork',
   async ({ homeWorkId }: { homeWorkId: string }, { dispatch }) => {

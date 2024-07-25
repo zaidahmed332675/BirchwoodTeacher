@@ -105,7 +105,9 @@ export enum EDiaryStack {
 
 export type DiaryStackParams = {
   diary: undefined;
-  createDiary: undefined;
+  createDiary: {
+    homeWorkId?: string
+  };
 };
 
 export enum EChatStack {

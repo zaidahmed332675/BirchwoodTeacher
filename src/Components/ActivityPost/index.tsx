@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import lodash from 'lodash';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import VideoPlayer from 'react-native-media-console';
 import { asyncCreatePostComment, asyncDeletePost, asyncGetCommentsByPostId, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
@@ -28,8 +28,8 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const [likeLoading, likePost] = useLoaderDispatch(asyncLikePost, false);
   const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
   const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId, false);
-  const [createCommentLoading, createPostComment] = useLoaderDispatch(asyncCreatePostComment, false);
-  const [deletePostLoading, deletePost] = useLoaderDispatch(asyncDeletePost, false);
+  const [createCommentLoading, createPostComment] = useLoaderDispatch(asyncCreatePostComment);
+  const [deletePostLoading, deletePost] = useLoaderDispatch(asyncDeletePost);
 
   const profile = useAppSelector(selectUserProfile)
   const comments = useAppSelector(selectPostComments(post._id))
@@ -70,7 +70,17 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   }
 
   const handlePostDelete = () => {
-    deletePost({ postId: post._id })
+    Alert.alert('Warning', 'Are you sure you want to delete this post permanently?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => deletePost({ postId: post._id })
+      },
+    ]);
   }
 
   const media = lodash.shuffle([...post.images, ...post.videos]);

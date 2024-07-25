@@ -1,9 +1,11 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { asyncDeleteHomeWork } from '../../Stores/actions/diary.action';
 import { useLoaderDispatch } from '../../Stores/hooks';
 import { HomeWork } from '../../Types/Diary';
+import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
 
@@ -20,20 +22,31 @@ export const DateCard = ({ formattedDate: { day, date, month, year } }: { format
 
 export const DiaryCard = ({ item }: { item: HomeWork }) => {
 
-  const [_, deleteHomeWork] = useLoaderDispatch(asyncDeleteHomeWork, false);
+  const [_, deleteHomeWork] = useLoaderDispatch(asyncDeleteHomeWork);
+  const navigation = useNavigation<NavigationProp<DiaryStackParams>>()
 
   const handleHomeWorkDelete = () => {
-    deleteHomeWork({ homeWorkId: item._id })
+    Alert.alert('Warning', 'Are you sure you want to delete this home work record permanently?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => deleteHomeWork({ homeWorkId: item._id })
+      },
+    ]);
   }
 
   const createAt = new Date(item.createdAt);
   const dueDate = new Date(item.dueDate);
 
   const formattedDate = {
-    day: format(createAt, 'EEE'), // 'EEE' for abbreviated day name (e.g., 'Mon', 'Tue', etc.)
-    date: format(createAt, 'dd'), // 'dd' for day of the month (two digits)
-    month: format(createAt, 'MMM'), // 'MMM' for abbreviated month name (e.g., 'Jan', 'Feb', etc.)
-    year: format(createAt, 'yyyy'), // 'yyyy' for full year (four digits)
+    day: format(createAt, 'EEE'),
+    date: format(createAt, 'dd'),
+    month: format(createAt, 'MMM'),
+    year: format(createAt, 'yyyy'),
   };
 
   return (
@@ -42,6 +55,30 @@ export const DiaryCard = ({ item }: { item: HomeWork }) => {
       <View style={[styles.card, item.type === "WARNING" ? styles.warningBorder : item.type === 'NOTICE' ? styles.noticeBorder : {}]} >
         <View style={[styles.sideBorder, item.type === "WARNING" ? styles.warningBg : item.type === 'NOTICE' ? styles.noticeBg : {}]} />
         <View style={styles.content}>
+          <View style={{
+            flexDirection: 'row',
+            alignSelf: 'flex-end',
+            gap: 5,
+          }}>
+            <TouchableOpacity onPress={() => navigation.navigate(EDiaryStack.createDiary, {
+              homeWorkId: item._id,
+            })}>
+              <VIcon
+                type="Feather"
+                name={"edit-3"}
+                size={15}
+                color={colors.theme.darkGreen}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleHomeWorkDelete}>
+              <VIcon
+                type="AntDesign"
+                name={"delete"}
+                size={15}
+                color={colors.theme.darkRed}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.description}>
             {item.description}
@@ -53,31 +90,7 @@ export const DiaryCard = ({ item }: { item: HomeWork }) => {
             Due Date: {format(dueDate, 'EEE dd yyyy')}
           </Text>
         </View>
-        <View style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 5,
-          top: 5,
-          right: 5,
-        }}>
-          <TouchableOpacity>
-            <VIcon
-              type="Feather"
-              name={"edit-3"}
-              size={20}
-              color={colors.theme.darkGreen}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleHomeWorkDelete}>
-            <VIcon
-              type="AntDesign"
-              name={"delete"}
-              size={20}
-              color={colors.theme.darkRed}
-            />
-          </TouchableOpacity>
-        </View>
+
       </View>
     </View>
   );
@@ -101,7 +114,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 3,
-    position: 'relative'
   },
   sideBorder: {
     height: 'auto',
@@ -124,6 +136,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
+    flex: 1,
+    flexGrow: 1,
   },
   title: {
     fontSize: 18,

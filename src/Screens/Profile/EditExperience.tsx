@@ -1,24 +1,24 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AppDatePicker } from '../../Components/AppDatePicker';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
+import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { VIcon } from '../../Components/VIcon';
-import { ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
-import { CustomHeader } from '../../Components/CustomHeader';
-import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncUpdateExperience } from '../../Stores/actions/user.action';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { AppDatePicker } from '../../Components/AppDatePicker';
-import { GrayMediumText } from '../../Components/GrayMediumText';
-import _ from 'lodash';
+import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { ProfileStackParams } from '../../Types/NavigationTypes';
+import { isArrayOfObjectsEqual } from '../../Utils/options';
+import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
 
@@ -123,7 +123,7 @@ export default function EditExperience({}: Props) {
                   rules={{
                     required: {
                       value: true,
-                      message: 'office name is required',
+                      message: 'Office name is required',
                     },
                   }}
                   render={({ field: { onChange, value } }) => (

@@ -19,12 +19,13 @@ import { colors } from '../../theme/colors';
 import { ETimeTableStack, TimeTableStackParams } from '../../Types/NavigationTypes';
 import { CreateTimeTableRecordPayload } from '../../Types/TimeTable';
 import { DaysEnum } from '../../Utils/options';
+import { DropDown } from '../../Components/DropDown';
 
 type Props = StackScreenProps<TimeTableStackParams, 'createTimeTable'>;
 
 export default function CreateTimeTable({ navigation, route }: Props) {
-  const [_, createTimeTableRecord] = useLoaderDispatch(asyncCreateTimeTableRecord, false);
-  const [__, updateTimeTableRecord] = useLoaderDispatch(asyncUpdateTimeTableRecord, false);
+  const [_, createTimeTableRecord] = useLoaderDispatch(asyncCreateTimeTableRecord);
+  const [__, updateTimeTableRecord] = useLoaderDispatch(asyncUpdateTimeTableRecord);
   const timeTableRecordById = useAppSelector(selectTimeTableRecordById(route.params?.timeTableRecordId!, route.params?.day!))
 
   const dispatch = useAppDispatch()
@@ -48,6 +49,8 @@ export default function CreateTimeTable({ navigation, route }: Props) {
     },
   });
 
+  // console.log(timeTableRecordById, route.params?.timeTableRecordId!)
+
   const onSubmit = useCallback(
     async (data: CreateTimeTableRecordPayload) => {
 
@@ -55,6 +58,9 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       data.endTime = format(data.endTime, "hh:mm a")
 
       let body = {} as typeof data
+
+      body.classroom = data.classroom
+
       if (data.day !== timeTableRecordById?.day) {
         body.day = data.day;
       }
@@ -77,7 +83,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       if (Object.keys(body).length === 0) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
-        let res = isEdit ? await updateTimeTableRecord(data) : await createTimeTableRecord(data)
+        let res = isEdit ? await updateTimeTableRecord({ timeTableRecordId: timeTableRecordById._id, prevDay: timeTableRecordById.day, data: body }) : await createTimeTableRecord(data)
         if (res.status) navigation.navigate(ETimeTableStack.timeTable)
       }
     },
@@ -87,7 +93,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
   useEffect(() => {
     if (isEdit) {
       setValue('classroom', timeTableRecordById.classroom);
-      setValue('day', { title: lodash.capitalize(timeTableRecordById.day), value: timeTableRecordById.day });
+      setValue('day', timeTableRecordById.day);
       setValue('meta', timeTableRecordById.meta);
       setValue('subject', timeTableRecordById.subject);
       setValue('description', timeTableRecordById.description);
@@ -111,20 +117,20 @@ export default function CreateTimeTable({ navigation, route }: Props) {
                 },
               }}
               render={({ field: { onChange, value } }) => {
-                console.log(value, 'checko')
                 return (
-                  <AppSelect
-                    defaultValue={value}
-                    data={Array.from(Object.keys(DaysEnum ?? {}), key => ({
-                      title: lodash.capitalize(key),
-                      value: key,
-                    }))}
+                  <DropDown
                     label="Day"
                     placeholder='Please select'
-                    onSelect={item => {
-                      console.log(item, 'chkkk')
-                      onChange(item.value)
-                    }}
+                    required={true}
+                    items={Array.from(Object.keys(DaysEnum ?? {}), key => ({
+                      label: lodash.capitalize(key),
+                      value: key,
+                    }))}
+                    value={value}
+                    setValue={_ => onChange(_(value))}
+                    multiple={false}
+                    open={true}
+                    setOpen={() => { }}
                   />
                 )
               }}

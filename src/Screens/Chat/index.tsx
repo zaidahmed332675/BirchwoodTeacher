@@ -10,7 +10,7 @@ import {
 import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
-import { ChatStackParams } from '../../Types/NavigationTypes';
+import { ChatStackParams, EChatStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
@@ -108,9 +108,9 @@ const Chat = ({ navigation }: Props) => {
     <TouchableOpacity
       style={styles.item}
       onPress={() => {
-        navigation.navigate('createChat', {
-          parentId: item._id,
-          parentName: item.name,
+        navigation.navigate(EChatStack.createChat, {
+          childId: item._id,
+          chatRoomId: item.name,
         });
       }}>
       <ImageBox

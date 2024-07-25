@@ -322,7 +322,7 @@ export const asyncGetAllHolidays = createAsyncThunk(
       path: allApiPaths.getPath('getAllHolidays')
     });
 
-    console.log(res, 'checking holiday response')
+    // console.log(res, 'checking holiday response')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));

@@ -60,5 +60,5 @@ export const selectTimeTableByDay = (day: string) =>
 export const selectTimeTableRecordById = (_id: string, day: string) =>
   createDraftSafeSelector(
     [(state: RootState) => state.timeTable.timeTable],
-    timeTable => (!_id ? {} : timeTable?.[day].find(record => record._id !== _id) || {}) as TimeTableRecord
+    timeTable => (_id && day && timeTable?.[day].find(record => record._id === _id) || {}) as TimeTableRecord
   );

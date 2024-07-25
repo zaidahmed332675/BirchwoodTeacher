@@ -136,7 +136,7 @@ function ChangePassword({ navigation }: Props) {
           rules={{
             required: {
               value: true,
-              message: 'Confirm Password is required',
+              message: 'Confirm password is required',
             },
             validate: {
               matchesPreviousPassword: value => {

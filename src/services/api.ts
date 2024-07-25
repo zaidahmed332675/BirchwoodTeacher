@@ -3,6 +3,7 @@ import {
   AxiosHeaders,
   AxiosInstance,
   AxiosRequestConfig,
+  AxiosResponse,
   Method,
   RawAxiosRequestHeaders,
 } from 'axios';
@@ -74,15 +75,18 @@ export const callApi = async <RT, T = undefined>({
   const axiosInstance: AxiosInstance = axiosSecure ? axiosPrivate : axios;
 
   return axiosInstance(options)
-    .then(responseCallback<RT>)
-    .catch((err: AxiosError<ResponseCallback<RT>>) => {
-      if (err.response) {
-        return responseCallback<RT>(err.response);
+    .then((response: AxiosResponse<ResponseCallback<RT>>) => responseCallback<RT>(response))
+    .catch((error: AxiosError<ResponseCallback<RT>>) => {
+      if (error.response) {
+        return responseCallback<RT>(error.response);
+      } else if (error.request) {
+        return responseCallback<RT>(error.request);
       } else {
         return {
           status: false,
-          message: "Something Went Wrong!"
-        }
+          message: error.message,
+          data: undefined,
+        };
       }
     }) as Promise<ResponseCallback<RT>>;
 };

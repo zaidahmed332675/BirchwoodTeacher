@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ChildAttendance, ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, ClassRoom, CreateChatPayload, CreateChatResponse, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { callApi } from '../../services/api';
 import { allApiPaths, ApiPaths } from '../../services/apiPaths';
-import { setAttendances, setChatRoom, setChatRoomMessage, setChild, setChildren, setClassRoom } from '../slices/class.slice';
+import { setAttendances, setChatRoomMessage, setChatRoomMessages, setChild, setChildren, setClassRoom } from '../slices/class.slice';
 import { setLoading } from '../slices/common.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
 
@@ -87,7 +87,7 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
         `?month=${month}&year=${year}`) as ApiPaths,
     });
 
-    console.log(res.data)
+    // console.log(res.data)
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
@@ -100,7 +100,7 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
 
 export const asyncCreateChat = createAsyncThunk(
   'createChat',
-  async ({ childId, data }: { childId: string, data: CreateChatPayload }, { dispatch }) => {
+  async (data: CreateChatPayload, { dispatch }) => {
     const res = await callApi<CreateChatResponse, CreateChatPayload>({
       method: 'POST',
       path: allApiPaths.getPath('createChat'),
@@ -112,10 +112,10 @@ export const asyncCreateChat = createAsyncThunk(
     } else {
       // When trying to create again it does not have chat property with message 'Already Exists'
       if (res.data?._id) {
-        dispatch(setChild({ _id: childId, chatRoomId: res.data._id }));
+        dispatch(setChild({ _id: data.childId, chatRoomId: res.data._id }));
       }
       if (res.data?.chat?._id) {
-        dispatch(setChild({ _id: childId, chatRoomId: res.data.chat._id }));
+        dispatch(setChild({ _id: data.childId, chatRoomId: res.data.chat._id }));
       }
     }
 
@@ -129,9 +129,11 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
   async (data: CreateChatRoomMessagePayload, { dispatch }) => {
     const res = await callApi<CreateChatRoomMessageResponse, CreateChatRoomMessagePayload>({
       method: 'POST',
-      path: allApiPaths.getPath('createChat'),
+      path: allApiPaths.getPath('createChatRoomMessage'),
       body: data,
     });
+
+    console.log(data, 'checking data')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
@@ -161,7 +163,7 @@ export const asyncGetMessagesByChatRoomId = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.docs?.length) {
-        dispatch(setChatRoom({ chatRoomId, ...res.data }));
+        dispatch(setChatRoomMessages({ chatRoomId, ...res.data }));
       }
       dispatch(asyncShowSuccess(res.message));
     }

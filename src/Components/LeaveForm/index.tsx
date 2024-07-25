@@ -3,6 +3,7 @@ import {
   NavigationProp,
   useNavigation,
 } from '@react-navigation/native';
+import lodash from 'lodash';
 import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -26,8 +27,9 @@ import { colors } from '../../theme/colors';
 import { LeavePayload } from '../../types/User';
 import { AppDatePicker } from '../AppDatePicker';
 import { AppSelect } from '../AppSelect';
+import { DropDown } from '../DropDown';
 
-export const LeaveForm = ({}) => {
+export const LeaveForm = ({ }) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MainStackParams>>();
 
@@ -97,14 +99,20 @@ export const LeaveForm = ({}) => {
                 message: 'Leave Type is required',
               },
             }}
-            render={({ field: { onChange } }) => (
-              <AppSelect
-                data={Array.from(Object.keys(leaveTypeEnum ?? {}), key => ({
-                  title: key.slice(0, 1) + key.slice(1).toLowerCase(),
+            render={({ field: { value, onChange } }) => (
+              <DropDown
+                label="Leave Type"
+                placeholder='Please select'
+                required={true}
+                items={Array.from(Object.keys(leaveTypeEnum ?? {}), key => ({
+                  label: lodash.capitalize(key),
                   value: key,
                 }))}
-                label="Leave Type"
-                onSelect={item => onChange(item.value)}
+                value={value}
+                setValue={_ => onChange(_(value))}
+                multiple={false}
+                open={true}
+                setOpen={() => { }}
               />
             )}
           />
@@ -137,7 +145,7 @@ export const LeaveForm = ({}) => {
           {errors.leaveFrom?.message && (
             <GrayMediumText
               _style={{ color: colors.theme.lightRed }}
-              text={errors.startDate.message}
+              text={errors.leaveFrom.message}
             />
           )}
 
@@ -162,7 +170,7 @@ export const LeaveForm = ({}) => {
           {errors.leaveTo?.message && (
             <GrayMediumText
               _style={{ color: colors.theme.lightRed }}
-              text={errors.endDate.message}
+              text={errors.leaveTo.message}
             />
           )}
 

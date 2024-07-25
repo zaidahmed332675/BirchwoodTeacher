@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-// import dp1 from '../../Assets/icons/dp1.png';
 import { FlatList } from 'react-native-gesture-handler';
 import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';

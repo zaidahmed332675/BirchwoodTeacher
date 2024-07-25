@@ -1,54 +1,55 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import DropDownPicker, {
   DropDownPickerProps,
   ItemType,
   ValueType,
 } from 'react-native-dropdown-picker';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme/colors';
+import { VIcon } from '../VIcon';
 
 interface DropDownCustomProps {
   items: ItemType<ValueType>[];
   label: string;
+  value: ValueType;
+  multiple: true | false;
   badge?: boolean;
   required?: boolean;
   starColor?: string;
-  mainContainer_style: any;
+  mainContainer_style?: object;
   placeholderStyle?: Record<string, any>;
 }
 
 export const DropDown = ({
-  // placeholder,
+  label,
+  placeholder,
+  required = false,
   items,
-  // setValue,
-  // value,
+  value,
+  setValue,
+  mainContainer_style,
+  multiple = false,
+  starColor,
+  placeholderStyle,
+  searchable = false,
+  badge = false,
+  disabled = false,
   // min,
   // max,
-  // searchable,
-  multiple = false,
-  // disabled,
   // multipleText,
-  // open,
-  // setOpen,
-  mainContainer_style,
   // labelStyle,
-  listMode = 'DEFAULT',
-  placeholderStyle,
   // setItems,
-  badge = false,
-  label,
-  required = false,
-  starColor,
-  ...restProps
 }: DropDownPickerProps<ValueType> & DropDownCustomProps) => {
+
+  const [open, setOpen] = useState(false);
+
   const ArrowUpIconComponent = useCallback(
     (props: { style: StyleProp<ViewStyle> }) => (
-      <Ionicon
-        name="chevron-up"
-        size={20}
-        color={colors.text.altGrey}
+      <VIcon
         {...props}
+        name={'chevron-up'}
+        style={styles.dropdownButtonArrowStyle}
+        type="MaterialCommunityIcons"
       />
     ),
     []
@@ -56,44 +57,41 @@ export const DropDown = ({
 
   const ArrowDownIconComponent = useCallback(
     (props: { style: StyleProp<ViewStyle> }) => (
-      <Ionicon
-        name="chevron-down"
-        size={20}
-        color={colors.text.altGrey}
+      <VIcon
         {...props}
+        name={'chevron-down'}
+        style={styles.dropdownButtonArrowStyle}
+        type="MaterialCommunityIcons"
       />
     ),
     []
   );
 
+  // console.log(items, 'items is here')
+
   return (
     <View style={{ marginVertical: 10 }}>
       <Text style={[styles.labelStyle]}>
-        {label}{' '}
-        {required && <Text style={{ color: starColor || 'red' }}>*</Text>}
+        {label} {required && <Text style={{ color: starColor || 'red' }}>*</Text>}
       </Text>
       <DropDownPicker
-        {...restProps}
         items={items}
-        // value={value}
-        // placeholder={placeholder}
-        containerStyle={{ borderRadius: 10 }}
-        style={[styles.mainContainer_style, mainContainer_style]}
-        // multipleText={multipleText}
-        // open={open}
-        // setOpen={setOpen}
-        // setValue={setValue}
-        // disabled={disabled}
-        // searchable={searchable}
-        // setItems={multiple ? setItems : undefined}
-        multiple={multiple}
-        // labelStyle={labelStyle ? labelStyle : null}
-        listMode={listMode}
+        open={open}
+        mode={badge ? 'BADGE' : 'SIMPLE'}
+        listMode='SCROLLVIEW'
+        setOpen={setOpen}
+        value={value}
+        setValue={setValue}
+        multiple={false}
+        disabled={disabled}
+        style={[styles.mainContainer_style, mainContainer_style, { zIndex: 9999 }]}
+        placeholder={placeholder}
         placeholderStyle={[styles.placeholder, placeholderStyle]}
+        searchable={searchable}
+        textStyle={styles.textStyle}
         dropDownContainerStyle={{
           borderColor: colors.input.background,
         }}
-        mode={badge ? 'BADGE' : 'SIMPLE'}
         disabledItemLabelStyle={{
           opacity: 0.5,
         }}
@@ -102,27 +100,41 @@ export const DropDown = ({
         }}
         ArrowDownIconComponent={ArrowDownIconComponent}
         ArrowUpIconComponent={ArrowUpIconComponent}
+        dropDownDirection='BOTTOM'
+      // multipleText={multipleText}
+      // setItems={multiple ? setItems : undefined}
+      // labelStyle={labelStyle ? labelStyle : null}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  placeholder: {
-    color: colors.text.altGrey,
-  },
   mainContainer_style: {
+    // paddingVertical: 0,
+    paddingHorizontal: 7,
+    color: colors.text.grey,
     borderWidth: 1.5,
     borderColor: colors.input.background,
     borderRadius: 10,
-    paddingHorizontal: 7,
-    color: colors.text.grey,
     backgroundColor: colors.input.background,
+  },
+  placeholder: {
+    color: colors.text.altGrey,
+    fontSize: 12,
   },
   labelStyle: {
     marginBottom: 5,
     fontSize: 12,
     fontWeight: 'bold',
+    color: colors.text.altGrey,
+  },
+  textStyle: {
+    fontSize: 12,
+    color: colors.theme.black
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 22,
     color: colors.text.altGrey,
   },
 });

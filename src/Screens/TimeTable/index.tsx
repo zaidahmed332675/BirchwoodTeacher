@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
@@ -23,33 +23,33 @@ export default function TimeTable({ navigation }: Props) {
   const [timeTableLoader, getAllClassTimeTable] = useLoaderDispatch(asyncGetAllClassTimeTable);
   const timeTableByDay = useAppSelector(selectTimeTableByDay(selectedDay));
 
-  const [_, deleteTimeTableRecord] = useLoaderDispatch(asyncDeleteTimeTableRecord, false);
-
-  const handleTimeTableRecordDelete = (_id: string) => {
-    deleteTimeTableRecord({ timeTableRecordId: _id, day: selectedDay })
-  }
+  const [_, deleteTimeTableRecord] = useLoaderDispatch(asyncDeleteTimeTableRecord);
 
   useEffect(() => {
     getAllClassTimeTable({ classId: '6630e5f01364cb7fd294281c' });
   }, [getAllClassTimeTable]);
 
+  const handleTimeTableRecordDelete = (_id: string) => {
+    Alert.alert('Warning', 'Are you sure you want to delete this time table record permanently?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => deleteTimeTableRecord({ timeTableRecordId: _id, day: selectedDay })
+      },
+    ]);
+  }
+
   const renderItem = ({ item }: { item: TimeTableRecord }) => {
     return (
       <View style={styles.cardContainer}>
-        <View style={styles.itemContent}>
-          <Text style={styles.titleText}>{item.subject}</Text>
-          <Text style={styles.titleText}>{item.startTime} - {item.endTime}</Text>
-        </View>
-        <View style={styles.borderLine} />
-        <Text style={styles.titleText}>{item.meta}</Text>
-
         <View style={{
-          position: 'absolute',
-          display: 'flex',
           flexDirection: 'row',
+          alignSelf: 'flex-end',
           gap: 5,
-          top: 0,
-          right: 0,
         }}>
           <TouchableOpacity onPress={() => navigation.navigate(ETimeTableStack.createTimeTable, {
             timeTableRecordId: item._id,
@@ -58,19 +58,26 @@ export default function TimeTable({ navigation }: Props) {
             <VIcon
               type="Feather"
               name={"edit-3"}
-              size={20}
-              color={colors.theme.primary}
+              size={15}
+              color={colors.theme.darkGreen}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleTimeTableRecordDelete(item._id)}>
             <VIcon
-              type="Ionicons"
-              name={"close-circle-outline"}
-              size={20}
-              color={colors.theme.primary}
+              type="AntDesign"
+              name={"delete"}
+              size={15}
+              color={colors.theme.darkRed}
             />
           </TouchableOpacity>
         </View>
+        <View style={styles.itemContent}>
+          <Text style={[styles.titleText, styles.subject]}>{item.subject}</Text>
+          <Text style={styles.titleText}>{item.description}</Text>
+          <Text style={styles.titleText}>{item.startTime} - {item.endTime}</Text>
+        </View>
+        <View style={styles.borderLine} />
+        <Text style={styles.titleText}>{item.meta}</Text>
       </View>
     );
   };
@@ -148,6 +155,12 @@ const styles = StyleSheet.create({
   },
   itemContent: {
     gap: 5
+  },
+  subject: {
+    fontSize: 18,
+    color: colors.text.greyAlt2,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   titleText: {
     fontSize: 14,

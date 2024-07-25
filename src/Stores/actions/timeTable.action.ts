@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { CreateTimeTableRecordPayload, CreatTimeTableResonse, TimeTable } from '../../Types/TimeTable';
+import { CreateTimeTableRecordPayload, CreatTimeTableResonse, TimeTable, TimeTableRecord } from '../../Types/TimeTable';
 import { callApi } from '../../services/api';
 import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
@@ -17,7 +17,7 @@ export const asyncGetAllClassTimeTable = createAsyncThunk(
       }),
     });
 
-    console.log(res, 'respons is here')
+    // console.log(res, 'respons is here')
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
@@ -56,19 +56,22 @@ export const asyncCreateTimeTableRecord = createAsyncThunk(
 
 export const asyncUpdateTimeTableRecord = createAsyncThunk(
   'updateTimeTableRecord',
-  async (data: CreateTimeTableRecordPayload, { dispatch }) => {
+  async ({ timeTableRecordId, prevDay, data }: { timeTableRecordId: string, prevDay: string, data: CreateTimeTableRecordPayload }, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<CreatTimeTableResonse, CreateTimeTableRecordPayload>({
+    const res = await callApi<TimeTableRecord, CreateTimeTableRecordPayload>({
       method: "POST",
-      path: allApiPaths.getPath('updateTimeTableRecord'),
+      path: allApiPaths.getPath('updateTimeTableRecord', {
+        timeTableRecordId
+      }),
       body: data
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setTimeTableRecord(res.data?.newTimetable!))
+      if (prevDay !== res.data?.day) dispatch(removeTimeTableRecord({ _id: res.data?._id!, day: prevDay }))
+      dispatch(setTimeTableRecord(res.data!))
       dispatch(asyncShowSuccess(res.message))
     }
 

@@ -28,7 +28,7 @@ const ChildInfo = ({ route }: Props) => {
   const child = useAppSelector(selectChildById(childId));
   const currentWeekAttendance = useAppSelector(selectCurrentWeekAttendance(childId, startOfWeek(calenderMonthYear, { weekStartsOn: 1 })))
 
-  console.log(getMonth(calenderMonthYear), calenderMonthYear)
+  // console.log(getMonth(calenderMonthYear), calenderMonthYear)
 
   useEffect(() => {
     getChildMonthlyAttendnace({
@@ -92,7 +92,7 @@ const ChildInfo = ({ route }: Props) => {
     checkInChildByTeacher({ children: childId, checkIn: checkInDateTime })
   }, [checkInChildByTeacher]);
 
-  console.log(currentWeekAttendance)
+  // console.log(currentWeekAttendance)
 
   const reportsCards = (items: any, indx: number) => {
     return (
@@ -190,7 +190,7 @@ const ChildInfo = ({ route }: Props) => {
 
             {Array.from({ length: 5 }).map((_, indx) => {
               let weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
-              const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item.createdAt)) || {} as ChildCheckInOutResponse
+              const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item?.createdAt ?? "")) || {} as ChildCheckInOutResponse
               let checkIn = day.checkIn ? format(new Date(day.checkIn), "hh:mm a") : 'N/A'
               let checkOut = day.checkOut ? format(new Date(day.checkOut), "hh:mm a") : 'N/A'
 

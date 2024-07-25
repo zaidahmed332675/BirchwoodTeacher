@@ -26,6 +26,8 @@ export const AppDatePicker = ({
   style,
 }: AppSelectProps) => {
   const [open, setOpen] = useState(false);
+  const isValueValid = isValid(value)
+
   return (
     <View style={[styles.appInput, style]}>
       <Text style={styles.labelStyle}>
@@ -37,23 +39,23 @@ export const AppDatePicker = ({
             style={{
               flex: 1,
               fontSize: 12,
-              color: isValid(value)
+              color: isValueValid
                 ? colors.theme.black
                 : colors.theme.greyAlt2,
               paddingHorizontal: 7,
             }}>
-            {isValid(value)
-              ? format(new Date(value), dateTimeFormat)
+            {isValueValid
+              ? format(value, dateTimeFormat)
               : 'Please Select'}
           </Text>
           <DatePicker
             modal
             mode={pickerMode}
             open={open}
-            date={new Date()}
+            date={isValueValid ? new Date(value) : new Date()}
             title={pickerTitle}
-            minimumDate={new Date()}
             onConfirm={selectedDate => {
+              console.log(selectedDate, 'checko')
               onChange(selectedDate);
               setOpen(false);
             }}

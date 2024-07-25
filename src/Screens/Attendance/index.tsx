@@ -37,7 +37,6 @@ const Attendance = () => {
 
   const [isHolidayCalled, setIsHolidayCalled] = useState(false)
   useEffect(() => {
-
     const loadData = async () => {
       let res = await getAllHolidays()
       if (res.status) setIsHolidayCalled(true)
@@ -81,7 +80,7 @@ const Attendance = () => {
   }, []);
 
   // console.log(attendanceData, 'checking attendance')
-  console.log(holidaysData, 'checking holidays yar')
+  // console.log(holidaysData, 'checking holidays yar')
 
   return (
     <Layout

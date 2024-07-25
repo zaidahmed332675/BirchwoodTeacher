@@ -39,6 +39,13 @@ export interface Message {
   chat: string;
   createdAt: string;
   updatedAt: string;
+
+  // These properties are added just to support chat library
+  text?: string;
+  user?: {
+    _id: string;
+    name: string;
+  }
 }
 
 export interface Category {
@@ -61,8 +68,19 @@ export interface MessagesResponse extends PaginationProps {
 export interface CreateChatPayload {
   teacher: string;
   parent: string;
+  childId: string;
 }
 
+export interface CreateChatRoomRes {
+  _id: string;
+  isGroupChat: boolean;
+  unreadMessage: number;
+  teacher: string;
+  parent: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface CreateChatResponse {
   chat: {
     _id: string;
