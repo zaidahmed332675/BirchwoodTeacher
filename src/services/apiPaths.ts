@@ -35,6 +35,7 @@ export enum PostApiPaths {
   getActivities = 'activity/getAllActivities',
   createPost = 'post/addPost',
   updatePost = 'post/updatePost/:postId',
+  getAllPosts = 'post/getAllPosts',
   getAllClassPosts = 'post/getAllClassPosts/:classRoomId',
   getAllChildPosts = 'post/getAllChildPosts/:childId',
   likePost = 'post/likePost/:postId',

@@ -68,12 +68,11 @@ const Diary = ({ navigation }: Props) => {
       }>
       <View style={styles.customSwitch}>
         <CustomSwitch
-          selectionMode={1}
+          selectionMode={tabIndex}
           roundCorner={true}
-          option1={'Class'}
-          option2={'Child'}
+          options={['Class', 'Child']}
           onSelectSwitch={onSelectSwitch}
-          selectionColor={colors.theme.primary}
+          selectionColor={colors.theme.secondary}
         />
       </View>
       {/* {tabIndex > 1 && student && (

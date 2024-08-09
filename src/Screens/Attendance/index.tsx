@@ -88,12 +88,11 @@ const Attendance = () => {
       showBottom={true}>
       <View style={styles.customSwitch}>
         <CustomSwitch
-          selectionMode={1}
+          selectionMode={tabIndex}
           roundCorner={true}
-          option1={'Attendance'}
-          option2={'Holiday'}
+          options={['Attendance', 'Holidays']}
           onSelectSwitch={onSelectSwitch}
-          selectionColor={colors.theme.primary}
+          selectionColor={colors.theme.secondary}
         />
       </View>
       <View>

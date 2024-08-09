@@ -1,7 +1,9 @@
 import React, {
   Dispatch,
   SetStateAction,
-  forwardRef
+  forwardRef,
+  // useImperativeHandle,
+  // useState
 } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';

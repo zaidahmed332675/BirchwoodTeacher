@@ -28,6 +28,28 @@ export const asyncGetAllActivities = createAsyncThunk(
   }
 );
 
+export const asyncGetAllPosts = createAsyncThunk(
+  'getAllPosts',
+  async (_, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<GetAllClassPosts>({
+      path: allApiPaths.getPath('getAllPosts'),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setPosts(res.data!)
+      );
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
 export const asyncGetAllClassPosts = createAsyncThunk(
   'getAllClassPosts',
   async (_, { dispatch }) => {
@@ -36,6 +58,30 @@ export const asyncGetAllClassPosts = createAsyncThunk(
     const res = await callApi<GetAllClassPosts>({
       path: allApiPaths.getPath('getAllClassPosts', {
         classRoomId: '6630e5f01364cb7fd294281c'
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setPosts(res.data!)
+      );
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
+export const asyncGetAllChildPosts = createAsyncThunk(
+  'getAllChildPosts',
+  async ({ childId }: { childId: string }, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<GetAllClassPosts>({
+      path: allApiPaths.getPath('getAllChildPosts', {
+        childId
       }),
     });
 
