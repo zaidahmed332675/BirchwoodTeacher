@@ -34,12 +34,15 @@ const CreatePost = ({ navigation, route }: Props) => {
   const textEditorRef = useRef<textEditorRefProps | null>(null);
   let { activityId, postId } = route?.params
 
-  let [audience, setAudience] = useState(0);
+  const [audience, setAudience] = useState(0);
   const [students, setStudents] = useState<any>();
   const [isSheetOpen, setSheetOpen] = useState(false);
+
   const dispatch = useAppDispatch()
+
   const [_, createPost] = useLoaderDispatch(asyncCreatePost);
   const [__, updatePost] = useLoaderDispatch(asyncUpdatePost);
+
   const profile = useAppSelector(selectUserProfile)
 
   const isEdit = !!postId
@@ -85,15 +88,13 @@ const CreatePost = ({ navigation, route }: Props) => {
     if (audience === 1) {
       if (students?.length) formData.append('children', JSON.stringify(students))
       else return dispatch(asyncShowError('Please select atleast one child!'))
-    } else formData.append('classroom', isEdit ? post.classroom : '6630e5f01364cb7fd294281c');
+    } else formData.append('classroom', isEdit ? post.classroom : profile.classroom);
 
     let res = !isEdit ? await createPost(formData) : await updatePost({ postId, data: formData })
     if (res.status) {
       navigation.navigate(EPostStack.posts)
     }
   }
-
-  // console.log(post, 'post to edit')
 
   useEffect(() => {
     if (isEdit) {

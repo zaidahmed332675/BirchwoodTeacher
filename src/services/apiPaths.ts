@@ -55,7 +55,7 @@ export enum DiaryApiPaths {
 }
 
 export enum TimeTableApiPaths {
-  getAllClassTimeTable = 'timetable/getAllClassTimetables/:classId',
+  getAllClassTimeTable = 'timetable/getAllClassTimetables/:classRoomId',
   createTimeTable = 'timetable/addTimetable',
   deleteTimeTableRecord = 'timetable/deleteTimetable/:timeTableRecordId',
   updateTimeTableRecord = 'timetable/updateTimetable/:timeTableRecordId'

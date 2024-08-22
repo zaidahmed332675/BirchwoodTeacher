@@ -5,15 +5,18 @@ import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removeTimeTableRecord, setTimeTable, setTimeTableRecord } from '../slices/timeTable.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+import { RootState } from '..';
 
 export const asyncGetAllClassTimeTable = createAsyncThunk(
   'getAllClassTimeTable',
-  async ({ classId }: { classId: string }, { dispatch }) => {
+  async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
+
+    const classRoomId: string = (getState() as RootState).user.user.classroom
 
     const res = await callApi<TimeTable>({
       path: allApiPaths.getPath('getAllClassTimeTable', {
-        classId
+        classRoomId
       }),
     });
 

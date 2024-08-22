@@ -26,7 +26,7 @@ export default function TimeTable({ navigation }: Props) {
   const [_, deleteTimeTableRecord] = useLoaderDispatch(asyncDeleteTimeTableRecord);
 
   useEffect(() => {
-    getAllClassTimeTable({ classId: '6630e5f01364cb7fd294281c' });
+    getAllClassTimeTable();
   }, [getAllClassTimeTable]);
 
   const handleTimeTableRecordDelete = (_id: string) => {

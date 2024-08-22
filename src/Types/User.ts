@@ -16,6 +16,7 @@ export interface User {
   status: string;
   education: any[];
   employment: any[];
+  classroom: string;
   newAttendance: {
     status: string;
   };

@@ -5,6 +5,7 @@ import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removePost, setActivities, setComment, setComments, setLike, setLove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+import { RootState } from '..';
 
 export const asyncGetAllActivities = createAsyncThunk(
   'getAllActivities',
@@ -52,12 +53,14 @@ export const asyncGetAllPosts = createAsyncThunk(
 
 export const asyncGetAllClassPosts = createAsyncThunk(
   'getAllClassPosts',
-  async (_, { dispatch }) => {
+  async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
+
+    const classRoomId: string = (getState() as RootState).user.user.classroom
 
     const res = await callApi<GetAllClassPosts>({
       path: allApiPaths.getPath('getAllClassPosts', {
-        classRoomId: '6630e5f01364cb7fd294281c'
+        classRoomId
       }),
     });
 
@@ -171,7 +174,7 @@ export const asyncDeletePost = createAsyncThunk(
 export const asyncLikePost = createAsyncThunk(
   'likePost',
   async ({ postId }: { postId: string }, { getState, dispatch }) => {
-    const userId = getState().user.user?._id
+    const userId = (getState() as RootState).user.user?._id
     const res = await callApi({
       path: allApiPaths.getPath('likePost', {
         postId
@@ -191,7 +194,7 @@ export const asyncLikePost = createAsyncThunk(
 export const asyncLovePost = createAsyncThunk(
   'lovePost',
   async ({ postId }: { postId: string }, { getState, dispatch }) => {
-    const userId = getState().user.user?._id
+    const userId = (getState() as RootState).user.user?._id
     const res = await callApi({
       path: allApiPaths.getPath('lovePost', {
         postId

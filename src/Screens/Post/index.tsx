@@ -125,8 +125,6 @@ const styles = StyleSheet.create({
   customSwitch: {
     marginTop: 20,
     flexDirection: 'row',
-    columnGap: 6,
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

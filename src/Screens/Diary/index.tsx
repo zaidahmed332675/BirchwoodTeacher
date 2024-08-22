@@ -158,8 +158,9 @@ const Diary = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginVertical: 20,
-    alignItems: 'center',
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   diaryRecord: {
     marginVertical: 6,

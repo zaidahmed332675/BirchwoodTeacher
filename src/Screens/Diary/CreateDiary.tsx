@@ -21,6 +21,7 @@ import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { HomeWorkTypeEnum } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 import { isEqual } from 'date-fns';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
 
 type Props = StackScreenProps<DiaryStackParams, 'createDiary'>;
 
@@ -35,13 +36,14 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
 
     const children = useAppSelector(selectChildren);
     const homeWork = useAppSelector(selectHomeWorkById(homeWorkId))
+    const profile = useAppSelector(selectUserProfile)
 
     const dispatch = useAppDispatch()
 
     const {
         control,
         handleSubmit,
-        formState: { errors, isDirty },
+        formState: { errors },
         watch,
         resetField,
         setValue
@@ -228,7 +230,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                                     value={value}
                                     setValue={_ => {
                                         if (value === "CLASS") {
-                                            setValue('classroom', '6630e5f01364cb7fd294281c')
+                                            setValue('classroom', profile.classroom)
                                             resetField('children')
                                         }
                                         onChange(_(value))

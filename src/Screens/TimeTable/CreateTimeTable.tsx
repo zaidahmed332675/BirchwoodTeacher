@@ -20,6 +20,7 @@ import { ETimeTableStack, TimeTableStackParams } from '../../Types/NavigationTyp
 import { CreateTimeTableRecordPayload } from '../../Types/TimeTable';
 import { DaysEnum } from '../../Utils/options';
 import { DropDown } from '../../Components/DropDown';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
 
 type Props = StackScreenProps<TimeTableStackParams, 'createTimeTable'>;
 
@@ -27,6 +28,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
   const [_, createTimeTableRecord] = useLoaderDispatch(asyncCreateTimeTableRecord);
   const [__, updateTimeTableRecord] = useLoaderDispatch(asyncUpdateTimeTableRecord);
   const timeTableRecordById = useAppSelector(selectTimeTableRecordById(route.params?.timeTableRecordId!, route.params?.day!))
+  const profile = useAppSelector(selectUserProfile)
 
   const dispatch = useAppDispatch()
 
@@ -40,7 +42,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
   } = useForm<any>({
     defaultValues: {
       day: '',
-      classroom: '6630e5f01364cb7fd294281c',
+      classroom: '',
       startTime: '',
       endTime: '',
       description: '',
@@ -48,8 +50,6 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       meta: '',
     },
   });
-
-  // console.log(timeTableRecordById, route.params?.timeTableRecordId!)
 
   const onSubmit = useCallback(
     async (data: CreateTimeTableRecordPayload) => {
@@ -99,6 +99,8 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       setValue('description', timeTableRecordById.description);
       // setValue('startTime', timeTableRecordById.startTime);
       // setValue('endTime', timeTableRecordById.endTime);
+    } else {
+      setValue('classroom', profile.classroom);
     }
   }, [setValue, timeTableRecordById]);
 

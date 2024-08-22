@@ -5,15 +5,18 @@ import { allApiPaths, ApiPaths } from '../../services/apiPaths';
 import { setAttendances, setChatRoomMessage, setChatRoomMessages, setChild, setChildren, setClassRoom } from '../slices/class.slice';
 import { setLoading } from '../slices/common.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+import { RootState } from '..';
 
 export const asyncGetClassRoomById = createAsyncThunk(
   'getClassRoomById',
-  async (_, { dispatch }) => {
+  async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
+
+    const classRoomId: string = (getState() as RootState).user.user.classroom
 
     const res = await callApi<{ classroom: ClassRoom }>({
       path: allApiPaths.getPath('getClassRoomById', {
-        classRoomId: "6630e5f01364cb7fd294281c"
+        classRoomId
       }),
     });
 
@@ -32,12 +35,14 @@ export const asyncGetClassRoomById = createAsyncThunk(
 
 export const asyncGetChildrenByClassId = createAsyncThunk(
   'getChildrenByClassId',
-  async (_, { dispatch }) => {
+  async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
+
+    const classRoomId: string = (getState() as RootState).user.user.classroom
 
     const res = await callApi<ClassResponse>({
       path: allApiPaths.getPath('getChildrenByClassId', {
-        classRoomId: "6630e5f01364cb7fd294281c"
+        classRoomId
       }),
     });
 
