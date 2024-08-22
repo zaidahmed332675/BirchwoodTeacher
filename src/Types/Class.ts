@@ -13,6 +13,21 @@ export interface ClassRoom {
   teacher: string
 }
 
+export interface Parent {
+  _id: string;
+  parentId: string;
+  fatherFirstName: string;
+  fatherLastName: string;
+  motherFirstName: string;
+  motherLastName: string;
+  email: string;
+  phone: string;
+  status: string;
+  childrens: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Child {
   _id: string;
   rollNumber: string;
@@ -27,9 +42,9 @@ export interface Child {
   image: string;
   createdAt: string;
   updatedAt: string;
-  parent: string
+  parent: Parent;
   newAttendance: ChildCheckInOutResponse;
-  chatRoomId: string
+  chatRoomId: string;
 }
 
 export interface Message {

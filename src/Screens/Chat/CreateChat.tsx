@@ -22,7 +22,7 @@ import { colors } from '../../theme/colors';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
-const CustomChatHeader = ({ title }: { title: string }) => {
+const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string }) => {
   const navigation = useNavigation();
 
   return (
@@ -51,15 +51,27 @@ const CustomChatHeader = ({ title }: { title: string }) => {
             }}
             source={{ uri: 'https://picsum.photos/seed/picsum/200/300' }}
           />
-          <Text
-            style={{
-              color: colors.text.white,
-              marginLeft: 10,
-              fontWeight: 'bold',
-              fontSize: 20,
-            }}>
-            {title}
-          </Text>
+          <View style={{
+            marginLeft: 10,
+          }}>
+            <Text
+              style={{
+                color: colors.text.white,
+
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}>
+              {title}
+            </Text>
+            {subTitle && <Text
+              style={{
+                color: colors.text.white,
+                fontWeight: 'bold',
+                fontSize: 14,
+              }}>
+              {subTitle}
+            </Text>}
+          </View>
         </View>
       </View>
     </View>
@@ -117,7 +129,9 @@ const CreateChat = ({ route }: Props) => {
 
   return (
     <Layout
-      customHeader={<CustomChatHeader title={child.parent?.parentName || "Parent Name"} />}>
+      customHeader={<CustomChatHeader
+        title={`${child.firstName} ${child.lastName}`}
+        subTitle={`${child.parent?.motherFirstName} ${child.parent?.motherLastName} ( Mother )`} />}>
       <GiftedChat
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}
