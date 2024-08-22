@@ -230,7 +230,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                                     value={value}
                                     setValue={_ => {
                                         if (value === "CLASS") {
-                                            setValue('classroom', profile.classroom)
+                                            setValue('classroom', profile?.classroom?._id)
                                             resetField('children')
                                         }
                                         onChange(_(value))

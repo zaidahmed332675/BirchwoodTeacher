@@ -100,7 +100,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       // setValue('startTime', timeTableRecordById.startTime);
       // setValue('endTime', timeTableRecordById.endTime);
     } else {
-      setValue('classroom', profile.classroom);
+      setValue('classroom', profile?.classroom?._id);
     }
   }, [setValue, timeTableRecordById]);
 

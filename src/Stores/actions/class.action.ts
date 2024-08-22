@@ -12,7 +12,7 @@ export const asyncGetClassRoomById = createAsyncThunk(
   async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
 
-    const classRoomId: string = (getState() as RootState).user.user.classroom
+    const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
 
     const res = await callApi<{ classroom: ClassRoom }>({
       path: allApiPaths.getPath('getClassRoomById', {
@@ -38,7 +38,7 @@ export const asyncGetChildrenByClassId = createAsyncThunk(
   async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
 
-    const classRoomId: string = (getState() as RootState).user.user.classroom
+    const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
 
     const res = await callApi<ClassResponse>({
       path: allApiPaths.getPath('getChildrenByClassId', {

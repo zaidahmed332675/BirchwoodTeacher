@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React, { StrictMode, useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -15,19 +15,23 @@ import { Header } from '../../Components/Header';
 import { store } from '../../Stores';
 import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
 import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.action';
-import { useLoaderDispatch } from '../../Stores/hooks';
+import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vh, vw } from '../../Utils/units';
 import { appShadow, colors } from '../../theme/colors';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { VIcon } from '../../Components/VIcon';
+import { asyncShowError } from '../../Stores/actions/common.action';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
 
-  const [loading, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
+  const profile = useAppSelector(selectUserProfile)
+  const [_, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
 
   useEffect(() => {
-    getChildrenByClassId()
+    if (profile?.classroom?._id) getChildrenByClassId()
   }, [getChildrenByClassId]);
 
   const data = [
@@ -42,18 +46,21 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'My Class',
       icon: featureIcons.profile,
       route: EMainStack.myClassRoutes,
+      isLocked: !profile?.classroom?._id
     },
     {
       id: 3,
       title: 'Posts',
       icon: featureIcons.activity,
       route: EMainStack.postRoutes,
+      isLocked: !profile?.classroom?._id
     },
     {
       id: 4,
       title: 'Work Diary',
       icon: featureIcons.assignment,
       route: EMainStack.diaryRoutes,
+      isLocked: !profile?.classroom?._id
     },
     {
       id: 5,
@@ -66,6 +73,7 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'Time Table',
       icon: featureIcons.time_table,
       route: EMainStack.timeTableRoutes,
+      isLocked: !profile?.classroom?._id
     },
     {
       id: 7,
@@ -104,7 +112,7 @@ const HomeScreen = ({ navigation }: Props) => {
     // },
   ];
 
-  const handleNavigate = async (route: keyof MainStackParams) => {
+  const handleNavigate = async (route: keyof MainStackParams, isLocked: boolean) => {
     if (route === EMainStack.logOut) {
       return await store.dispatch(asyncSignOut()).unwrap();
     } else if (route === EMainStack.checkOut) {
@@ -112,6 +120,7 @@ const HomeScreen = ({ navigation }: Props) => {
       const checkOutDateTime = date.toISOString();
       return await store.dispatch(asyncCheckOutUser({ checkOut: checkOutDateTime })).unwrap();
     } else {
+      if (isLocked) return store.dispatch(asyncShowError('Currently, no class have been assigned'))
       navigation.navigate(route);
     }
   };
@@ -124,12 +133,25 @@ const HomeScreen = ({ navigation }: Props) => {
       title: string;
       icon: any;
       route: keyof MainStackParams;
+      isLocked: boolean;
     };
   }) => {
     return (
       <TouchableOpacity
-        style={styles.card}
-        onPress={() => handleNavigate(item.route)}>
+        style={[styles.card, item.isLocked && { backgroundColor: colors.theme.greyAlt }]}
+        onPress={() => handleNavigate(item.route, item.isLocked)}>
+        {item.isLocked && <View style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}>
+          <VIcon
+            type="MaterialIcons"
+            name={"lock"}
+            size={16}
+            color={colors.theme.primary}
+          />
+        </View>}
         <View style={styles.iconContainer}>
           <Image source={item.icon} style={styles.featureIcons} />
         </View>
@@ -280,6 +302,7 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: colors.card.card1,
     justifyContent: 'center',
+    position: 'relative',
     height: vh * 15,
     width: vw * 38,
     borderRadius: 10,

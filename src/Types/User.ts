@@ -1,3 +1,5 @@
+import { ClassRoom } from "./Class";
+
 export interface User {
   _id: string;
   teacherId: string;
@@ -16,7 +18,7 @@ export interface User {
   status: string;
   education: any[];
   employment: any[];
-  classroom: string;
+  classroom: ClassRoom;
   newAttendance: {
     status: string;
   };

@@ -12,7 +12,7 @@ export const asyncGetAllClassTimeTable = createAsyncThunk(
   async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
 
-    const classRoomId: string = (getState() as RootState).user.user.classroom
+    const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
 
     const res = await callApi<TimeTable>({
       path: allApiPaths.getPath('getAllClassTimeTable', {

@@ -88,7 +88,7 @@ const CreatePost = ({ navigation, route }: Props) => {
     if (audience === 1) {
       if (students?.length) formData.append('children', JSON.stringify(students))
       else return dispatch(asyncShowError('Please select atleast one child!'))
-    } else formData.append('classroom', isEdit ? post.classroom : profile.classroom);
+    } else formData.append('classroom', isEdit ? post.classroom : profile?.classroom?._id);
 
     let res = !isEdit ? await createPost(formData) : await updatePost({ postId, data: formData })
     if (res.status) {

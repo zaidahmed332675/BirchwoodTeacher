@@ -56,7 +56,7 @@ export const asyncGetAllClassPosts = createAsyncThunk(
   async (_, { dispatch, getState }) => {
     dispatch(setLoading(true));
 
-    const classRoomId: string = (getState() as RootState).user.user.classroom
+    const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
 
     const res = await callApi<GetAllClassPosts>({
       path: allApiPaths.getPath('getAllClassPosts', {
