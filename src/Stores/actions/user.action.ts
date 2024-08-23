@@ -40,13 +40,17 @@ export const asyncLogin = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(
-        setUserState({
-          ...res.data!,
-          holidays: {},
-          attendance: {} as UserAttendance
-        })
-      );
+      if (res.data?.token) {
+        let { todayAttendance, user, token } = res.data ?? {}
+        dispatch(
+          setUserState({
+            user: { ...user, todayAttendance },
+            holidays: {},
+            attendance: {} as UserAttendance,
+            token,
+          })
+        );
+      }
     }
     dispatch(setLoading(false));
 
