@@ -50,7 +50,7 @@ const MyClass = ({ }: Props) => {
           alignSelf: 'flex-start',
         }}>
         <Image
-          source={item.checkIn ? pDot : item.newAttendance?.status === 'LEAVE' ? pendingDot : aDot}
+          source={item.checkIn ? pDot : item.todayAttendance?.status === 'LEAVE' ? pendingDot : aDot}
           style={styles.attendanceIcon}
         />
         <ImageBox
@@ -69,7 +69,7 @@ const MyClass = ({ }: Props) => {
             text="Attendance: 20 | Absents: 2 | Leaves: 5"
             _style={{ fontSize: 12 }}
           /> */}
-          {item.checkIn && !(item.newAttendance?.status === 'LEAVE') && (
+          {item.checkIn && !(item.todayAttendance?.status === 'LEAVE') && (
             <View
               style={{
                 marginTop: 10,

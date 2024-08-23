@@ -246,7 +246,7 @@ export const asyncCheckInUser = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ newAttendance: res.data?.newAttendance }));
+      dispatch(setUser({ todayAttendance: res.data?.newAttendance }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));
@@ -268,7 +268,7 @@ export const asyncCheckOutUser = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ newAttendance: res.data?.newAttendance }));
+      dispatch(setUser({ todayAttendance: res.data?.newAttendance }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));
@@ -290,7 +290,7 @@ export const asyncUserLeave = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ newAttendance: { status: 'LEAVE' } }));
+      dispatch(setUser({ todayAttendance: { status: 'LEAVE' } }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));

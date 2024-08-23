@@ -81,7 +81,7 @@ const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string
 const CreateChat = ({ route }: Props) => {
   const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, CreateChatResponse>(asyncCreateChat);
   const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
-  const [messageLoader, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
+  const [_, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
   const { childId, chatRoomId } = route.params
 
   const child = useAppSelector(selectChildById(childId));
@@ -103,7 +103,7 @@ const CreateChat = ({ route }: Props) => {
     let RoomId = chatRoomId || child.chatRoomId
 
     if (!RoomId) {
-      const createRes = await createChat({ parent: child.parent, teacher: child.classroom.teacher, childId })
+      const createRes = await createChat({ parent: child?.parent?._id, teacher: child.classroom.teacher, children: childId })
 
       if (createRes.status && createRes.data) {
         RoomId = createRes.data._id || createRes.data?.chat?._id

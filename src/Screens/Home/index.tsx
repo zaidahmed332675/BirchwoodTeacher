@@ -33,6 +33,7 @@ const HomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
     if (profile?.classroom?._id) getChildrenByClassId()
   }, [getChildrenByClassId]);
+  console.log(profile, 'cheking')
 
   const data = [
     {

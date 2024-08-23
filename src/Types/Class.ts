@@ -43,7 +43,7 @@ export interface Child {
   createdAt: string;
   updatedAt: string;
   parent: Parent;
-  newAttendance: ChildCheckInOutResponse;
+  todayAttendance: ChildCheckInOutResponse;
   chatRoomId: string;
 }
 
@@ -83,7 +83,7 @@ export interface MessagesResponse extends PaginationProps {
 export interface CreateChatPayload {
   teacher: string;
   parent: string;
-  childId: string;
+  children: string;
 }
 
 export interface CreateChatRoomRes {

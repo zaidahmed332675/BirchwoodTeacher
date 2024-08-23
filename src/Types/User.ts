@@ -19,7 +19,7 @@ export interface User {
   education: any[];
   employment: any[];
   classroom: ClassRoom;
-  newAttendance: {
+  todayAttendance: {
     status: string;
   };
   tokens: string[];
@@ -36,6 +36,7 @@ export interface LoginUserPayload {
 export interface LoginUserResponse {
   user: User;
   token: string;
+  todayAttendance: UserCheckInOut
 }
 
 export interface EmailVerificationPayload {
@@ -77,13 +78,17 @@ export interface UpdateUserProfilePayload {
   image?: string;
 }
 
-export interface UserCheckInOutResponse {
-  teacher: Omit<User, 'newAttendance'>,
-  checkIn: string | null,
-  checkOut: string | null,
-  leaveReason: string,
-  sickDescription: string,
-  status: string,
+export interface UserCheckInOut {
+  teacher: string;
+  checkIn: string | null;
+  checkOut: string | null;
+  leaveReason: string;
+  sickDescription: string;
+  status: string;
+}
+
+export interface UserCheckInOutResponse extends Omit<UserCheckInOut, 'teacher'> {
+  teacher: Omit<User, 'todayAttendance'>;
 }
 
 export interface UserAttendance {

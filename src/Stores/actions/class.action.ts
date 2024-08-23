@@ -74,7 +74,7 @@ export const asyncCheckInChildByTeacher = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.newAttendance?.children) {
-        dispatch(setChild({ _id: res.data.newAttendance.children, newAttendance: res.data.newAttendance }));
+        dispatch(setChild({ _id: res.data.newAttendance.children, todayAttendance: res.data.newAttendance }));
       }
       dispatch(asyncShowSuccess(res.message));
     }
@@ -117,10 +117,10 @@ export const asyncCreateChat = createAsyncThunk(
     } else {
       // When trying to create again it does not have chat property with message 'Already Exists'
       if (res.data?._id) {
-        dispatch(setChild({ _id: data.childId, chatRoomId: res.data._id }));
+        dispatch(setChild({ _id: data.children, chatRoomId: res.data._id }));
       }
       if (res.data?.chat?._id) {
-        dispatch(setChild({ _id: data.childId, chatRoomId: res.data.chat._id }));
+        dispatch(setChild({ _id: data.children, chatRoomId: res.data.chat._id }));
       }
     }
 

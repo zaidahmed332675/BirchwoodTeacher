@@ -41,7 +41,7 @@ const AppNavigator = () => {
     },
   });
 
-  if (!attendanceEnum[profile?.newAttendance?.status] && !profile.checkIn) {
+  if (!attendanceEnum[profile?.todayAttendance?.status] && !profile.checkIn) {
     return (
       <View style={styles.container}>
         <Header />
