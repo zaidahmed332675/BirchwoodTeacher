@@ -52,8 +52,6 @@ const Post = ({ navigation }: Props) => {
     else setChildId('')
   };
 
-  console.log(childId)
-
   useEffect(() => {
     console.log(childId, 'childId', tabIndex, 'index')
     if (!isSearchModalOpen && !childId && tabIndex === 2) {

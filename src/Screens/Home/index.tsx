@@ -22,6 +22,7 @@ import { appShadow, colors } from '../../theme/colors';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { VIcon } from '../../Components/VIcon';
 import { asyncShowError } from '../../Stores/actions/common.action';
+import { attendanceEnum } from '../../Utils/options';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -82,7 +83,7 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut' },
+    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: profile.todayAttendance.status !== attendanceEnum.PRESENT },
     { id: 9, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // {
     //   id: 5,

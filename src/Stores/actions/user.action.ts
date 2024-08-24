@@ -13,6 +13,7 @@ import {
   User,
   UserAttendance,
   UserAttendanceResponse,
+  UserCheckInOutLeave,
   UserCheckInOutResponse
 } from '../../types/User';
 import { setLoading } from '../slices/common.slice';
@@ -155,11 +156,14 @@ export const asyncGetUserProfile = createAsyncThunk(
     const res = await callApi<User>({
       path: allApiPaths.getPath('profile'),
     });
-    // console.log('Async User Profile Res >>', res);
+
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser(res.data!));
+      if (res.data?._id) {
+        let { classroom, ...teacher } = res.data ?? {}
+        dispatch(setUser({ ...teacher }));
+      }
     }
 
     dispatch(setLoading(false));
@@ -250,8 +254,11 @@ export const asyncCheckInUser = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ todayAttendance: res.data?.newAttendance }));
-      dispatch(asyncShowSuccess(res.message));
+      if (res.data?.newAttendance) {
+        let { teacher: { classroom, ...teacher }, ...todayAttendance } = res.data?.newAttendance ?? {}
+        dispatch(setUser({ todayAttendance, ...teacher }));
+        dispatch(asyncShowSuccess(res.message));
+      }
     }
     dispatch(setLoading(false));
     return res;
@@ -285,7 +292,7 @@ export const asyncUserLeave = createAsyncThunk(
   async (data: any, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
+    const res = await callApi<{ todayAttendance: UserCheckInOutLeave }, User>({
       method: 'POST',
       path: allApiPaths.getPath('markLeave'),
       body: data,
@@ -294,7 +301,7 @@ export const asyncUserLeave = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ todayAttendance: { status: 'LEAVE' } }));
+      dispatch(setUser({ todayAttendance: res.data?.todayAttendance, checkIn: true }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));
@@ -325,8 +332,6 @@ export const asyncGetAllHolidays = createAsyncThunk(
     const res = await callApi<{ holidays: Holiday[] }>({
       path: allApiPaths.getPath('getAllHolidays')
     });
-
-    // console.log(res, 'checking holiday response')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));

@@ -19,7 +19,7 @@ import { attendanceEnum } from '../../Utils/options';
 import { colors } from '../../theme/colors';
 
 const Attendance = () => {
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(0);
   const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
 
   const [attendanceLoader, getUserMonthlyAttendnace] = useLoaderDispatch(asyncUserMonthlyAttendance);
@@ -29,7 +29,7 @@ const Attendance = () => {
   const monthWiseHolidays = useAppSelector(selectHolidaysMonthWise(format(calenderMonthYear, 'yyyy-MM')));
 
   useEffect(() => {
-    if (tabIndex === 1) getUserMonthlyAttendnace({
+    if (tabIndex === 0) getUserMonthlyAttendnace({
       month: getMonth(calenderMonthYear),
       year: getYear(calenderMonthYear),
     });
@@ -42,7 +42,7 @@ const Attendance = () => {
       if (res.status) setIsHolidayCalled(true)
     }
 
-    if (tabIndex === 2 && !isHolidayCalled) {
+    if (tabIndex === 1 && !isHolidayCalled) {
       loadData()
     }
   }, [tabIndex, getAllHolidays])
@@ -95,8 +95,8 @@ const Attendance = () => {
           selectionColor={colors.theme.secondary}
         />
       </View>
-      <View>
-        {tabIndex === 1 ? (
+      <View style={styles.calender}>
+        {tabIndex === 0 ? (
           <AppCalender
             data={attendanceData}
             calenderMonthYear={calenderMonthYear}
@@ -109,7 +109,7 @@ const Attendance = () => {
             handleMonthChange={handleMonthChange}
           />
         )}
-        {tabIndex === 2 && (
+        {tabIndex === 1 && (
           <GrayMediumText
             text="List of Holidays"
             _style={{
@@ -121,7 +121,7 @@ const Attendance = () => {
         )}
       </View>
 
-      {tabIndex === 2 ? (
+      {tabIndex === 1 ? (
         monthWiseHolidays.length ? <FlatList
           contentContainerStyle={{ gap: 10, paddingBottom: 15 }}
           data={monthWiseHolidays}
@@ -153,9 +153,13 @@ const Attendance = () => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginVertical: 20,
-    alignItems: 'center',
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
+  calender: {
+    paddingTop: 20
+  }
 });
 
 export default Attendance;

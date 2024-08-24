@@ -145,7 +145,7 @@ const Diary = ({ navigation }: Props) => {
 
       {homeworks.length ? <FlatList
         contentContainerStyle={{
-          paddingBottom: 10
+          paddingBottom: 10,
         }}
         data={homeworks}
         renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} /></View>}
@@ -158,12 +158,12 @@ const Diary = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginTop: 20,
+    marginVertical: 20,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   diaryRecord: {
-    marginVertical: 6,
+    marginBottom: 6,
   },
 });
 

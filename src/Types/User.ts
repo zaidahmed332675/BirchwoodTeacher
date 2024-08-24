@@ -36,7 +36,7 @@ export interface LoginUserPayload {
 export interface LoginUserResponse {
   user: User;
   token: string;
-  todayAttendance: UserCheckInOut
+  todayAttendance: UserCheckInOutLeave;
 }
 
 export interface EmailVerificationPayload {
@@ -78,16 +78,18 @@ export interface UpdateUserProfilePayload {
   image?: string;
 }
 
-export interface UserCheckInOut {
+export interface UserCheckInOutLeave {
+  _id: string;
   teacher: string;
   checkIn: string | null;
   checkOut: string | null;
   leaveReason: string;
   sickDescription: string;
+  leaveType: string;
   status: string;
 }
 
-export interface UserCheckInOutResponse extends Omit<UserCheckInOut, 'teacher'> {
+export interface UserCheckInOutResponse extends Omit<UserCheckInOutLeave, 'teacher'> {
   teacher: Omit<User, 'todayAttendance'>;
 }
 
