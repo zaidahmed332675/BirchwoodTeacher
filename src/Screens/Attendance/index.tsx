@@ -30,7 +30,7 @@ const Attendance = () => {
 
   useEffect(() => {
     if (tabIndex === 0) getUserMonthlyAttendnace({
-      month: getMonth(calenderMonthYear),
+      month: getMonth(calenderMonthYear) + 1,
       year: getYear(calenderMonthYear),
     });
   }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace]);
@@ -74,7 +74,7 @@ const Attendance = () => {
       [formatedDate]: {
         ...curr,
         checkInDate: formatedDate,
-        checkIn: true,
+        isHoliday: true,
       },
     };
   }, []);

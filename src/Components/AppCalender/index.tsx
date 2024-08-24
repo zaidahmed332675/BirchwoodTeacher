@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { colors } from '../../theme/colors';
 import { VIcon } from '../VIcon';
+import { attendanceEnum } from '../../Utils/options';
 
 interface AppCalenderProps {
   data: Record<string, any>;
@@ -73,14 +74,19 @@ export const AppCalender = ({
               compareAsc(calenderDate, calenderDateUserEntry?.checkInDate)
             ) || undefined;
 
-          if (isDateMatched && calenderDateUserEntry?.checkIn) {
+          if (isDateMatched && (calenderDateUserEntry?.checkIn && calenderDateUserEntry?.status === attendanceEnum.PRESENT) || calenderDateUserEntry?.isHoliday) {
             return {
               style: styles.presentDaysStyle,
               textStyle: styles.textStyle,
             };
-          } else if (isDateMatched && !calenderDateUserEntry?.checkIn) {
+          } else if (isDateMatched && calenderDateUserEntry?.status === attendanceEnum.ABSENT) {
             return {
               style: styles.absentDaysStyle,
+              textStyle: styles.textStyle,
+            };
+          } else if (isDateMatched && calenderDateUserEntry?.status === attendanceEnum.LEAVE) {
+            return {
+              style: styles.leaveDaysStyle,
               textStyle: styles.textStyle,
             };
           } else if (date.getDay() === 0) {
@@ -147,6 +153,9 @@ const styles = StyleSheet.create({
   },
   absentDaysStyle: {
     backgroundColor: colors.theme.darkRed,
+  },
+  leaveDaysStyle: {
+    backgroundColor: colors.theme.secondary,
   },
   weekEndDaysStyle: {
     backgroundColor: colors.theme.lightSecondary,
