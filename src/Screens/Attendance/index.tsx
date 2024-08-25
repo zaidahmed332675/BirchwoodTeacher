@@ -17,38 +17,43 @@ import {
 import { selectHolidaysMonthWise, selectUserAttendance } from '../../Stores/slices/user.slice';
 import { attendanceEnum } from '../../Utils/options';
 import { colors } from '../../theme/colors';
+import { DataLoader } from '../../Components/DataLoader';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
+  const [switchLoader, setSwitchLoader] = useState(false);
 
   const [attendanceLoader, getUserMonthlyAttendnace] = useLoaderDispatch(asyncUserMonthlyAttendance);
-  const [holidayLoader, getAllHolidays] = useLoaderDispatch(asyncGetAllHolidays);
+  const [holidayLoader, getAllHolidays] = useLoaderDispatch(asyncGetAllHolidays, false);
 
   const userAttendance = useAppSelector(selectUserAttendance);
   const monthWiseHolidays = useAppSelector(selectHolidaysMonthWise(format(calenderMonthYear, 'yyyy-MM')));
 
+  const [isHolidayCalled, setIsHolidayCalled] = useState(false)
   useEffect(() => {
     if (tabIndex === 0) getUserMonthlyAttendnace({
       month: getMonth(calenderMonthYear) + 1,
       year: getYear(calenderMonthYear),
     });
-  }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace]);
 
-  const [isHolidayCalled, setIsHolidayCalled] = useState(false)
-  useEffect(() => {
     const loadData = async () => {
       let res = await getAllHolidays()
-      if (res.status) setIsHolidayCalled(true)
+      if (res.status) {
+        setIsHolidayCalled(true)
+      }
     }
 
     if (tabIndex === 1 && !isHolidayCalled) {
       loadData()
     }
-  }, [tabIndex, getAllHolidays])
+
+    setSwitchLoader(false)
+  }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace, getAllHolidays]);
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
+    setSwitchLoader(true)
   };
 
   const handleMonthChange = (date: Date) => {
@@ -79,8 +84,9 @@ const Attendance = () => {
     };
   }, []);
 
-  // console.log(attendanceData, 'checking attendance')
-  // console.log(holidaysData, 'checking holidays yar')
+  if (switchLoader) {
+    return <DataLoader />;
+  }
 
   return (
     <Layout

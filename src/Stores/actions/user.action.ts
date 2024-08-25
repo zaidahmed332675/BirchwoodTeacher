@@ -312,6 +312,9 @@ export const asyncUserLeave = createAsyncThunk(
 export const asyncUserMonthlyAttendance = createAsyncThunk(
   'monthlyAttendance',
   async ({ month, year }: any, { dispatch }) => {
+
+    dispatch(setLoading(true));
+
     const res = await callApi<UserAttendanceResponse>({
       path: (allApiPaths.getPath('monthlyAttendance') +
         `?month=${month}&year=${year}`) as ApiPaths,
@@ -322,6 +325,8 @@ export const asyncUserMonthlyAttendance = createAsyncThunk(
     } else {
       dispatch(setUserAttendance(res.data ?? ({} as UserAttendanceResponse)));
     }
+
+    dispatch(setLoading(false));
     return res;
   }
 );
@@ -329,6 +334,9 @@ export const asyncUserMonthlyAttendance = createAsyncThunk(
 export const asyncGetAllHolidays = createAsyncThunk(
   'getAllHolidays',
   async (_, { dispatch }) => {
+
+    dispatch(setLoading(true));
+
     const res = await callApi<{ holidays: Holiday[] }>({
       path: allApiPaths.getPath('getAllHolidays')
     });
@@ -338,6 +346,8 @@ export const asyncGetAllHolidays = createAsyncThunk(
     } else {
       dispatch(setHolidays(res.data?.holidays!));
     }
+
+    dispatch(setLoading(false));
     return res;
   }
 );
