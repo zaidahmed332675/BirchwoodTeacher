@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View
@@ -11,47 +11,44 @@ import { DiaryCard } from '../../Components/DiaryCard';
 import { Layout } from '../../Components/Layout';
 import { NotFound } from '../../Components/NotFound';
 import { CustomSwitch } from '../../Components/Switch';
-import { asyncGetAllHomeWorks } from '../../Stores/actions/diary.action';
+import { asyncGetAllChildHomeWorks, asyncGetAllHomeWorks } from '../../Stores/actions/diary.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { SearchModal } from '../../Components/SearchModal';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
 const Diary = ({ navigation }: Props) => {
-  const searchModalRef = useRef();
 
-  const [tabIndex, setTabIndex] = useState<number>(1);
+  const [tabIndex, setTabIndex] = useState<number>(0);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
-  const [student, setStudent] = useState<Record<string, any>>();
+  const [childId, setChildId] = useState<string>("");
 
   const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks);
+  const [childloading, getAllChildHomeWorks] = useLoaderDispatch(asyncGetAllChildHomeWorks, false);
 
   let homeworks = useAppSelector(selectHomeWorks);
   let children = useAppSelector(selectChildren);
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
-    if (index > 1) {
-      setSearchModalOpen(true);
-    }
+    if (index === 1) setSearchModalOpen(true);
+    else setChildId('')
   };
 
   useEffect(() => {
-    let item = searchModalRef.current?.selectedItem;
-    if (item) {
-      setStudent(item);
+    if (!isSearchModalOpen && !childId && tabIndex === 1) {
+      return setTabIndex(0)
     }
-  }, [isSearchModalOpen]);
 
-  useEffect(() => {
-    getAllHomeWorks()
-  }, [getAllHomeWorks]);
+    if (tabIndex === 0) getAllHomeWorks()
+    if (tabIndex === 1 && childId) getAllChildHomeWorks({ childId })
+  }, [tabIndex, childId, isSearchModalOpen, getAllHomeWorks, getAllChildHomeWorks]);
 
-
-  if (loading) {
+  if (loading || childloading) {
     return <DataLoader />;
   }
 
@@ -75,57 +72,12 @@ const Diary = ({ navigation }: Props) => {
           selectionColor={colors.theme.secondary}
         />
       </View>
-      {/* {tabIndex > 1 && student && (
-        <View
-          style={{
-            borderColor: colors.theme.secondary,
-            borderRadius: 2,
-            padding: 10,
-            borderBottomWidth: 0.2,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={dp1}
-            style={{
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              resizeMode: 'contain',
-            }}
-          />
-          <View style={{ marginLeft: 10, flex: 1 }}>
-            <GlroyBold
-              text={student?.label}
-              _style={{ color: colors.text.black }}
-            />
-            <GrayMediumText
-              text={`Class ${'X1-B'} | Roll no: ${student?.rollNumber}`}
-              _style={{ fontSize: 12 }}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={() => setSearchModalOpen(o => !o)}
-            style={{
-              alignSelf: 'flex-start',
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 5,
-            }}>
-            <Text
-              style={{
-                fontSize: 10,
-                fontWeight: 'bold',
-                marginHorizontal: 3,
-                color: colors.text.black,
-              }}>
-              Change
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )} */}
 
-      {/* <SearchModal
+      <SearchModal
+        label=""
+        value={childId ? childId : []}
+        onChange={setChildId}
+        required={true}
         open={isSearchModalOpen}
         setOpen={setSearchModalOpen}
         children={children.map(child => {
@@ -137,11 +89,10 @@ const Diary = ({ navigation }: Props) => {
             ...childData,
           })
         })}
-        ref={searchModalRef}
         _style={{
           display: 'none',
         }}
-      /> */}
+      />
 
       {homeworks.length ? <FlatList
         contentContainerStyle={{
@@ -158,12 +109,13 @@ const Diary = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginVertical: 20,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   diaryRecord: {
-    marginBottom: 6,
+    backgroundColor: 'red',
+    marginBottom: 12,
   },
 });
 

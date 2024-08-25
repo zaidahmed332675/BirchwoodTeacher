@@ -28,6 +28,30 @@ export const asyncGetAllHomeWorks = createAsyncThunk(
   }
 );
 
+export const asyncGetAllChildHomeWorks = createAsyncThunk(
+  'getAllChildHomeWork',
+  async ({ childId }: { childId: string }, { dispatch }) => {
+    dispatch(setLoading(true));
+
+    const res = await callApi<GetAllHomeWorks>({
+      path: allApiPaths.getPath('getAllChildHomework', {
+        childId
+      }),
+    });
+
+    if (!res.status) {
+      dispatch(asyncShowError(res.message));
+    } else {
+      dispatch(
+        setHomeWorks(res.data!)
+      );
+    }
+
+    dispatch(setLoading(false));
+    return res;
+  }
+);
+
 export const asyncCreateHomeWork = createAsyncThunk(
   'createHomeWork',
   async (data: CreateHomeWorkPayload, { dispatch }) => {
