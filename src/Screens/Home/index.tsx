@@ -83,7 +83,7 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: profile.todayAttendance.status !== attendanceEnum.PRESENT },
+    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: profile.todayAttendance?.status !== attendanceEnum.PRESENT },
     { id: 9, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // {
     //   id: 5,

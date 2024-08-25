@@ -24,6 +24,8 @@ const Stack = createStackNavigator<MainStackParams>();
 
 const AppNavigator = () => {
   const [isApplyingLeave, setIsApplyingLeave] = useState(false);
+  const [skipCheckIn, setSkipCheckIn] = useState(false);
+
   const profile = useAppSelector(selectUserProfile);
 
   const styles = StyleSheet.create({
@@ -41,7 +43,7 @@ const AppNavigator = () => {
     },
   });
 
-  if (!attendanceEnum[profile?.todayAttendance?.status] && !profile.checkIn) {
+  if (!attendanceEnum[profile?.todayAttendance?.status] && !profile.checkIn && !skipCheckIn) {
     return (
       <View style={styles.container}>
         <Header />
@@ -52,7 +54,7 @@ const AppNavigator = () => {
             </View>
           ) : (
             <View style={[styles.card, { justifyContent: 'center' }]}>
-              <Attendance handleLeave={() => setIsApplyingLeave(true)} />
+              <Attendance handleLeave={() => setIsApplyingLeave(true)} handleSkip={() => { setSkipCheckIn(true) }} />
             </View>
           )}
         </View>

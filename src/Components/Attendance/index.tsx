@@ -62,7 +62,7 @@ const FormatedText = ({ onPress }: FormatTextProps) => {
   );
 };
 
-export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
+export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => void, handleSkip: () => void }) => {
   const totalSeconds = useRef(0);
   const checkInTime = useMemo(() => addHours(startOfToday(), 8), []);
   const [progress] = useState(100);
@@ -176,6 +176,17 @@ export const Attendance = ({ handleLeave }: { handleLeave: () => void }) => {
         formatText={() => FormatedText({ onPress: onSubmit })}
         strokeCap="round"
       />
+      <TouchableOpacity onPress={handleSkip}>
+        <GrayMediumText
+          _style={{
+            color: colors.theme.primary,
+            fontSize: vw * 4,
+            textAlign: 'center',
+            marginTop: 50,
+          }}
+          text={`Want to skip this \n check-in and continue?`}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

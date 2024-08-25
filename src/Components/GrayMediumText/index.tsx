@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 
 interface GrayMediumTextProps {
   text: any;
-  _style?: object;
+  _style?: StyleProp<TextStyle>;
 }
 
 export const GrayMediumText = ({ text, _style }: GrayMediumTextProps) => {
