@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ChildAttendance, ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, ClassRoom, CreateChatPayload, CreateChatResponse, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
+import { ChatRoom, ChildAttendance, ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, ClassRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { callApi } from '../../services/api';
 import { allApiPaths, ApiPaths } from '../../services/apiPaths';
 import { setAttendances, setChatRoomMessage, setChatRoomMessages, setChild, setChildren, setClassRoom } from '../slices/class.slice';
@@ -106,7 +106,7 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
 export const asyncCreateChat = createAsyncThunk(
   'createChat',
   async (data: CreateChatPayload, { dispatch }) => {
-    const res = await callApi<CreateChatResponse, CreateChatPayload>({
+    const res = await callApi<{ chat: ChatRoom }, CreateChatPayload>({
       method: 'POST',
       path: allApiPaths.getPath('createChat'),
       body: data,
@@ -117,10 +117,10 @@ export const asyncCreateChat = createAsyncThunk(
     } else {
       // When trying to create again it does not have chat property with message 'Already Exists'
       if (res.data?._id) {
-        dispatch(setChild({ _id: data.children, chatRoomId: res.data._id }));
+        dispatch(setChild({ _id: data.children, chats: res.data }));
       }
       if (res.data?.chat?._id) {
-        dispatch(setChild({ _id: data.children, chatRoomId: res.data.chat._id }));
+        dispatch(setChild({ _id: data.children, chats: res.data.chat }));
       }
     }
 
@@ -155,13 +155,26 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
 
 export const asyncGetMessagesByChatRoomId = createAsyncThunk(
   'getMessagesByChatRoomId',
-  async ({ chatRoomId }: { chatRoomId: string }, { dispatch }) => {
-    dispatch(setLoading(true));
+  async ({ chatRoomId }: { chatRoomId: string }, { getState, dispatch }) => {
+
+    const { page, pages } = (getState() as RootState).class.chatRooms?.["chatRoom_" + chatRoomId]?.messagePagination ?? {}
+
+    if (page >= pages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<MessagesResponse>({
-      path: allApiPaths.getPath('getMessagesByChatRoomId', {
+      path: (allApiPaths.getPath('getMessagesByChatRoomId', {
         chatRoomId
-      }),
+      }) +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res?.status) {
@@ -170,7 +183,6 @@ export const asyncGetMessagesByChatRoomId = createAsyncThunk(
       if (res.data?.docs?.length) {
         dispatch(setChatRoomMessages({ chatRoomId, ...res.data }));
       }
-      dispatch(asyncShowSuccess(res.message));
     }
 
     dispatch(setLoading(false));

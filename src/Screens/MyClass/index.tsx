@@ -22,6 +22,7 @@ import {
   EMainStack
 } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { attendanceEnum } from '../../Utils/options';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
 
@@ -50,7 +51,7 @@ const MyClass = ({ }: Props) => {
           alignSelf: 'flex-start',
         }}>
         <Image
-          source={item.checkIn ? pDot : item.todayAttendance?.status === 'LEAVE' ? pendingDot : aDot}
+          source={item.checkIn ? pDot : item.todayAttendance?.status === attendanceEnum.LEAVE ? pendingDot : aDot}
           style={styles.attendanceIcon}
         />
         <ImageBox
@@ -69,7 +70,7 @@ const MyClass = ({ }: Props) => {
             text="Attendance: 20 | Absents: 2 | Leaves: 5"
             _style={{ fontSize: 12 }}
           /> */}
-          {item.checkIn && !(item.todayAttendance?.status === 'LEAVE') && (
+          {item.checkIn && !(item.todayAttendance?.status === attendanceEnum.LEAVE) && (
             <View
               style={{
                 marginTop: 10,
@@ -93,7 +94,7 @@ const MyClass = ({ }: Props) => {
             screen: EChatStack.createChat,
             params: {
               childId: item._id,
-              chatRoomId: item.chatRoomId
+              chatRoomId: item.chats?._id
             },
           });
         }}

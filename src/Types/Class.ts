@@ -1,4 +1,4 @@
-import { PaginationProps } from "./Common";
+import { MessagePaginationProps, PaginationProps } from "./Common";
 
 export interface ClassRoom {
   _id: string;
@@ -44,7 +44,20 @@ export interface Child {
   updatedAt: string;
   parent: Parent;
   todayAttendance: ChildCheckInOutResponse;
-  chatRoomId: string;
+  chats: ChatRoom;
+}
+
+export interface ChatRoom {
+  _id: string;
+  isGroupChat: boolean;
+  unreadMessage: number;
+  teacher: string;
+  parent: string;
+  children: string;
+  status: string;
+  latestMessage?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Message {
@@ -76,7 +89,7 @@ export interface ClassResponse extends PaginationProps {
   docs: Child[];
 }
 
-export interface MessagesResponse extends PaginationProps {
+export interface MessagesResponse extends MessagePaginationProps {
   docs: Message[];
 }
 
@@ -84,29 +97,6 @@ export interface CreateChatPayload {
   teacher: string;
   parent: string;
   children: string;
-}
-
-export interface CreateChatRoomRes {
-  _id: string;
-  isGroupChat: boolean;
-  unreadMessage: number;
-  teacher: string;
-  parent: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-export interface CreateChatResponse {
-  chat: {
-    _id: string;
-    isGroupChat: boolean;
-    unreadMessage: number;
-    teacher: string;
-    parent: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-  }
 }
 
 export interface CreateChatRoomMessagePayload {

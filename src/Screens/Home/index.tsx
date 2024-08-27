@@ -118,6 +118,7 @@ const HomeScreen = ({ navigation }: Props) => {
     if (route === EMainStack.logOut) {
       return await store.dispatch(asyncSignOut()).unwrap();
     } else if (route === EMainStack.checkOut) {
+      if (isLocked) return store.dispatch(asyncShowError('Checkout unavailable while on leave'))
       const date = new Date();
       const checkOutDateTime = date.toISOString();
       return await store.dispatch(asyncCheckOutUser({ checkOut: checkOutDateTime })).unwrap();

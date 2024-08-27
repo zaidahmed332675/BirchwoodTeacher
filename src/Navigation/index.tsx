@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { AppLoader } from '../Components/AppLoader';
 import { useAppSelector } from '../Stores/hooks';
 import { selectAppLoader } from '../Stores/slices/common.slice';
@@ -11,12 +11,29 @@ import { ERootStack, RootStackParams } from '../Types/NavigationTypes';
 import { NavigationOptions } from '../Utils/options';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
+import { io } from "socket.io-client";
 
 const Stack = createStackNavigator<RootStackParams>();
+
+const socket = io("https://darkmodelabs.com:8201/");
 
 const AppRouting = () => {
   const token = useAppSelector(selectUserToken);
   const loader = useAppSelector(selectAppLoader);
+
+  const handleNewMessage = useCallback((record: any) => {
+    console.log(record, 'new message created')
+  }, [])
+
+  console.log(socket.connected)
+  useEffect(() => {
+    if (socket.connected) {
+      socket.on('new message', handleNewMessage)
+    }
+    return () => {
+      socket.off('new message', handleNewMessage)
+    }
+  }, [])
 
   return (
     <NavigationContainer>

@@ -5,8 +5,8 @@ import {
 } from '@reduxjs/toolkit';
 import { isSameWeek } from 'date-fns';
 import { RootState } from '..';
-import { Child, ChildAttendance, ClassResponse, ClassRoom, CreateChatRoomRes, Message, MessagesResponse } from '../../Types/Class';
-import { PaginationProps } from '../../Types/Common';
+import { Child, ChildAttendance, ClassResponse, ClassRoom, Message, MessagesResponse } from '../../Types/Class';
+import { MessagePaginationProps, PaginationProps } from '../../Types/Common';
 
 interface ClassSliceState {
   classRoom: ClassRoom;
@@ -15,8 +15,8 @@ interface ClassSliceState {
   pagination: PaginationProps;
   chatRooms: Record<string, {
     messages: Record<string, Message>,
-    messagePagination: any
-  } & CreateChatRoomRes>;
+    messagePagination: MessagePaginationProps
+  }>;
 }
 
 const initialState: ClassSliceState = {
@@ -78,14 +78,17 @@ const ClassSlice = createSlice({
     setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
       const { chatRoomId, message } = payload;
       const chatRoomKey = `chatRoom_${chatRoomId}`;
-      state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
-        ...message,
-        text: message.content,
-        user: {
-          _id: message.sender,
-          name: 'Sender Name',
+      state.chatRooms[chatRoomKey].messages = {
+        [`message_${message._id}`]: {
+          ...message,
+          text: message.content,
+          user: {
+            _id: message.sender,
+            name: 'Sender Name',
+          },
         },
-      };
+        ...state.chatRooms[chatRoomKey].messages,
+      }
     },
     removeChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, messageId: string }>) => {
       const { chatRoomId, messageId } = payload;
@@ -133,5 +136,11 @@ export const selectChatRoomMessages = (chatRoomId: string) =>
   createDraftSafeSelector(
     [(state: RootState) => state.class.chatRooms],
     chatRooms => Object.values(chatRooms?.["chatRoom_" + chatRoomId]?.messages || {})
+  );
+
+export const selectChatRoomPagination = (chatRoomId: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.class.chatRooms],
+    chatRooms => chatRooms?.["chatRoom_" + chatRoomId]?.messagePagination || {}
   );
 

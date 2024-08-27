@@ -8,15 +8,16 @@ import {
   GiftedChat,
   IMessage,
   InputToolbar,
+  LoadEarlier,
 } from 'react-native-gifted-chat';
 import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
 import { VIcon } from '../../Components/VIcon';
 import { asyncCreateChat, asyncCreateChatRoomMessage, asyncGetMessagesByChatRoomId } from '../../Stores/actions/class.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectChatRoomMessages, selectChildById } from '../../Stores/slices/class.slice';
+import { selectChatRoomMessages, selectChatRoomPagination, selectChildById } from '../../Stores/slices/class.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { CreateChatPayload, CreateChatResponse, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
+import { ChatRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
 
@@ -79,14 +80,15 @@ const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string
 };
 
 const CreateChat = ({ route }: Props) => {
-  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, CreateChatResponse>(asyncCreateChat);
+  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, { chat: ChatRoom }>(asyncCreateChat);
   const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
   const [_, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
   const { childId, chatRoomId } = route.params
 
   const child = useAppSelector(selectChildById(childId));
   const profile = useAppSelector(selectUserProfile);
-  const messages = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chatRoomId));
+  const messages = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chats?._id));
+  const messagesPagination = useAppSelector(selectChatRoomPagination(chatRoomId || child?.chats?._id));
 
   useLayoutEffect(() => {
     if (chatRoomId) {
@@ -96,11 +98,11 @@ const CreateChat = ({ route }: Props) => {
 
   const onSend = useCallback(async (msg: IMessage[]) => {
     console.log(msg)
-    await createMessage({ chatId: child?.chatRoomId, content: msg[0].text })
-  }, [child?.chatRoomId]);
+    await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
+  }, [child?.chats?._id]);
 
   const handleCreateChatAndLoadMessages = useCallback(async () => {
-    let RoomId = chatRoomId || child.chatRoomId
+    let RoomId = chatRoomId || child?.chats?._id
 
     if (!RoomId) {
       const createRes = await createChat({ parent: child?.parent?._id, teacher: child.classroom.teacher, children: childId })
@@ -115,6 +117,10 @@ const CreateChat = ({ route }: Props) => {
     }
   }, [])
 
+  const handleLoadEarlierMessages = useCallback(async () => {
+    getMessages({ chatRoomId: child?.chats?._id })
+  }, [])
+
   useEffect(() => {
     handleCreateChatAndLoadMessages()
   }, [createChat]);
@@ -123,9 +129,11 @@ const CreateChat = ({ route }: Props) => {
     return <DataLoader text='Creating Chat Room ...' />;
   }
 
-  if (messagesLoader) {
+  if (!messages.length && messagesLoader) {
     return <DataLoader text='Fetching Messages ...' />;
   }
+
+  console.log(messagesPagination, messagesPagination.page <= messagesPagination.pages)
 
   return (
     <Layout
@@ -136,6 +144,15 @@ const CreateChat = ({ route }: Props) => {
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}
         renderAvatar={null}
+        keyboardShouldPersistTaps="handled"
+        inverted={true}
+        alwaysShowSend={true}
+        showAvatarForEveryMessage={true}
+        onSend={msgs => onSend(msgs)}
+        infiniteScroll={true}
+        loadEarlier={messagesPagination.page < messagesPagination.pages}
+        isLoadingEarlier={!!messages.length && messagesLoader}
+        onLoadEarlier={handleLoadEarlierMessages}
         messages={messages}
         renderInputToolbar={props => (
           <InputToolbar
@@ -150,11 +167,6 @@ const CreateChat = ({ route }: Props) => {
             )}
           />
         )}
-        keyboardShouldPersistTaps="handled"
-        inverted={false}
-        alwaysShowSend={true}
-        showAvatarForEveryMessage={true}
-        onSend={msgs => onSend(msgs)}
         renderBubble={props => {
           return (
             <Bubble
@@ -193,7 +205,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  messageContainer: {},
+  messageContainer: {
+    marginBottom: 20,
+  },
 });
 
 export default CreateChat;
