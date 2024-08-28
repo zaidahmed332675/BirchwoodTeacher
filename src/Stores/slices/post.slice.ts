@@ -48,7 +48,10 @@ const PostSlice = createSlice({
       state.pagination = pagination;
     },
     setPost: (state, { payload }: PayloadAction<Partial<Post>>) => {
-      state.posts["post_" + payload._id] = { ...state.posts["post_" + payload._id], ...payload };
+      state.posts = {
+        ["post_" + payload._id]: { ...state.posts["post_" + payload._id], ...payload },
+        ...state.posts
+      }
     },
     removePost: (state, { payload }: PayloadAction<{ _id: string }>) => {
       delete state.posts["post_" + payload._id];

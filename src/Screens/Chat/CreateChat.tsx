@@ -80,7 +80,7 @@ const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string
 };
 
 const CreateChat = ({ route }: Props) => {
-  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, { chat: ChatRoom }>(asyncCreateChat);
+  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, ChatRoom>(asyncCreateChat);
   const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
   const [_, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
   const { childId, chatRoomId } = route.params
@@ -97,7 +97,6 @@ const CreateChat = ({ route }: Props) => {
   }, [])
 
   const onSend = useCallback(async (msg: IMessage[]) => {
-    console.log(msg)
     await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
   }, [child?.chats?._id]);
 
@@ -107,8 +106,8 @@ const CreateChat = ({ route }: Props) => {
     if (!RoomId) {
       const createRes = await createChat({ parent: child?.parent?._id, teacher: child.classroom.teacher, children: childId })
 
-      if (createRes.status && createRes.data) {
-        RoomId = createRes.data._id || createRes.data?.chat?._id
+      if (createRes.status && createRes.data?._id) {
+        RoomId = createRes.data._id
       }
     }
 

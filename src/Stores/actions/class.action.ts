@@ -92,8 +92,6 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
         `?month=${month}&year=${year}`) as ApiPaths,
     });
 
-    // console.log(res.data)
-
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
@@ -106,7 +104,7 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
 export const asyncCreateChat = createAsyncThunk(
   'createChat',
   async (data: CreateChatPayload, { dispatch }) => {
-    const res = await callApi<{ chat: ChatRoom }, CreateChatPayload>({
+    const res = await callApi<ChatRoom, CreateChatPayload>({
       method: 'POST',
       path: allApiPaths.getPath('createChat'),
       body: data,
@@ -115,12 +113,8 @@ export const asyncCreateChat = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      // When trying to create again it does not have chat property with message 'Already Exists'
       if (res.data?._id) {
         dispatch(setChild({ _id: data.children, chats: res.data }));
-      }
-      if (res.data?.chat?._id) {
-        dispatch(setChild({ _id: data.children, chats: res.data.chat }));
       }
     }
 
@@ -137,8 +131,6 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
       path: allApiPaths.getPath('createChatRoomMessage'),
       body: data,
     });
-
-    console.log(data, 'checking data')
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
