@@ -15,23 +15,31 @@ import { io } from "socket.io-client";
 
 const Stack = createStackNavigator<RootStackParams>();
 
-const socket = io("https://darkmodelabs.com:8201/");
+const socket = io("https://darkmodelabs.com:8201");
 
 const AppRouting = () => {
   const token = useAppSelector(selectUserToken);
   const loader = useAppSelector(selectAppLoader);
 
-  const handleNewMessage = useCallback((record: any) => {
+  const handleNewMessage = (record: any) => {
     console.log(record, 'new message created')
-  }, [])
+  }
 
-  console.log(socket.connected)
   useEffect(() => {
-    if (socket.connected) {
-      socket.on('new message', handleNewMessage)
-    }
+    console.log('working')
+    socket.on('connection', (res) => {
+      console.log(res, 'socket connection')
+    })
+    socket.on('connect', () => {
+      console.log(true, 'connected');
+    });
+    socket.on('disconnect', () => {
+      console.log(false, 'disconnected');
+    });
+    socket.on('message', handleNewMessage)
     return () => {
-      socket.off('new message', handleNewMessage)
+      socket.off('message', handleNewMessage)
+      socket.disconnect();
     }
   }, [])
 
