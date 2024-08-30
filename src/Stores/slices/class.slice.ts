@@ -78,6 +78,7 @@ const ClassSlice = createSlice({
     setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
       const { chatRoomId, message } = payload;
       const chatRoomKey = `chatRoom_${chatRoomId}`;
+      state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
       state.chatRooms[chatRoomKey].messages = {
         [`message_${message._id}`]: {
           ...message,

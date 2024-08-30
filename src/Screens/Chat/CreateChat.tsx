@@ -20,6 +20,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ChatRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { socket } from '../../Navigation';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
@@ -97,7 +98,14 @@ const CreateChat = ({ route }: Props) => {
   }, [])
 
   const onSend = useCallback(async (msg: IMessage[]) => {
-    await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
+    let res = await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
+    if (res.status) {
+      socket.emit('new message', {
+        senderType: 'teacher',
+        reciever: child.parent?._id,
+        ...res.data?.message
+      })
+    }
   }, [child?.chats?._id]);
 
   const handleCreateChatAndLoadMessages = useCallback(async () => {
@@ -131,8 +139,6 @@ const CreateChat = ({ route }: Props) => {
   if (!messages.length && messagesLoader) {
     return <DataLoader text='Fetching Messages ...' />;
   }
-
-  console.log(messagesPagination, messagesPagination.page <= messagesPagination.pages)
 
   return (
     <Layout
