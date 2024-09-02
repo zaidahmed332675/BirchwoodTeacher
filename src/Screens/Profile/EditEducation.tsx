@@ -1,8 +1,8 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import _ from 'lodash';
+import _, { isArray } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AppDatePicker } from '../../Components/AppDatePicker';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
@@ -18,20 +18,21 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { colors } from '../../theme/colors';
+import { UserEducation } from '../../types/User';
+import { format, isValid } from 'date-fns';
 
 type Props = StackScreenProps<ProfileStackParams, 'editEducation'>;
 
-export default function EditEducation({}: Props) {
+export default function EditEducation({ }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
   const initObj = useMemo(
     () => ({
-      instituteName: '',
-      degree: '',
-      startingDate: '',
-      endingDate: '',
-      fieldOfStudy: '',
+      school: '',
+      start: '',
+      end: '',
+      subject: [],
     }),
     []
   );
@@ -50,18 +51,42 @@ export default function EditEducation({}: Props) {
 
   useEffect(() => {
     if (user?.education?.length) {
-      setValue('edu.0.instituteName', 'testing institute by zaid');
+      user?.education.forEach((education, index) => {
+        append(initObj);
+        Object.keys(education).forEach((itemKey) => {
+          const value = user?.education[index][itemKey];
+          if (!Array.isArray(value)) {
+            if (isValid(new Date(value))) setValue(`edu.${index}.${itemKey}`, new Date(value));
+            else setValue(`edu.${index}.${itemKey}`, value);
+          }
+          else {
+            value.forEach((subject, ind) => {
+              setValue(`edu.${index}.${itemKey}.${ind}`, { subject });
+            })
+          }
+        })
+      });
     } else {
-      !fields.length && append(initObj);
+      if (!fields.length) {
+        append(initObj);
+      }
     }
-  }, [append, fields.length, initObj, setValue, user?.education?.length]);
+  }, [initObj, user?.education?.length]);
 
   const onSubmit = useCallback(
-    async (data: any) => {
-      if (isArrayOfObjectsEqual(user.education, data, _.keys(initObj))) {
+    async ({ edu }: { edu: UserEducation[] }) => {
+
+      let education = edu.map((eduRecord: UserEducation) => ({
+        ...eduRecord,
+        start: eduRecord.start.toISOString(),
+        end: eduRecord.end.toISOString(),
+        subject: eduRecord.subject.map((sub: any) => sub.subject)
+      }));
+
+      if (isArrayOfObjectsEqual(user.education, education, _.keys(initObj))) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
-        await dispatch(asyncUpdateEducation(data.edu)).unwrap();
+        await dispatch(asyncUpdateEducation({ education })).unwrap();
       }
     },
     [dispatch, user, initObj]
@@ -76,7 +101,7 @@ export default function EditEducation({}: Props) {
   };
 
   return (
-    <Layout customHeader={<CustomHeader title="Edit Education" />}>
+    <Layout customHeader={<CustomHeader title={user?.education?.length ? "Edit Education" : "Add Education"} />}>
       <ScrollView>
         <View style={styles.container}>
           <ScrollView>
@@ -117,12 +142,12 @@ export default function EditEducation({}: Props) {
                   </View>
 
                   <Controller
-                    name={`edu.${index}.instituteName`}
+                    name={`edu.${index}.school`}
                     control={control}
                     rules={{
                       required: {
                         value: true,
-                        message: 'Instinute name is required',
+                        message: 'Institute name is required',
                       },
                     }}
                     render={({ field: { onChange, value } }) => (
@@ -136,69 +161,17 @@ export default function EditEducation({}: Props) {
                     )}
                   />
 
-                  {errors?.edu?.[index]?.instituteName?.message && (
+                  {errors?.edu?.[index]?.school?.message && (
                     <GrayMediumText
-                      text={errors?.edu?.[index]?.instituteName.message}
+                      text={errors.edu[index].school.message}
                       _style={{ color: colors.theme.lightRed }}
                     />
                   )}
 
-                  <Controller
-                    name={`edu.${index}.degree`}
-                    control={control}
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'Degree name is required',
-                      },
-                    }}
-                    render={({ field: { onChange, value } }) => (
-                      <AppInput
-                        label="Degree Name"
-                        placeholder={'Enter degree name'}
-                        value={value}
-                        onChange={onChange}
-                        required
-                      />
-                    )}
-                  />
-
-                  {errors?.edu?.[index]?.degree?.message && (
-                    <GrayMediumText
-                      text={errors?.edu?.[index]?.degree.message}
-                      _style={{ color: colors.theme.lightRed }}
-                    />
-                  )}
+                  <NestedFieldArray control={control} nestIndex={index} fieldName="subject" fieldLabel="Subjects" placeholder="Enter Subject" errors={errors} />
 
                   <Controller
-                    name={`edu.${index}.fieldOfStudy`}
-                    control={control}
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'Field of study is required',
-                      },
-                    }}
-                    render={({ field: { onChange, value } }) => (
-                      <AppInput
-                        label="Field Of Study Date"
-                        placeholder={'Enter Field of study'}
-                        value={value}
-                        onChange={onChange}
-                        required
-                      />
-                    )}
-                  />
-
-                  {errors?.edu?.[index]?.fieldOfStudy?.message && (
-                    <GrayMediumText
-                      text={errors?.edu?.[index]?.fieldOfStudy.message}
-                      _style={{ color: colors.theme.lightRed }}
-                    />
-                  )}
-
-                  <Controller
-                    name={`edu.${index}.startingDate`}
+                    name={`edu.${index}.start`}
                     control={control}
                     rules={{
                       required: {
@@ -215,15 +188,15 @@ export default function EditEducation({}: Props) {
                     )}
                   />
 
-                  {errors?.edu?.[index]?.startingDate?.message && (
+                  {errors?.edu?.[index]?.start?.message && (
                     <GrayMediumText
-                      text={errors?.edu?.[index]?.startingDate.message}
+                      text={errors.edu[index].start.message}
                       _style={{ color: colors.theme.lightRed }}
                     />
                   )}
 
                   <Controller
-                    name={`edu.${index}.endingDate`}
+                    name={`edu.${index}.end`}
                     control={control}
                     rules={{
                       required: {
@@ -240,10 +213,10 @@ export default function EditEducation({}: Props) {
                     )}
                   />
 
-                  {errors?.edu?.[index]?.endingDate?.message && (
+                  {errors?.edu?.[index]?.end?.message && (
                     <GrayMediumText
+                      text={errors.edu[index].end.message}
                       _style={{ color: colors.theme.lightRed }}
-                      text={errors?.edu?.[index]?.endingDate.message}
                     />
                   )}
                 </View>
@@ -259,8 +232,9 @@ export default function EditEducation({}: Props) {
                 marginVertical: 10,
               }}
             />
+
             <AppButton
-              title={'Update'}
+              title={user?.education?.length ? 'Update' : 'Submit'}
               btnStyle={{
                 marginVertical: 10,
               }}
@@ -273,6 +247,93 @@ export default function EditEducation({}: Props) {
   );
 }
 
+export const NestedFieldArray = ({ control, nestIndex, fieldName, rules, fieldLabel = "", placeholder = "", errors }: any) => {
+  const { fields, remove, append } = useFieldArray({
+    control,
+    name: `edu.${nestIndex}.${fieldName}`
+  });
+
+  useEffect(() => {
+    !fields.length && append("");
+  }, [])
+
+  return (
+    <View>
+      <Text style={styles.labelStyle}>
+        {fieldLabel} <Text style={{ color: 'red' }}>*</Text>
+      </Text>
+      {fields.map((item, index) => (
+        <View key={item.id}>
+          <Controller
+            name={`edu.${nestIndex}.${fieldName}.${index}.subject`}
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Field is required',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+                <AppInput
+                  label={""}
+                  placeholder={placeholder}
+                  value={value}
+                  onChange={onChange}
+                  required
+                  _containerStyle={{
+                    marginVertical: 0,
+                    marginBottom: 10,
+                  }}
+                />
+                {fields.length > 1 && <TouchableOpacity
+                  onPress={() => remove(index)}
+                  style={{
+                    paddingLeft: 10
+                  }}
+                >
+                  <VIcon
+                    type="AntDesign"
+                    name={"delete"}
+                    size={20}
+                    color={colors.theme.darkRed}
+                  />
+                </TouchableOpacity>
+                }
+              </View>
+            )}
+          />
+          {errors.edu?.[nestIndex]?.[fieldName]?.[index]?.[fieldName]?.message && (
+            <GrayMediumText
+              text={errors.edu[nestIndex][fieldName][index][fieldName].message}
+              _style={{ color: colors.theme.lightRed, marginBottom: 10 }}
+            />
+          )}
+        </View>
+      ))}
+      <TouchableOpacity
+        onPress={() => append({ school: "" })}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.theme.primary,
+          borderRadius: 8,
+          paddingVertical: 6,
+        }}>
+        <VIcon
+          type="FontAwesome"
+          name="plus"
+          size={18}
+          color={colors.theme.greyAlt}
+        />
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -281,5 +342,12 @@ const styles = StyleSheet.create({
   groupContainer: {},
   fieldGroup: {
     marginTop: 20,
+  },
+  labelStyle: {
+    fontSize: 12,
+    marginBottom: 5,
+    fontWeight: 'bold',
+    color: colors.text.altGrey,
+    marginTop: 10
   },
 });

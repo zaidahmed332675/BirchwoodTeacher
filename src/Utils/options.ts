@@ -308,9 +308,8 @@ export const isArrayOfObjectsEqual = (
   const pickProps = (obj: Record<string, any>, props: string[]) =>
     _.pick(obj, props);
   const xProps = x.map(obj => pickProps(obj, comparator));
-  // our new object already in proper shape with required props
-  // const yProps = y.map(obj => pickProps(obj, keys));
-  return _.isEqual(xProps, y);
+  const yProps = y.map(obj => pickProps(obj, comparator));
+  return _.isEqual(xProps, yProps);
 };
 
 export const formatCommentTime = (commentDate: string) => {

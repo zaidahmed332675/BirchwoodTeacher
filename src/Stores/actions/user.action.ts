@@ -14,7 +14,9 @@ import {
   UserAttendance,
   UserAttendanceResponse,
   UserCheckInOutLeave,
-  UserCheckInOutResponse
+  UserCheckInOutResponse,
+  UserEducation,
+  UserExperience
 } from '../../types/User';
 import { setLoading } from '../slices/common.slice';
 import {
@@ -201,16 +203,16 @@ export const asyncUpdateEducation = createAsyncThunk(
   async (data: any, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
+    const res = await callApi<User, UserEducation>({
       method: 'POST',
-      path: allApiPaths.getPath('updateEducation'),
+      path: allApiPaths.getPath('updateProfile'),
       body: data,
     });
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ education: res.data }));
+      dispatch(setUser({ ...res.data }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));
@@ -223,16 +225,16 @@ export const asyncUpdateExperience = createAsyncThunk(
   async (data: any, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{}, User>({
+    const res = await callApi<User, UserExperience>({
       method: 'POST',
-      path: allApiPaths.getPath('updateExperience'),
+      path: allApiPaths.getPath('updateProfile'),
       body: data,
     });
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ employment: res.data }));
+      dispatch(setUser({ ...res.data }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));

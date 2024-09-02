@@ -16,8 +16,8 @@ export interface User {
   checkIn: boolean;
   checkOut: boolean;
   status: string;
-  education: any[];
-  employment: any[];
+  education: UserEducation[];
+  employment: UserExperience[];
   classroom: ClassRoom;
   todayAttendance: {
     status: string;
@@ -76,6 +76,23 @@ export interface UpdateUserProfilePayload {
   state?: string;
   address?: string;
   image?: string;
+}
+
+export interface UserEducation {
+  _id: string;
+  school: string;
+  subject: string[];
+  start: Date;
+  end: Date;
+}
+
+export interface UserExperience {
+  _id: string;
+  school: string;
+  position: string;
+  address: string;
+  start: Date;
+  end: Date;
 }
 
 export interface UserCheckInOutLeave {

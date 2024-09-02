@@ -17,8 +17,6 @@ export enum ProfileApiPaths {
   markLeave = 'teacher/attendance/markLeave',
   monthlyAttendance = 'teacher/attendance/getAttendanceByMonth',
   getAllHolidays = 'holiday/getAllHolidays',
-  updateEducation = 'teacher/profile/updateEducation',
-  updateExperience = 'teacher/profile/updateExperience',
 }
 
 export enum ClassApiPaths {

@@ -45,7 +45,7 @@ export const AppInput = ({
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
   return (
-    <View style={[{ marginVertical: 10 }, _containerStyle]}>
+    <View style={[{ marginVertical: 10, flex: 1 }, _containerStyle]}>
       {label && <Text style={styles.labelStyle}>
         {label} {required && <Text style={{ color: 'red' }}>*</Text>}
       </Text>}

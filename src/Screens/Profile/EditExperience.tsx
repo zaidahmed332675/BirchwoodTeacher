@@ -19,19 +19,22 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { colors } from '../../theme/colors';
+import { isValid } from 'date-fns';
+import { UserExperience } from '../../types/User';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
 
-export default function EditExperience({}: Props) {
+export default function EditExperience({ }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
   const initObj = useMemo(
     () => ({
-      officeName: '',
-      designation: '',
-      startingDate: '',
-      endingDate: '',
+      school: '',
+      position: '',
+      address: "",
+      start: '',
+      end: '',
     }),
     []
   );
@@ -45,23 +48,47 @@ export default function EditExperience({}: Props) {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'exp',
+    name: 'emp',
   });
+
 
   useEffect(() => {
     if (user?.employment?.length) {
-      setValue('exp.0.instituteName', 'testing institute by zaid');
+      user?.employment.forEach((employment, index) => {
+        append(initObj);
+        Object.keys(employment).forEach((itemKey) => {
+          const value = user?.employment[index][itemKey];
+          if (isValid(new Date(value))) setValue(`emp.${index}.${itemKey}`, new Date(value));
+          else setValue(`emp.${index}.${itemKey}`, value);
+        })
+      });
+    } else {
+      if (!fields.length) append(initObj);
+    }
+  }, [initObj, user?.employment?.length]);
+
+
+  useEffect(() => {
+    if (user?.employment?.length) {
+      setValue('emp.0.school', 'testing institute by zaid');
     } else {
       !fields.length && append(initObj);
     }
-  }, [append, fields.length, initObj, setValue, user?.employment?.length]);
+  }, [initObj, user?.employment?.length]);
 
   const onSubmit = useCallback(
-    async (data: any) => {
-      if (isArrayOfObjectsEqual(user.education, data, _.keys(initObj))) {
+    async ({ emp }: { emp: UserExperience[] }) => {
+
+      let employment = emp.map((eduRecord: UserExperience) => ({
+        ...eduRecord,
+        start: eduRecord.start.toISOString(),
+        end: eduRecord.end.toISOString(),
+      }));
+
+      if (isArrayOfObjectsEqual(user.employment, employment, _.keys(initObj))) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
-        await dispatch(asyncUpdateExperience(data.edu)).unwrap();
+        await dispatch(asyncUpdateExperience({ employment })).unwrap();
       }
     },
     [dispatch, user, initObj]
@@ -75,10 +102,8 @@ export default function EditExperience({}: Props) {
     remove(index);
   };
 
-  // console.log(errors, 'errors');
-
   return (
-    <Layout customHeader={<CustomHeader title="Edit Experience" />}>
+    <Layout customHeader={<CustomHeader title={user?.employment?.length ? "Edit Employment" : "Add Employment"} />}>
       <ScrollView>
         <View style={styles.container}>
           {/* Dynamic Fields */}
@@ -118,18 +143,18 @@ export default function EditExperience({}: Props) {
                 </View>
 
                 <Controller
-                  name={`exp.${index}.officeName`}
+                  name={`emp.${index}.school`}
                   control={control}
                   rules={{
                     required: {
                       value: true,
-                      message: 'Office name is required',
+                      message: 'Institute name is required',
                     },
                   }}
                   render={({ field: { onChange, value } }) => (
                     <AppInput
-                      label="Office Name"
-                      placeholder={'Enter office name'}
+                      label="Institute Name"
+                      placeholder={'Enter institute name'}
                       value={value}
                       onChange={onChange}
                       required
@@ -137,26 +162,26 @@ export default function EditExperience({}: Props) {
                   )}
                 />
 
-                {errors?.exp?.[index]?.officeName?.message && (
+                {errors?.emp?.[index]?.school?.message && (
                   <GrayMediumText
-                    text={errors?.exp?.[index]?.officeName.message}
+                    text={errors.emp[index].school.message}
                     _style={{ color: colors.theme.lightRed }}
                   />
                 )}
 
                 <Controller
-                  name={`exp.${index}.designation`}
+                  name={`emp.${index}.position`}
                   control={control}
                   rules={{
                     required: {
                       value: true,
-                      message: 'Designation name is required',
+                      message: 'Designation is required',
                     },
                   }}
                   render={({ field: { onChange, value } }) => (
                     <AppInput
-                      label="Designation Name"
-                      placeholder={'Enter designation name'}
+                      label="Designation"
+                      placeholder={'Enter designation'}
                       value={value}
                       onChange={onChange}
                       required
@@ -164,15 +189,15 @@ export default function EditExperience({}: Props) {
                   )}
                 />
 
-                {errors?.exp?.[index]?.designation?.message && (
+                {errors?.emp?.[index]?.position?.message && (
                   <GrayMediumText
-                    text={errors?.exp?.[index]?.designation.message}
+                    text={errors.emp[index].position.message}
                     _style={{ color: colors.theme.lightRed }}
                   />
                 )}
 
                 <Controller
-                  name={`exp.${index}.startingDate`}
+                  name={`emp.${index}.start`}
                   control={control}
                   rules={{
                     required: {
@@ -189,15 +214,15 @@ export default function EditExperience({}: Props) {
                   )}
                 />
 
-                {errors?.exp?.[index]?.startingDate?.message && (
+                {errors?.emp?.[index]?.start?.message && (
                   <GrayMediumText
-                    text={errors?.exp?.[index]?.startingDate.message}
+                    text={errors.emp[index].start.message}
                     _style={{ color: colors.theme.lightRed }}
                   />
                 )}
 
                 <Controller
-                  name={`exp.${index}.endingDate`}
+                  name={`emp.${index}.end`}
                   control={control}
                   rules={{
                     required: {
@@ -214,12 +239,45 @@ export default function EditExperience({}: Props) {
                   )}
                 />
 
-                {errors?.exp?.[index]?.endingDate?.message && (
+                {errors?.emp?.[index]?.end?.message && (
                   <GrayMediumText
-                    text={errors?.exp?.[index]?.endingDate.message}
+                    text={errors.emp[index].end.message}
                     _style={{ color: colors.theme.lightRed }}
                   />
                 )}
+
+                <Controller
+                  name={`emp.${index}.address`}
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'Address is required',
+                    },
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <AppInput
+                      label="Address Reason"
+                      placeholder="Enter address"
+                      required
+                      value={value}
+                      onChange={onChange}
+                      isMultiple={true}
+                      numberOfLines={4}
+                      inputStyle={{
+                        textAlignVertical: 'top',
+                      }}
+                    />
+                  )}
+                />
+
+                {errors?.emp?.[index]?.address?.message && (
+                  <GrayMediumText
+                    text={errors.emp[index].address.message}
+                    _style={{ color: colors.theme.lightRed }}
+                  />
+                )}
+
               </View>
             ))}
           </View>
@@ -233,7 +291,7 @@ export default function EditExperience({}: Props) {
             }}
           />
           <AppButton
-            title={'Update'}
+            title={user?.employment?.length ? 'Update' : 'Submit'}
             btnStyle={{
               marginVertical: 10,
             }}
