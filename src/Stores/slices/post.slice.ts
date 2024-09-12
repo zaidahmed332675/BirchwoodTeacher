@@ -64,14 +64,44 @@ const PostSlice = createSlice({
       });
     },
     setComment: (state, { payload }: PayloadAction<{ postId: string, comment: Comment }>) => {
+
       const { postId, comment } = payload;
-      state.postsComments["post_" + postId].comments[`comment_${comment._id}`] = comment;
+      const postKey = "post_" + postId;
+
+      state.postsComments[postKey].comments = {
+        [`comment_${comment._id}`]: comment,
+        ...state.postsComments[postKey].comments,
+      };
     },
-    setLike: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {
-      state.posts["post_" + payload._id].likes.push(payload.userId)
+    setLikeDislike: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {
+      const postKey = "post_" + payload._id;
+      const post = state.posts[postKey];
+
+      if (post) {
+        const likeIndex = post.likes.indexOf(payload.userId);
+        if (likeIndex === -1) {
+          // User has not liked the post, so add the userId
+          post.likes.push(payload.userId);
+        } else {
+          // User has already liked the post, so remove the userId
+          post.likes.splice(likeIndex, 1);
+        }
+      }
     },
-    setLove: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {
-      state.posts["post_" + payload._id].loves.push(payload.userId)
+    setLoveUnlove: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {
+      const postKey = "post_" + payload._id;
+      const post = state.posts[postKey];
+
+      if (post) {
+        const likeIndex = post.loves.indexOf(payload.userId);
+        if (likeIndex === -1) {
+          // User has not liked the post, so add the userId
+          post.loves.push(payload.userId);
+        } else {
+          // User has already liked the post, so remove the userId
+          post.loves.splice(likeIndex, 1);
+        }
+      }
     },
     setActivities: (state, { payload }: PayloadAction<GetActivities>) => {
       const { docs, ...pagination } = payload;
@@ -91,7 +121,7 @@ const PostSlice = createSlice({
   },
 });
 
-export const { setPosts, setPost, removePost, setLike, setLove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
+export const { setPosts, setPost, removePost, setLikeDislike, setLoveUnlove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
   PostSlice.actions;
 
 export default PostSlice.reducer;

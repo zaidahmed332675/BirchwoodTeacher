@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '..';
 import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } from '../../Types/Post';
 import { callApi } from '../../services/api';
 import { allApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
-import { removePost, setActivities, setComment, setComments, setLike, setLove, setPost, setPosts } from '../slices/post.slice';
+import { removePost, setActivities, setComment, setComments, setLikeDislike, setLoveUnlove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
-import { RootState } from '..';
 
 export const asyncGetAllActivities = createAsyncThunk(
   'getAllActivities',
@@ -184,8 +184,7 @@ export const asyncLikePost = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setLike({ _id: postId, userId }))
-      dispatch(asyncShowSuccess(res.message))
+      dispatch(setLikeDislike({ _id: postId, userId }))
     }
     return res;
   }
@@ -204,8 +203,7 @@ export const asyncLovePost = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setLove({ _id: postId, userId }))
-      dispatch(asyncShowSuccess(res.message))
+      dispatch(setLoveUnlove({ _id: postId, userId }))
     }
     return res;
   }
