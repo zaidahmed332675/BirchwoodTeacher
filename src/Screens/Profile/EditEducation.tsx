@@ -23,7 +23,7 @@ import { format, isValid } from 'date-fns';
 
 type Props = StackScreenProps<ProfileStackParams, 'editEducation'>;
 
-export default function EditEducation({ }: Props) {
+export default function EditEducation({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
@@ -78,16 +78,28 @@ export default function EditEducation({ }: Props) {
 
       let education = edu.map((eduRecord: UserEducation) => ({
         ...eduRecord,
-        start: eduRecord.start.toISOString(),
-        end: eduRecord.end.toISOString(),
         subject: eduRecord.subject.map((sub: any) => sub.subject)
+        // start: new Date(eduRecord.start),
+        // end: new Date(eduRecord.end),
       }));
 
-      if (isArrayOfObjectsEqual(user.education, education, _.keys(initObj))) {
-        return dispatch(asyncShowError('No changes have been made!'));
-      } else {
-        await dispatch(asyncUpdateEducation({ education })).unwrap();
-      }
+      // let existingEducation = user.education.map(eduRecord => ({
+      //   ...eduRecord,
+      //   start: eduRecord.start,
+      //   end: eduRecord.end
+      // }))
+
+      // console.log(education, '001')
+      // console.log(existingEducation, '002')
+      // console.log(user?.education, '003')
+
+      // if (isArrayOfObjectsEqual(user.education, education, _.keys(initObj))) {
+      //   return dispatch(asyncShowError('No changes have been made!'));
+      // } else {
+      await dispatch(asyncUpdateEducation({ education })).unwrap();
+      navigation.navigate('profile')
+
+      // }
     },
     [dispatch, user, initObj]
   );
@@ -285,6 +297,7 @@ export const NestedFieldArray = ({ control, nestIndex, fieldName, rules, fieldLa
                   onChange={onChange}
                   required
                   _containerStyle={{
+                    flex: 1,
                     marginVertical: 0,
                     marginBottom: 10,
                   }}

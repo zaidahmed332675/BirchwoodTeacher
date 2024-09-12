@@ -24,7 +24,7 @@ import { UserExperience } from '../../types/User';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
 
-export default function EditExperience({ }: Props) {
+export default function EditExperience({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserProfile);
 
@@ -53,6 +53,7 @@ export default function EditExperience({ }: Props) {
 
 
   useEffect(() => {
+    console.log(user?.employment)
     if (user?.employment?.length) {
       user?.employment.forEach((employment, index) => {
         append(initObj);
@@ -67,29 +68,21 @@ export default function EditExperience({ }: Props) {
     }
   }, [initObj, user?.employment?.length]);
 
-
-  useEffect(() => {
-    if (user?.employment?.length) {
-      setValue('emp.0.school', 'testing institute by zaid');
-    } else {
-      !fields.length && append(initObj);
-    }
-  }, [initObj, user?.employment?.length]);
-
   const onSubmit = useCallback(
     async ({ emp }: { emp: UserExperience[] }) => {
 
       let employment = emp.map((eduRecord: UserExperience) => ({
         ...eduRecord,
-        start: eduRecord.start.toISOString(),
-        end: eduRecord.end.toISOString(),
+        // start: eduRecord.start.toISOString(),
+        // end: eduRecord.end.toISOString(),
       }));
 
-      if (isArrayOfObjectsEqual(user.employment, employment, _.keys(initObj))) {
-        return dispatch(asyncShowError('No changes have been made!'));
-      } else {
-        await dispatch(asyncUpdateExperience({ employment })).unwrap();
-      }
+      // if (isArrayOfObjectsEqual(user.employment, employment, _.keys(initObj))) {
+      //   return dispatch(asyncShowError('No changes have been made!'));
+      // } else {
+      await dispatch(asyncUpdateExperience({ employment })).unwrap();
+      navigation.navigate('profile')
+      // }
     },
     [dispatch, user, initObj]
   );
@@ -257,7 +250,7 @@ export default function EditExperience({ }: Props) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <AppInput
-                      label="Address Reason"
+                      label="Address"
                       placeholder="Enter address"
                       required
                       value={value}

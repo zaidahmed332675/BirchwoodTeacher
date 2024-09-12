@@ -13,6 +13,7 @@ import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
+import { format, isAfter } from 'date-fns';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
 
@@ -193,14 +194,14 @@ const Profile = ({ navigation }: Props) => {
             }}
             text="Education"
           />
-          {profileold.education?.map((edu, ind) => (
+          {profile.education?.map((edu, ind) => (
             <View key={'edu-' + ind}>
               {ind > 0 && (
                 <View
-                  style={{
-                    backgroundColor: colors.theme.secondary,
-                    height: 0.3,
-                  }}
+                  style={
+                    [styles.divider, {
+                    }]
+                  }
                 />
               )}
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -215,7 +216,7 @@ const Profile = ({ navigation }: Props) => {
                     _style={{
                       color: colors.text.black,
                     }}
-                    text={edu.instituteName}
+                    text={edu.school}
                   />
                 </View>
                 <View style={styles.userInfoItem}>
@@ -223,13 +224,13 @@ const Profile = ({ navigation }: Props) => {
                     _style={{
                       color: colors.theme.primary,
                     }}
-                    text="Field of study"
+                    text="Subjects"
                   />
                   <GrayMediumText
                     _style={{
                       color: colors.text.black,
                     }}
-                    text={`${edu.degree}, ${edu.fieldOfStudy}`}
+                    text={edu.subject.join(', ')}
                   />
                 </View>
                 <View style={styles.userInfoItem}>
@@ -243,7 +244,7 @@ const Profile = ({ navigation }: Props) => {
                     _style={{
                       color: colors.text.black,
                     }}
-                    text={`${edu.startingDate} - ${edu.endingDate}`}
+                    text={`${format(edu.start, 'yyyy-MM-dd')} - ${isAfter(new Date(), edu.end) ? format(edu.end, 'yyyy-MM-dd') : 'Present'}`}
                   />
                 </View>
               </View>
@@ -266,31 +267,17 @@ const Profile = ({ navigation }: Props) => {
             }}
             text="Experience"
           />
-          {profileold.experience?.map((exp, ind) => (
+          {profile.employment?.map((emp, ind) => (
             <View key={'exp-' + ind}>
               {ind > 0 && (
                 <View
-                  style={{
-                    backgroundColor: colors.theme.secondary,
-                    height: 0.3,
-                  }}
+                  style={
+                    [styles.divider, {
+                    }]
+                  }
                 />
               )}
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                <View style={styles.userInfoItem}>
-                  <GrayMediumText
-                    _style={{
-                      color: colors.theme.primary,
-                    }}
-                    text="Job Title"
-                  />
-                  <GrayMediumText
-                    _style={{
-                      color: colors.text.black,
-                    }}
-                    text={exp.designation}
-                  />
-                </View>
                 <View style={styles.userInfoItem}>
                   <GrayMediumText
                     _style={{
@@ -302,7 +289,21 @@ const Profile = ({ navigation }: Props) => {
                     _style={{
                       color: colors.text.black,
                     }}
-                    text={exp.officeName}
+                    text={emp.school}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Job Title"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={emp.position}
                   />
                 </View>
                 <View style={styles.userInfoItem}>
@@ -316,7 +317,21 @@ const Profile = ({ navigation }: Props) => {
                     _style={{
                       color: colors.text.black,
                     }}
-                    text={`${exp.startingDate} - ${exp.endingDate}`}
+                    text={`${format(emp.start, 'yyyy-MM-dd')} - ${isAfter(new Date(), emp.end) ? format(emp.end, 'yyyy-MM-dd') : 'Present'}`}
+                  />
+                </View>
+                <View style={styles.userInfoItem}>
+                  <GrayMediumText
+                    _style={{
+                      color: colors.theme.primary,
+                    }}
+                    text="Address"
+                  />
+                  <GrayMediumText
+                    _style={{
+                      color: colors.text.black,
+                    }}
+                    text={emp.address}
                   />
                 </View>
               </View>
@@ -384,6 +399,13 @@ const styles = StyleSheet.create({
   actionBtn: {
     flex: 1,
     width: '100%',
+  },
+  divider: {
+    backgroundColor: colors.theme.white,
+    borderBottomWidth: 0.2,
+    borderColor: colors.theme.secondary,
+    borderRadius: 20,
+    paddingTop: 16,
   },
 });
 
