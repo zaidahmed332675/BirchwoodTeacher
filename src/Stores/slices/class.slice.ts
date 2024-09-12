@@ -23,17 +23,7 @@ const initialState: ClassSliceState = {
   classRoom: {} as ClassRoom,
   children: {},
   attendances: {},
-  pagination: {
-    totalDocs: 0,
-    limit: 0,
-    page: 0,
-    totalPages: 0,
-    pagingCounter: 1,
-    hasPrevPage: false,
-    hasNextPage: false,
-    prevPage: null,
-    nextPage: null
-  },
+  pagination: {} as PaginationProps,
   chatRooms: {}
 };
 
@@ -126,7 +116,6 @@ export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
     [(state: RootState) => state.class.attendances],
     attendances => {
       return attendances?.[_id]?.attendance?.map((attendance => {
-        // console.log(isSameWeek(attendance.createdAt, weekStart))
         if (isSameWeek(attendance.createdAt, weekStart))
           return attendance
       }))

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } from '../../Types/Post';
 import { callApi } from '../../services/api';
-import { allApiPaths } from '../../services/apiPaths';
+import { allApiPaths, ApiPaths } from '../../services/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removePost, setActivities, setComment, setComments, setLikeDislike, setLoveUnlove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
@@ -31,11 +31,23 @@ export const asyncGetAllActivities = createAsyncThunk(
 
 export const asyncGetAllPosts = createAsyncThunk(
   'getAllPosts',
-  async (_, { dispatch }) => {
-    dispatch(setLoading(true));
+  async (_, { getState, dispatch }) => {
+    const { page, totalPages } = (getState() as RootState).post?.pagination ?? {}
+
+    if (page >= totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetAllClassPosts>({
-      path: allApiPaths.getPath('getAllPosts'),
+      path: (allApiPaths.getPath('getAllPosts') +
+        `?limit=${3}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {

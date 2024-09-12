@@ -10,7 +10,6 @@ import { Activity, Comment, GetActivities, GetAllClassPosts, Post } from '../../
 interface PostSliceState {
   activities: Record<string, Activity>;
   posts: Record<string, Post>;
-  // comments: Record<string, {}>
   postsComments: Record<string, {
     comments: Record<string, Comment>,
     commentsPagination: any
@@ -22,17 +21,7 @@ const initialState: PostSliceState = {
   activities: {},
   posts: {},
   postsComments: {},
-  pagination: {
-    totalDocs: 0,
-    limit: 0,
-    page: 0,
-    totalPages: 0,
-    pagingCounter: 1,
-    hasPrevPage: false,
-    hasNextPage: false,
-    prevPage: null,
-    nextPage: null
-  },
+  pagination: {} as PaginationProps,
 };
 
 const PostSlice = createSlice({
@@ -41,10 +30,15 @@ const PostSlice = createSlice({
   reducers: {
     setPosts: (state, { payload }: PayloadAction<GetAllClassPosts>) => {
       const { docs, ...pagination } = payload;
-      state.posts = docs.reduce((acc, curr) => {
-        acc["post_" + curr._id] = curr;
-        return acc;
-      }, {} as Record<string, Post>);
+
+      state.posts = {
+        ...state.posts,
+        ...docs.reduce((acc, curr) => {
+          acc["post_" + curr._id] = curr;
+          return acc;
+        }, {} as Record<string, Post>)
+      }
+
       state.pagination = pagination;
     },
     setPost: (state, { payload }: PayloadAction<Partial<Post>>) => {

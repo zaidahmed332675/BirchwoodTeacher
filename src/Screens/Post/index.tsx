@@ -1,6 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View
 } from 'react-native';
@@ -39,8 +40,8 @@ const Post = ({ navigation }: Props) => {
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [childId, setChildId] = useState<string>("");
 
-  const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts, false);
-  const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
+  const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts);
+  const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts, false);
   const [childloading, getAllChildPosts] = useLoaderDispatch(asyncGetAllChildPosts, false);
 
   let posts = useAppSelector(selectPosts);
@@ -52,18 +53,34 @@ const Post = ({ navigation }: Props) => {
     else setChildId('')
   };
 
+  const loadData = useCallback(() => {
+    if (tabIndex === 0 || tabIndex === 1) getAllPosts()
+    // if (tabIndex === 1) getAllClassPosts()
+    if (tabIndex === 2 && childId) getAllChildPosts({ childId })
+  }, [tabIndex, childId])
+
   useEffect(() => {
-    console.log(childId, 'childId', tabIndex, 'index')
     if (!isSearchModalOpen && !childId && tabIndex === 2) {
       return setTabIndex(1)
     }
 
-    if (tabIndex === 0) getAllPosts()
-    if (tabIndex === 1) getAllClassPosts()
-    if (tabIndex === 2 && childId) getAllChildPosts({ childId })
+    loadData()
   }, [tabIndex, childId, isSearchModalOpen, asyncGetAllPosts, getAllClassPosts, asyncGetAllChildPosts]);
 
-  if (loading || classloading || childloading) {
+  const filterPosts = () => {
+    switch (tabIndex) {
+      case 1:
+        return posts.filter(post => post.type === 'CLASS');
+      case 2:
+        return posts.filter(post => post.type === 'CHILD' && post.children?.includes(childId));
+      default:
+        return posts;
+    }
+  };
+
+  const filteredPosts = filterPosts();
+
+  if (!filteredPosts.length && (loading || childloading)) {
     return <DataLoader />;
   }
 
@@ -110,10 +127,22 @@ const Post = ({ navigation }: Props) => {
         }}
       />
 
-      {posts.length ? <FlatList
-        data={posts}
+      {filteredPosts.length ? <FlatList
+        data={filteredPosts}
         renderItem={({ item }) => <ActivityPost item={item} />}
         keyExtractor={item => item._id.toString()}
+        onEndReached={loadData}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        ListFooterComponent={() => filteredPosts.length && (loading || childloading) ? <ActivityIndicator
+          style={{
+            paddingVertical: 10
+          }}
+          animating={true}
+          size={'large'}
+          color={colors.theme.primary}
+        /> : null}
       /> : <NotFound text={`No posts available\nPlease add a new post`} />}
     </Layout>
   );

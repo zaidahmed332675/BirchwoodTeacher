@@ -41,9 +41,10 @@ export const asyncGetChildrenByClassId = createAsyncThunk(
     const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
 
     const res = await callApi<ClassResponse>({
-      path: allApiPaths.getPath('getChildrenByClassId', {
+      path: (allApiPaths.getPath('getChildrenByClassId', {
         classRoomId
-      }),
+      }) +
+        `?limit=${100}`) as ApiPaths,
     });
 
     if (!res.status) {
