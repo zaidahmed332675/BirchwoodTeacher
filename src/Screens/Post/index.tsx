@@ -1,19 +1,18 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
+  FlatList,
   StyleSheet,
   View
 } from 'react-native';
-import { CustomHeader } from '../../Components/CustomHeader';
-import { Layout } from '../../Components/Layout';
-import { SearchModal } from '../../Components/SearchModal';
-import { FlatList } from 'react-native';
 import { ActivityPost } from '../../Components/ActivityPost';
-import { AppButton } from '../../Components/Button';
+import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';
+import { Layout } from '../../Components/Layout';
+import { LoadIndicator } from '../../Components/LoadIndicator';
 import { NotFound } from '../../Components/NotFound';
-import { VIcon } from '../../Components/VIcon';
+import { SearchModal } from '../../Components/SearchModal';
+import { CustomSwitch } from '../../Components/Switch';
 import { asyncGetAllChildPosts, asyncGetAllClassPosts, asyncGetAllPosts } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
@@ -23,7 +22,6 @@ import {
   PostStackParams,
 } from '../../Types/NavigationTypes';
 import { colors } from '../../theme/colors';
-import { CustomSwitch } from '../../Components/Switch';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 
@@ -65,7 +63,7 @@ const Post = ({ navigation }: Props) => {
     }
 
     loadData()
-  }, [tabIndex, childId, isSearchModalOpen, asyncGetAllPosts, getAllClassPosts, asyncGetAllChildPosts]);
+  }, [tabIndex, childId, isSearchModalOpen]);
 
   const filterPosts = () => {
     switch (tabIndex) {
@@ -135,14 +133,7 @@ const Post = ({ navigation }: Props) => {
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}
-        ListFooterComponent={() => filteredPosts.length && (loading || childloading) ? <ActivityIndicator
-          style={{
-            paddingVertical: 10
-          }}
-          animating={true}
-          size={'large'}
-          color={colors.theme.primary}
-        /> : null}
+        ListFooterComponent={() => filteredPosts.length && (loading || childloading) ? <LoadIndicator /> : null}
       /> : <NotFound text={`No posts available\nPlease add a new post`} />}
     </Layout>
   );

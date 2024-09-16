@@ -47,7 +47,7 @@ export const asyncGetAllPosts = createAsyncThunk(
 
     const res = await callApi<GetAllClassPosts>({
       path: (allApiPaths.getPath('getAllPosts') +
-        `?limit=${3}&page=${(page ?? 0) + 1}`) as ApiPaths,
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
