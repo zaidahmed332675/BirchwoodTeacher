@@ -1,4 +1,4 @@
-import { compareAsc, format } from 'date-fns';
+import { compareAsc, format, isToday } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
@@ -94,6 +94,9 @@ export const AppCalender = ({
               style: styles.weekEndDaysStyle,
             };
           }
+          else if (isToday(date)) {
+            return { style: styles.todayStyle }
+          }
           else {
             return { textStyle: styles.daysLabelStyle };
           }
@@ -160,4 +163,9 @@ const styles = StyleSheet.create({
   weekEndDaysStyle: {
     backgroundColor: colors.theme.lightSecondary,
   },
+  todayStyle: {
+    borderWidth: 2,
+    borderRadius: 50,
+    borderColor: colors.theme.lightGreen
+  }
 });

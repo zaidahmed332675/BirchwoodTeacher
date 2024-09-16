@@ -139,17 +139,17 @@ const Attendance = () => {
           <AttendanceCard
             type={attendanceEnum.PRESENT}
             title="Present"
-            count={userAttendance.stats?.PRESENT}
+            count={userAttendance.stats?.PRESENT ?? 0o0}
           />
           <AttendanceCard
             type={attendanceEnum.ABSENT}
             title="Absent"
-            count={userAttendance.stats?.ABSENT}
+            count={userAttendance.stats?.ABSENT ?? 0o0}
           />
           <AttendanceCard
             type={attendanceEnum.LEAVE}
             title="Leave"
-            count={userAttendance.stats?.LEAVE}
+            count={userAttendance.stats?.LEAVE ?? 0o0}
           />
         </View>
       )}
