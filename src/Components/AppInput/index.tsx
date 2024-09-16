@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 import { vh } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 interface AppInputProps extends TextInputProps {

@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { VIcon } from '../../Components/VIcon';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 
 export const CustomHeader = ({

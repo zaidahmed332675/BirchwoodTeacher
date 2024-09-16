@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { vh } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { CustomHeader } from '../CustomHeader';
 import { GrayMediumText } from '../GrayMediumText';
 import { Layout } from '../Layout';

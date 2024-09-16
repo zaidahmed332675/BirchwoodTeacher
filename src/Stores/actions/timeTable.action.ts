@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CreateTimeTableRecordPayload, CreatTimeTableResonse, TimeTable, TimeTableRecord } from '../../Types/TimeTable';
-import { callApi } from '../../apiService/api';
-import { allApiPaths } from '../../apiService/apiPaths';
+import { callApi } from '../../Service/api';
+import { allApiPaths } from '../../Service/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removeTimeTableRecord, setTimeTable, setTimeTableRecord } from '../slices/timeTable.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';

@@ -21,7 +21,7 @@ import {
   EChatStack,
   EMainStack
 } from '../../Types/NavigationTypes';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { attendanceEnum } from '../../Utils/options';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;

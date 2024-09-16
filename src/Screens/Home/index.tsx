@@ -18,7 +18,7 @@ import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.actio
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vh, vw } from '../../Utils/units';
-import { appShadow, colors } from '../../apptheme/colors';
+import { appShadow, colors } from '../../Theme/colors';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { VIcon } from '../../Components/VIcon';
 import { asyncShowError } from '../../Stores/actions/common.action';

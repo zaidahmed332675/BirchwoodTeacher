@@ -9,7 +9,7 @@ import { VIcon } from '../../Components/VIcon';
 import { asyncDeleteTimeTableRecord, asyncGetAllClassTimeTable } from '../../Stores/actions/timeTable.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectTimeTableByDay } from '../../Stores/slices/timeTable.slice';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { ETimeTableStack, TimeTableStackParams } from '../../Types/NavigationTypes';
 import { TimeTableRecord } from '../../Types/TimeTable';
 import { DaysEnum } from '../../Utils/options';

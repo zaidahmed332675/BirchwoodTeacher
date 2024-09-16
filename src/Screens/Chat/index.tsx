@@ -11,7 +11,7 @@ import { CustomHeader } from '../../Components/CustomHeader';
 import { Layout } from '../../Components/Layout';
 import { ImageBox } from '../../Components/UploadImage';
 import { ChatStackParams, EChatStack } from '../../Types/NavigationTypes';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 
 type Props = StackScreenProps<ChatStackParams, 'chat'>;
 

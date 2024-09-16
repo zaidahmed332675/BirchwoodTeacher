@@ -1,7 +1,7 @@
 import { Dispatch, useCallback, useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { ResponseCallback } from '../apiService/responseCallback';
+import { ResponseCallback } from '../Service/responseCallback';
 import { RootState, store } from './index';
 
 export type AppDispatch = typeof store.dispatch;

@@ -18,7 +18,7 @@ import { asyncCheckInUser } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';

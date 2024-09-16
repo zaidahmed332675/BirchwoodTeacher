@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { vw } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { Holiday } from '../../types/User';
 import { GrayMediumText } from '../GrayMediumText';
 

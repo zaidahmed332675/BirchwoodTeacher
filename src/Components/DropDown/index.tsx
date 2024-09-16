@@ -5,7 +5,7 @@ import DropDownPicker, {
   ItemType,
   ValueType,
 } from 'react-native-dropdown-picker';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 interface DropDownCustomProps {

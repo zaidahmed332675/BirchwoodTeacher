@@ -6,7 +6,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { Ref, forwardRef } from 'react';
 import { StyleSheet } from 'react-native';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 
 interface AppBottomSheetProps extends Partial<BottomSheetModalProps> {
   children: React.ReactNode;

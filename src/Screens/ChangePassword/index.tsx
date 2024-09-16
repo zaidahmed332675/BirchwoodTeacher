@@ -17,7 +17,7 @@ import {
 import { useAppDispatch } from '../../Stores/hooks';
 import { MainStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { ChangePasswordPayload } from '../../types/User';
 
 type Props = StackScreenProps<MainStackParams, 'changePassword'>;

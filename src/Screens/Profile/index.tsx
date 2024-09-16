@@ -12,7 +12,7 @@ import { asyncGetUserProfile } from '../../Stores/actions/user.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { format, isAfter } from 'date-fns';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;

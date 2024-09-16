@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 interface AppSelectProps {

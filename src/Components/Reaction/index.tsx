@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Post } from '../../Types/Post';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 interface ReactionProps {

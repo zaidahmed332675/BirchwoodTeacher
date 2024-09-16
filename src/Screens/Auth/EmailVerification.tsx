@@ -10,7 +10,7 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { asyncEmailVerification } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { EmailVerificationPayload } from '../../Types/User';
 import { vw } from '../../Utils/units';

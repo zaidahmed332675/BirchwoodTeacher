@@ -1,5 +1,5 @@
 import { ActivityIndicator, ActivityIndicatorProps } from "react-native"
-import { colors } from "../../apptheme/colors"
+import { colors } from "../../Theme/colors"
 import { ActivityIndicatorComponentPropsInterface } from "react-native-dropdown-picker";
 
 type LoadIndicatorType = {

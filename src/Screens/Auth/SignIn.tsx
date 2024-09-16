@@ -23,7 +23,7 @@ import { useAppDispatch } from '../../Stores/hooks';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { LoginUserPayload } from '../../Types/User';
 import { vh } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
 

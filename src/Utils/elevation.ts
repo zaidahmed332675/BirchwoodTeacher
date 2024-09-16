@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { colors } from '../apptheme/colors';
+import { colors } from '../Theme/colors';
 
 type StyleObject = {
   [key: string]: string | number | Record<string, string | number>;

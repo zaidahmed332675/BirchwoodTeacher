@@ -9,7 +9,7 @@ import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
 import { AttendanceStackParams } from '../../Types/NavigationTypes';
 import { vw } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 
 type Props = StackScreenProps<AttendanceStackParams, 'leave'>;
 

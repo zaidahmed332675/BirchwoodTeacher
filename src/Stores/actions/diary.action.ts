@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CreateHomeWorkPayload, GetAllHomeWorks, HomeWork } from '../../Types/Diary';
-import { callApi } from '../../apiService/api';
-import { allApiPaths } from '../../apiService/apiPaths';
+import { callApi } from '../../Service/api';
+import { allApiPaths } from '../../Service/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removeHomeWork, setHomeWork, setHomeWorks } from '../slices/diary.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';

@@ -2,7 +2,7 @@ import { compareAsc, format, isToday } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 import { attendanceEnum } from '../../Utils/options';
 

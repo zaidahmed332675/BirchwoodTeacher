@@ -23,7 +23,7 @@ import { useAppDispatch } from '../../Stores/hooks';
 import { ERootStack, MainStackParams } from '../../Types/NavigationTypes';
 import { leaveTypeEnum } from '../../Utils/options';
 import { vw } from '../../Utils/units';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { LeavePayload } from '../../types/User';
 import { AppDatePicker } from '../AppDatePicker';
 import { AppSelect } from '../AppSelect';

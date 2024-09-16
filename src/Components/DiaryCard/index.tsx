@@ -6,7 +6,7 @@ import { asyncDeleteHomeWork } from '../../Stores/actions/diary.action';
 import { useLoaderDispatch } from '../../Stores/hooks';
 import { HomeWork } from '../../Types/Diary';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 export const DateCard = ({ formattedDate: { day, date, month, year } }: { formattedDate: { day: string; date: string, month: string, year: string } }) => {

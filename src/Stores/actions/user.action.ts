@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { callApi } from '../../apiService/api';
-import { allApiPaths, ApiPaths } from '../../apiService/apiPaths';
+import { callApi } from '../../Service/api';
+import { allApiPaths, ApiPaths } from '../../Service/apiPaths';
 import {
   ChangePasswordPayload,
   EmailVerificationPayload,

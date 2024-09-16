@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ProfileStackParams } from '../../Types/NavigationTypes';
 import { isArrayOfObjectsEqual } from '../../Utils/options';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { isValid } from 'date-fns';
 import { UserExperience } from '../../types/User';
 

@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import workerImage from '../../Assets/images/worker.png';
 import { Comment as CommentProps } from '../../Types/Post';
 import { formatCommentTime } from '../../Utils/options';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';

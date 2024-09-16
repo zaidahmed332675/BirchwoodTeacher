@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
-import { colors } from '../../apptheme/colors';
+import { colors } from '../../Theme/colors';
 
 interface GrayMediumTextProps {
   text: any;
