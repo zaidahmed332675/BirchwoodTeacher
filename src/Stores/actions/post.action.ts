@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } from '../../Types/Post';
-import { callApi } from '../../services/api';
-import { allApiPaths, ApiPaths } from '../../services/apiPaths';
+import { callApi } from '../../apiService/api';
+import { allApiPaths, ApiPaths } from '../../apiService/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removePost, setActivities, setComment, setComments, setLikeDislike, setLoveUnlove, setPost, setPosts } from '../slices/post.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';

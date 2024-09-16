@@ -13,7 +13,7 @@ import { asyncUpdateProfile } from '../../Stores/actions/user.action';
 import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 

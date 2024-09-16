@@ -14,7 +14,7 @@ import { setLikeDislike, setLoveUnlove } from '../Stores/slices/post.slice';
 import { selectUserProfile } from '../Stores/slices/user.slice';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
 import { NavigationOptions, attendanceEnum } from '../Utils/options';
-import { appShadow, colors } from '../theme/colors';
+import { appShadow, colors } from '../apptheme/colors';
 import AttendanceNavigator from './AttendanceNavigator';
 import ChatNavigator from './ChatNavigator';
 import ClassNavigator from './ClassNavigator';

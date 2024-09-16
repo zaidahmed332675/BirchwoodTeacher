@@ -20,7 +20,7 @@ import {
     insertVideoFromGallery,
 } from '../../Utils/cameraOptions';
 import { isImage, isVideo } from '../../Utils/options';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { AppInput } from '../AppInput';
 import { GrayMediumText } from '../GrayMediumText';
 import { AppModal } from '../Modal';

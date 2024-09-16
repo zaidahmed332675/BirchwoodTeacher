@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/
 import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectPostById } from '../../Stores/slices/post.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { isImage, isVideo } from '../../Utils/options';
 

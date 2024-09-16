@@ -11,7 +11,7 @@ import { ImageBox } from '../../Components/UploadImage';
 import { asyncCheckInChildByTeacher, asyncChildMonthlyAttendance } from '../../Stores/actions/class.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildById, selectCurrentWeekAttendance } from '../../Stores/slices/class.slice';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { ChildCheckInOutResponse } from '../../Types/Class';
 import { ClassStackParams } from '../../Types/NavigationTypes';
 import { vh } from '../../Utils/units';

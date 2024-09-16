@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 interface GlroyBoldTextProps {
   text: string;

@@ -2,7 +2,7 @@ import { format, isValid } from 'date-fns';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 interface AppSelectProps {
   label?: string;

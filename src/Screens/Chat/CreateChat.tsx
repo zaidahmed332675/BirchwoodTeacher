@@ -19,7 +19,7 @@ import { selectChatRoomMessages, selectChatRoomPagination, selectChildById } fro
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ChatRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { ChatStackParams } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { socket } from '../../Navigation';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;

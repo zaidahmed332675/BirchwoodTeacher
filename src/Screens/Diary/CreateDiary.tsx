@@ -19,7 +19,7 @@ import { selectHomeWorkById } from '../../Stores/slices/diary.slice';
 import { CreateHomeWorkPayload } from '../../Types/Diary';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { HomeWorkTypeEnum } from '../../Utils/options';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { isEqual } from 'date-fns';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 

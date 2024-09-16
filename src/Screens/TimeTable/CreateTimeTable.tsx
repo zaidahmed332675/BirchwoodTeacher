@@ -15,7 +15,7 @@ import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncCreateTimeTableRecord, asyncUpdateTimeTableRecord } from '../../Stores/actions/timeTable.action';
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectTimeTableRecordById } from '../../Stores/slices/timeTable.slice';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { ETimeTableStack, TimeTableStackParams } from '../../Types/NavigationTypes';
 import { CreateTimeTableRecordPayload } from '../../Types/TimeTable';
 import { DaysEnum } from '../../Utils/options';

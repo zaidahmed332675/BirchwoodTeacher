@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { GlroyBold } from '../GlroyBoldText';
 import { VIcon } from '../VIcon';
 

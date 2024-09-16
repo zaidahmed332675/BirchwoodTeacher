@@ -20,7 +20,7 @@ import {
 } from '../../Types/NavigationTypes';
 import { Activity } from '../../Types/Post';
 import { vh, vw } from '../../Utils/units';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 type Props = StackScreenProps<PostStackParams, 'activityList'>;
 

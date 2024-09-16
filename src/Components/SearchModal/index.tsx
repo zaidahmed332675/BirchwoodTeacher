@@ -11,7 +11,7 @@ import aDot from '../../Assets/icons/absentDot.png';
 import dp1 from '../../Assets/icons/dp1.png';
 import pDot from '../../Assets/icons/presentDot.png';
 import { Child } from '../../Types/Class';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
 import { VIcon } from '../VIcon';

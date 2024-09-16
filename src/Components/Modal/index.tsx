@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalProps, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { VIcon } from '../VIcon';
 
 interface AppModalProps extends ModalProps {

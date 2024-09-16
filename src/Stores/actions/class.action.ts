@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ChatRoom, ChildAttendance, ChildCheckInOutPayload, ChildCheckInOutResponse, ClassResponse, ClassRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
-import { callApi } from '../../services/api';
-import { allApiPaths, ApiPaths } from '../../services/apiPaths';
+import { callApi } from '../../apiService/api';
+import { allApiPaths, ApiPaths } from '../../apiService/apiPaths';
 import { setAttendances, setChatRoomMessage, setChatRoomMessages, setChild, setChildren, setClassRoom } from '../slices/class.slice';
 import { setLoading } from '../slices/common.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';

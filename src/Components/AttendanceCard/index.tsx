@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { vh, vw } from '../../Utils/units';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { GrayMediumText } from '../GrayMediumText';
 import { attendanceEnum } from '../../Utils/options';
 

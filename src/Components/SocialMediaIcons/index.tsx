@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { icons } from '../../Assets/icons';
 import { GlroyBold } from '../GlroyBoldText';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 export const SocialMediaIcons = () => {
   return (

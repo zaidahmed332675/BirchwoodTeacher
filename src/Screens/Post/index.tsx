@@ -21,7 +21,7 @@ import {
   EPostStack,
   PostStackParams,
 } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 

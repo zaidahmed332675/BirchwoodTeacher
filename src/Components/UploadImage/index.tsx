@@ -16,8 +16,8 @@ import {
   insertImageFromCamera,
   insertImageFromGallery,
 } from '../../Utils/cameraOptions';
-import { getImagePath } from '../../services/axios';
-import { colors } from '../../theme/colors';
+import { getImagePath } from '../../apiService/axios';
+import { colors } from '../../apptheme/colors';
 import { VIcon } from '../VIcon';
 
 interface UploadImageProps {

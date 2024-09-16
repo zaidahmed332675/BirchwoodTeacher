@@ -16,7 +16,7 @@ import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { SearchModal } from '../../Components/SearchModal';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;

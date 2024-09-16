@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Text, View, TouchableOpacity } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 
 interface CustomSwitchProps {
   selectionMode: number;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { statusBarHeight } from '../../Utils/units';
 import LinearGradient from 'react-native-linear-gradient';
 import { BottomBackground } from '../BottomBackground';

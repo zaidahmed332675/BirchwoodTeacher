@@ -16,7 +16,7 @@ import {
 } from '../../Stores/hooks';
 import { selectHolidaysMonthWise, selectUserAttendance } from '../../Stores/slices/user.slice';
 import { attendanceEnum } from '../../Utils/options';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { DataLoader } from '../../Components/DataLoader';
 
 const Attendance = () => {

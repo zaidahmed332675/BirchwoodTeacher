@@ -11,7 +11,7 @@ import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { asyncResetPassword } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
-import { colors } from '../../theme/colors';
+import { colors } from '../../apptheme/colors';
 import { AuthStackParams, ERootStack } from '../../Types/NavigationTypes';
 import { ResetPasswordPayload } from '../../Types/User';
 import { vw } from '../../Utils/units';
