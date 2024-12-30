@@ -1,18 +1,9 @@
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 import _ from 'lodash';
-import { create } from 'react-native-pixel-perfect';
 
 export const NavigationOptions = () => {
   return { headerShown: false };
 };
-
-const designResolution = {
-  width: 390,
-  height: 844,
-};
-
-export const pS = create(designResolution);
-export const perfectSize = create(designResolution);
 
 export const dummyRecords = [
   {
