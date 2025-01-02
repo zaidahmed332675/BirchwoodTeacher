@@ -14,13 +14,13 @@ import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
 import { VIcon } from '../../Components/VIcon';
 import { asyncCreateChat, asyncCreateChatRoomMessage, asyncGetMessagesByChatRoomId } from '../../Stores/actions/class.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectChatRoomMessages, selectChatRoomPagination, selectChildById } from '../../Stores/slices/class.slice';
+import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChatRoomMessages, selectChatRoomPagination, selectChildById, setChatRoomMessage } from '../../Stores/slices/class.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { ChatRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
-import { socket } from '../../Navigation';
+import { socket } from '../../Utils/socket';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
@@ -81,6 +81,9 @@ const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string
 };
 
 const CreateChat = ({ route }: Props) => {
+
+  const dispatch = useAppDispatch();
+
   const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, ChatRoom>(asyncCreateChat);
   const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
   const [_, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
@@ -91,9 +94,29 @@ const CreateChat = ({ route }: Props) => {
   const messages = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chats?._id));
   const messagesPagination = useAppSelector(selectChatRoomPagination(chatRoomId || child?.chats?._id));
 
+  const handleNewMessage = (record: any) => {
+    let { sender, reciever, ...data } = record
+    dispatch(setChatRoomMessage({
+      chatRoomId: record?.chat,
+      message: {
+        sender: sender?._id,
+        ...data
+      }
+    }))
+  }
+
   useLayoutEffect(() => {
     if (chatRoomId) {
       setCreateChatLoader(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    socket.emit('join chat', '66c8a613d2d70bdd407d28f4'); // Chat Id
+    socket.on('message', handleNewMessage)
+
+    return () => {
+      socket.off('message', handleNewMessage)
     }
   }, [])
 
