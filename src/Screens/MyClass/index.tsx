@@ -23,18 +23,21 @@ import {
 } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
 import { attendanceEnum } from '../../Utils/options';
+import { NotFound } from '../../Components/NotFound';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
 
 const MyClass = ({ }: Props) => {
   const navigation = useNavigation<NavigationProp<ClassStackParams>>();
-  const [loading, getClassRoom] = useLoaderDispatch(asyncGetClassRoomById);
+  const [loading, getClassRoomById] = useLoaderDispatch(asyncGetClassRoomById);
   let classRoom = useAppSelector(selectClassRoom);
   let children = useAppSelector(selectChildren);
 
   useEffect(() => {
-    getClassRoom()
-  }, [getClassRoom]);
+    if (!children.length) {
+      getClassRoomById()
+    }
+  }, [getClassRoomById]);
 
   if (loading) {
     return <DataLoader />;
@@ -116,11 +119,14 @@ const MyClass = ({ }: Props) => {
 
   return (
     <Layout customHeader={<CustomHeader title={`${classRoom.classroomName} - Grade ${classRoom.classroomGrade} (${classRoom.classroomBatch})`} />}>
-      <FlatList
+      {children.length ? <FlatList
         data={[...children]}
-        keyExtractor={item => item._id.toString()}
         renderItem={renderItem}
-      />
+        keyExtractor={item => item._id.toString()}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+      /> : <NotFound text={`No children available`} />}
     </Layout>
   );
 };
