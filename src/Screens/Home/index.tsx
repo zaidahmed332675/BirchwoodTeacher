@@ -33,8 +33,9 @@ const HomeScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (profile?.classroom?._id) getChildrenByClassId()
-  }, [getChildrenByClassId]);
-  console.log(profile, 'cheking')
+  }, [profile?.classroom?._id, getChildrenByClassId]);
+
+  const isClassBasedLocked = !profile?.classroom?._id
 
   const data = [
     {
@@ -48,21 +49,21 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'My Class',
       icon: featureIcons.profile,
       route: EMainStack.myClassRoutes,
-      isLocked: !profile?.classroom?._id
+      isLocked: isClassBasedLocked
     },
     {
       id: 3,
       title: 'Posts',
       icon: featureIcons.activity,
       route: EMainStack.postRoutes,
-      isLocked: !profile?.classroom?._id
+      isLocked: isClassBasedLocked
     },
     {
       id: 4,
       title: 'Work Diary',
       icon: featureIcons.assignment,
       route: EMainStack.diaryRoutes,
-      isLocked: !profile?.classroom?._id
+      isLocked: isClassBasedLocked
     },
     {
       id: 5,
@@ -75,7 +76,7 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'Time Table',
       icon: featureIcons.time_table,
       route: EMainStack.timeTableRoutes,
-      isLocked: !profile?.classroom?._id
+      isLocked: isClassBasedLocked
     },
     {
       id: 7,

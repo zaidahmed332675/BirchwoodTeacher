@@ -27,6 +27,7 @@ import {
   setUserState,
 } from '../slices/user.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+import { ClassRoom } from '../../Types/Class';
 
 export const asyncLogin = createAsyncThunk(
   'login',
@@ -189,7 +190,7 @@ export const asyncUpdateProfile = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data) {
-        dispatch(setUser(res.data));
+        dispatch(setUser({ ...res.data, ...(res.data?.classroom && { classroom: { _id: res.data?.classroom as unknown as string } as ClassRoom }) }));
       }
       dispatch(asyncShowSuccess(res.message));
     }
@@ -212,7 +213,7 @@ export const asyncUpdateEducation = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ ...res.data }));
+      dispatch(setUser({ ...res.data, ...(res.data?.classroom && { classroom: { _id: res.data?.classroom as unknown as string } as ClassRoom }) }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));
@@ -234,7 +235,7 @@ export const asyncUpdateExperience = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ ...res.data }));
+      dispatch(setUser({ ...res.data, ...(res.data?.classroom && { classroom: { _id: res.data?.classroom as unknown as string } as ClassRoom }) }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));

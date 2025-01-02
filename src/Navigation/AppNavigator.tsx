@@ -21,6 +21,7 @@ import PostNavigator from './PostNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import TimetableNavigator from './TimetableNavigator';
 import { socket } from '../Utils/socket';
+import { ClassRoom } from '../Types/Class';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -33,7 +34,7 @@ const AppNavigator = () => {
   const dispatch = useAppDispatch()
 
   const handleClassAssignByAdmin = (record: any) => {
-    dispatch(setUser({ classroom: { _id: record.classroom } }))
+    dispatch(setUser({ classroom: { _id: record.classroom } as ClassRoom }))
   }
 
   const handlePostInteraction = (record: any) => {
