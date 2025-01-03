@@ -37,7 +37,7 @@ export interface Child {
   age: number;
   birthday: string;
   classroom: ClassRoom;
-  checkIn: false;
+  checkIn: boolean;
   status: string;
   image: string;
   createdAt: string;

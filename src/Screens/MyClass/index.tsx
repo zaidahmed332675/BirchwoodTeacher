@@ -22,7 +22,7 @@ import {
   EMainStack
 } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
-import { attendanceEnum } from '../../Utils/options';
+import { attendanceEnum, getCheckInBtnColor } from '../../Utils/options';
 import { NotFound } from '../../Components/NotFound';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
@@ -34,7 +34,7 @@ const MyClass = ({ }: Props) => {
   let children = useAppSelector(selectChildren);
 
   useEffect(() => {
-    if (!children.length) {
+    if (!classRoom._id) {
       getClassRoomById()
     }
   }, [getClassRoomById]);
@@ -54,7 +54,7 @@ const MyClass = ({ }: Props) => {
           alignSelf: 'flex-start',
         }}>
         <Image
-          source={item.checkIn ? pDot : item.todayAttendance?.status === attendanceEnum.LEAVE ? pendingDot : aDot}
+          source={item.todayAttendance?.status === attendanceEnum.PRESENT ? pDot : item.todayAttendance?.status === attendanceEnum.ABSENT ? aDot : pendingDot}
           style={styles.attendanceIcon}
         />
         <ImageBox
@@ -73,7 +73,7 @@ const MyClass = ({ }: Props) => {
             text="Attendance: 20 | Absents: 2 | Leaves: 5"
             _style={{ fontSize: 12 }}
           /> */}
-          {item.checkIn && !(item.todayAttendance?.status === attendanceEnum.LEAVE) && (
+          {!item.todayAttendance?._id && (
             <View
               style={{
                 marginTop: 10,

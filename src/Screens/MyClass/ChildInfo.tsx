@@ -15,6 +15,7 @@ import { colors } from '../../Theme/colors';
 import { ChildCheckInOutResponse } from '../../Types/Class';
 import { ClassStackParams } from '../../Types/NavigationTypes';
 import { vh } from '../../Utils/units';
+import { getCheckInBtnColor, getCheckInBtnLabel } from '../../Utils/options';
 
 type Props = StackScreenProps<ClassStackParams, 'childInfo'>;
 
@@ -23,12 +24,10 @@ const ChildInfo = ({ route }: Props) => {
   const [calenderMonthYear] = useState(new Date());
 
   const [_, checkInChildByTeacher] = useLoaderDispatch(asyncCheckInChildByTeacher);
-  const [attendanceLoader, getChildMonthlyAttendnace] = useLoaderDispatch(asyncChildMonthlyAttendance);
+  const [__, getChildMonthlyAttendnace] = useLoaderDispatch(asyncChildMonthlyAttendance);
 
   const child = useAppSelector(selectChildById(childId));
   const currentWeekAttendance = useAppSelector(selectCurrentWeekAttendance(childId, startOfWeek(calenderMonthYear, { weekStartsOn: 1 })))
-
-  // console.log(getMonth(calenderMonthYear), calenderMonthYear)
 
   useEffect(() => {
     getChildMonthlyAttendnace({
@@ -37,39 +36,6 @@ const ChildInfo = ({ route }: Props) => {
       year: getYear(calenderMonthYear),
     });
   }, [childId, calenderMonthYear, getChildMonthlyAttendnace]);
-
-  const data = [
-    {
-      id: '1',
-      date: 'Monday',
-      checkIn: '08:20 AM',
-      checkOut: '01:00 PM',
-    },
-    {
-      id: '2',
-      date: 'Tuesday',
-      checkIn: '08:10 AM',
-      checkOut: '01:00 PM',
-    },
-    {
-      id: '3',
-      date: 'Wednesday',
-      checkIn: '08:00 AM',
-      checkOut: '01:00 PM',
-    },
-    {
-      id: '4',
-      date: 'Thursday',
-      checkIn: '07:50 AM',
-      checkOut: '01:00 PM',
-    },
-    {
-      id: '5',
-      date: 'Friday',
-      checkIn: '00:00 AM',
-      checkOut: '00:00 PM',
-    },
-  ];
 
   const reports = [
     {
@@ -85,14 +51,12 @@ const ChildInfo = ({ route }: Props) => {
   ];
 
   const handleCheckIn = useCallback(async () => {
-    if (child.checkIn) return
+    if (child?.todayAttendance?._id) return
 
     const date = new Date();
     const checkInDateTime = date.toISOString();
     checkInChildByTeacher({ children: childId, checkIn: checkInDateTime })
   }, [checkInChildByTeacher]);
-
-  // console.log(currentWeekAttendance)
 
   const reportsCards = (items: any, indx: number) => {
     return (
@@ -155,7 +119,7 @@ const ChildInfo = ({ route }: Props) => {
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 8 }}>
-            <AppButton title={child.checkIn ? "Checked In" : "Check In"} onPress={handleCheckIn} btnStyle={child.checkIn ? styles.checkInBtn : {}} />
+            <AppButton title={getCheckInBtnLabel(child?.todayAttendance?.status)} onPress={handleCheckIn} btnStyle={{ backgroundColor: getCheckInBtnColor(child?.todayAttendance?.status) }} />
           </View>
 
           <View
@@ -189,16 +153,22 @@ const ChildInfo = ({ route }: Props) => {
             <View style={{ margin: 1 }} />
 
             {Array.from({ length: 5 }).map((_, indx) => {
-              let weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
+              const weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
               const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item?.createdAt ?? "")) || {} as ChildCheckInOutResponse
               let checkIn = day.checkIn ? format(new Date(day.checkIn), "hh:mm a") : 'N/A'
-              let checkOut = day.checkOut ? format(new Date(day.checkOut), "hh:mm a") : 'N/A'
+
+              const childTodayCheckIn = child.todayAttendance?.checkIn ?? ""
+              if (isSameDay(checkIn, childTodayCheckIn)) {
+                checkIn = format(new Date(childTodayCheckIn), "hh:mm a")
+              }
+
+              const checkOut = day.checkOut ? format(new Date(day.checkOut), "hh:mm a") : 'N/A'
 
               return (
                 <View
                   style={[
                     styles.tableItems,
-                    { borderBottomWidth: data.length - 1 === indx ? 0 : 1 },
+                    { borderBottomWidth: 6 === indx ? 0 : 1 },
                   ]}
                   key={indx}>
                   <GrayMediumText

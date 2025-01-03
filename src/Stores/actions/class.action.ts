@@ -75,7 +75,8 @@ export const asyncCheckInChildByTeacher = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.newAttendance?.children) {
-        dispatch(setChild({ _id: res.data.newAttendance.children, todayAttendance: res.data.newAttendance }));
+        // REVIEW IT
+        dispatch(setChild({ _id: res.data.newAttendance.children, checkIn: true, todayAttendance: res.data.newAttendance }));
       }
       dispatch(asyncShowSuccess(res.message));
     }
@@ -96,7 +97,7 @@ export const asyncChildMonthlyAttendance = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setAttendances({ _id: childId, ...res.data! }));
+      dispatch(setAttendances({ ...res.data! }));
     }
     return res;
   }

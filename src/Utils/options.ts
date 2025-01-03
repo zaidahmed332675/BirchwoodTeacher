@@ -1,5 +1,6 @@
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, formatDistanceToNow } from 'date-fns';
 import _ from 'lodash';
+import { colors } from '../Theme/colors';
 
 export const NavigationOptions = () => {
   return { headerShown: false };
@@ -336,3 +337,29 @@ export const isVideo = (fileName: string): boolean => {
   const extension = fileName.split('.').pop()?.toLowerCase();
   return videoExtensions.includes(extension || '');
 };
+
+export const getCheckInBtnColor = (status: string) => {
+  switch (status) {
+    case attendanceEnum.PRESENT:
+      return colors.theme.darkGreen;
+    case attendanceEnum.ABSENT:
+      return colors.theme.darkRed;
+    case attendanceEnum.LEAVE:
+      return colors.theme.secondary;
+    default:
+      return colors.theme.primary
+  }
+}
+
+export const getCheckInBtnLabel = (status: string) => {
+  switch (status) {
+    case attendanceEnum.PRESENT:
+      return "Checked In";
+    case attendanceEnum.ABSENT:
+      return "Absent";
+    case attendanceEnum.LEAVE:
+      return "On Leave";
+    default:
+      return "Check In";
+  }
+}

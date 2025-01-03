@@ -10,7 +10,7 @@ import { MessagePaginationProps, PaginationProps } from '../../Types/Common';
 
 interface ClassSliceState {
   classRoom: ClassRoom;
-  attendances: Record<string, ChildAttendance>;
+  attendance: ChildAttendance; // Record<string, ChildAttendance>
   children: Record<string, Child>;
   pagination: PaginationProps;
   chatRooms: Record<string, {
@@ -22,7 +22,15 @@ interface ClassSliceState {
 const initialState: ClassSliceState = {
   classRoom: {} as ClassRoom,
   children: {},
-  attendances: {},
+  attendance: {
+    attendance: [],
+    stats: {
+      PRESENT: 0,
+      ABSENT: 0,
+      LEAVE: 0,
+      HOLIDAY: 0
+    }
+  },
   pagination: {} as PaginationProps,
   chatRooms: {}
 };
@@ -45,8 +53,11 @@ const ClassSlice = createSlice({
     setChild: (state, { payload }: PayloadAction<Partial<Child>>) => {
       state.children["child_" + payload._id] = { ...state.children["child_" + payload._id], ...payload };
     },
-    setAttendances: (state, { payload }: PayloadAction<Partial<ChildAttendance>>) => {
-      state.attendances[payload._id] = { ...state.attendances[payload._id], ...payload };
+    // setAttendances: (state, { payload }: PayloadAction<Partial<ChildAttendance>>) => {
+    //   state.attendances[payload._id] = { ...state.attendances[payload._id], ...payload };
+    // },
+    setAttendances: (state, { payload }: PayloadAction<ChildAttendance>) => {
+      state.attendance = payload;
     },
     setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
       const { chatRoomId, docs, ...pagination } = payload;
@@ -111,11 +122,22 @@ export const selectChildById = (childId: string) =>
     children => children["child_" + childId] as Child
   );
 
+// export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
+//   createDraftSafeSelector(
+//     [(state: RootState) => state.class.attendances],
+//     attendances => {
+//       return attendances?.[_id]?.attendance?.map((attendance => {
+//         if (isSameWeek(attendance.createdAt, weekStart))
+//           return attendance
+//       }))
+//     }
+//   );
+
 export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
   createDraftSafeSelector(
-    [(state: RootState) => state.class.attendances],
-    attendances => {
-      return attendances?.[_id]?.attendance?.map((attendance => {
+    [(state: RootState) => state.class.attendance],
+    attendance => {
+      return attendance?.attendance?.map((attendance => {
         if (isSameWeek(attendance.createdAt, weekStart))
           return attendance
       }))
