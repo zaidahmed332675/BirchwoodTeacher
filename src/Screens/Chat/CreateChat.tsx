@@ -112,13 +112,13 @@ const CreateChat = ({ route }: Props) => {
   }, [])
 
   useEffect(() => {
-    socket.emit('join chat', '66c8a613d2d70bdd407d28f4'); // Chat Id
+    socket.emit('join chat', child?.chats?._id);
     socket.on('message', handleNewMessage)
 
     return () => {
       socket.off('message', handleNewMessage)
     }
-  }, [])
+  }, [child?.chats?._id])
 
   const onSend = useCallback(async (msg: IMessage[]) => {
     let res = await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
@@ -135,7 +135,7 @@ const CreateChat = ({ route }: Props) => {
     let RoomId = chatRoomId || child?.chats?._id
 
     if (!RoomId) {
-      const createRes = await createChat({ parent: child?.parent?._id, teacher: child.classroom.teacher, children: childId })
+      const createRes = await createChat({ parent: child?.parent?._id, teacher: profile?._id, children: childId })
 
       if (createRes.status && createRes.data?._id) {
         RoomId = createRes.data._id
