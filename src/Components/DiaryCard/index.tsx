@@ -1,12 +1,13 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
+import { has } from 'lodash';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { asyncDeleteHomeWork } from '../../Stores/actions/diary.action';
 import { useLoaderDispatch } from '../../Stores/hooks';
+import { colors } from '../../Theme/colors';
 import { HomeWork } from '../../Types/Diary';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
-import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
 export const DateCard = ({ formattedDate: { day, date, month, year } }: { formattedDate: { day: string; date: string, month: string, year: string } }) => {
@@ -20,7 +21,7 @@ export const DateCard = ({ formattedDate: { day, date, month, year } }: { format
   );
 };
 
-export const DiaryCard = ({ item }: { item: HomeWork }) => {
+export const DiaryCard = ({ item, showChildrenLabel = false }: { item: HomeWork, showChildrenLabel: boolean }) => {
 
   const [_, deleteHomeWork] = useLoaderDispatch(asyncDeleteHomeWork);
   const navigation = useNavigation<NavigationProp<DiaryStackParams>>()
@@ -89,6 +90,9 @@ export const DiaryCard = ({ item }: { item: HomeWork }) => {
           }]}>
             Due Date: {format(dueDate, 'EEE dd yyyy')}
           </Text>
+          {showChildrenLabel && has(item, 'children') && <View style={{ alignSelf: "flex-start", borderWidth: 1, borderColor: colors.theme.darkRed, marginTop: 5, paddingVertical: 2, paddingHorizontal: 4, borderRadius: 5 }}>
+            <Text style={[styles.description, { color: colors.theme.darkRed, fontSize: 10 }]}>Children Assigned</Text>
+          </View>}
         </View>
 
       </View>

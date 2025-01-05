@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   StyleSheet,
   View
@@ -18,16 +18,18 @@ import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
 import { SearchModal } from '../../Components/SearchModal';
+import { LoadIndicator } from '../../Components/LoadIndicator';
+import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
 const Diary = ({ navigation }: Props) => {
-
-  const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tabIndex, setTabIndex] = useState(0);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
-  const [childId, setChildId] = useState<string>("");
+  const [childId, setChildId] = useState("");
 
-  const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks);
+  const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks, false);
   const [childloading, getAllChildHomeWorks] = useLoaderDispatch(asyncGetAllChildHomeWorks, false);
 
   let homeworks = useAppSelector(selectHomeWorks);
@@ -39,16 +41,24 @@ const Diary = ({ navigation }: Props) => {
     else setChildId('')
   };
 
+  const loadData = (isFresh: boolean = false) => {
+    if (tabIndex === 0 && !loading) getAllHomeWorks({ isFresh })
+    if (tabIndex === 1 && childId && !childloading) getAllChildHomeWorks({ childId, isFresh })
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData(true)
+    }, [tabIndex, childId])
+  );
+
   useEffect(() => {
     if (!isSearchModalOpen && !childId && tabIndex === 1) {
       return setTabIndex(0)
     }
+  }, [tabIndex, childId, isSearchModalOpen]);
 
-    if (tabIndex === 0) getAllHomeWorks()
-    if (tabIndex === 1 && childId) getAllChildHomeWorks({ childId })
-  }, [tabIndex, childId, isSearchModalOpen, getAllHomeWorks, getAllChildHomeWorks]);
-
-  if (loading || childloading) {
+  if ((loading || childloading) && !homeworks.length) {
     return <DataLoader />;
   }
 
@@ -94,16 +104,43 @@ const Diary = ({ navigation }: Props) => {
         }}
       />
 
-      {homeworks.length ? <FlatList
-        contentContainerStyle={{
-          paddingBottom: 10,
-        }}
-        data={homeworks}
-        renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} /></View>}
-        keyExtractor={item => item._id.toString()}
-      /> : <NotFound text={`No home work available\nPlease add a new home work`} />}
+      {/* {homeworks.length ?
+        <FlatList
+          data={homeworks}
+          keyExtractor={item => item._id}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
+          renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} showChildrenLabel={tabIndex == 0} /></View>}
+          onEndReached={({ distanceFromEnd }) => {
+            if (isScrollable && distanceFromEnd >= 0 && !!flatListRef.current.listHeight) loadData()
+          }}
+          onContentSizeChange={(_, height) => {
+            if (flatListRef.current.listHeight == 0) {
+              setContentSize(height)
+            }
+          }}
+          onLayout={(e) => {
+            flatListRef.current = { listHeight: e.nativeEvent.layout.height }
+          }}
+          onEndReachedThreshold={0.1}
+          contentContainerStyle={{
+            paddingBottom: 10,
+          }}
+          ListFooterComponent={() => homeworks.length && (loading || childloading) ? <LoadIndicator /> : null}
+        />
+        : <NotFound text={`No home work available\nPlease add a new home work`} />} */}
 
-    </Layout >
+      {homeworks.length ?
+        <LoadMoreFlatList
+          uuidKey='_id'
+          data={homeworks}
+          renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} showChildrenLabel={tabIndex == 0} /></View>}
+          loadMore={loadData}
+          loading={loading || childloading}
+        />
+        : <NotFound text={`No home work available\nPlease add a new home work`} />}
+    </Layout>
   );
 };
 

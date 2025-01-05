@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import lodash from 'lodash';
+import lodash, { isArray } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -42,11 +42,12 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
 
     const {
         control,
+        register,
         handleSubmit,
-        formState: { errors },
+        formState,
         watch,
         resetField,
-        setValue
+        setValue,
     } = useForm<any>({
         defaultValues: {
             title: '',
@@ -59,6 +60,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
         },
     });
 
+    const { errors } = formState;
     const isChildren = watch("assignee", "CLASS") === "CHILD";
 
     const onSubmit = useCallback(async (data: CreateHomeWorkPayload) => {
@@ -99,29 +101,27 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
     }, [createHomeWorks, isChildren]);
 
     useEffect(() => {
+        register('classroom');
         if (isEdit) {
             setValue('title', homeWork.title)
             setValue('description', homeWork.description)
             setValue('assignee', homeWork.assignee);
             setValue('classroom', homeWork.classroom)
-            setValue('children', homeWork.type === 'CHILD' && homeWork.children?.length ? homeWork.children : [])
+            setValue('children', homeWork.assignee === 'CHILD' && homeWork.children?.length ? isArray(homeWork.children) ? homeWork.children : [homeWork.children] : [])
             setValue('type', homeWork.type);
             setValue('dueDate', new Date(homeWork.dueDate))
         }
     }, [homeWorkId])
 
     return (
-        <Layout customHeader={<CustomHeader title={`${isEdit ? 'Edit' : 'Create'} Home Work`} />}>
+        <Layout customHeader={<CustomHeader title={`${isEdit ? 'Edit' : 'Create'} Work Diary`} />}>
             <ScrollView>
                 <View style={styles.container}>
                     <Controller
                         name="title"
                         control={control}
                         rules={{
-                            required: {
-                                value: false,
-                                message: 'Title is required',
-                            },
+                            required: 'Title is required',
                         }}
                         render={({ field: { onChange, value } }) => (
                             <AppInput
@@ -145,10 +145,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                         name="description"
                         control={control}
                         rules={{
-                            required: {
-                                value: false,
-                                message: 'Description is required',
-                            },
+                            required: 'Description is required',
                         }}
                         render={({ field: { onChange, value } }) => (
                             <AppInput
@@ -176,10 +173,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                         name="type"
                         control={control}
                         rules={{
-                            required: {
-                                value: false,
-                                message: 'Type is required',
-                            },
+                            required: 'Type is required',
                         }}
                         render={({ field: { onChange, value } }) => {
                             return (
@@ -212,10 +206,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                         name="assignee"
                         control={control}
                         rules={{
-                            required: {
-                                value: false,
-                                message: 'Assign to is required',
-                            },
+                            required: 'Assign to is required',
                         }}
                         render={({ field: { onChange, value } }) => {
                             return (
@@ -223,13 +214,13 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                                     label="Assign To"
                                     placeholder='Please select'
                                     required={true}
-                                    items={Array.from(Object.keys({ CLASS: "CLASS", CHILD: "CHILD" } ?? {}), key => ({
+                                    items={Array.from(Object.keys({ CLASS: "CLASS", CHILD: "CHILD" }), key => ({
                                         label: lodash.capitalize(key),
                                         value: key,
                                     }))}
                                     value={value}
                                     setValue={_ => {
-                                        if (value === "CLASS") {
+                                        if (_(value) === "CLASS") {
                                             setValue('classroom', profile?.classroom?._id)
                                             resetField('children')
                                         }
@@ -256,10 +247,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                                 name="children"
                                 control={control}
                                 rules={{
-                                    required: {
-                                        value: false,
-                                        message: 'Child is required',
-                                    },
+                                    required: 'Child is required',
                                 }}
                                 render={({ field: { onChange, value } }) => {
                                     return (
@@ -306,10 +294,7 @@ const CreateDiaryNew = ({ navigation, route }: Props) => {
                         name="dueDate"
                         control={control}
                         rules={{
-                            required: {
-                                value: false,
-                                message: 'Due Date is required',
-                            },
+                            required: 'Due Date is required',
                         }}
                         render={({ field: { onChange, value } }) => (
                             <AppDatePicker

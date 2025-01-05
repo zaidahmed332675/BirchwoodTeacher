@@ -19,7 +19,7 @@ const initialState: DiarySliceState = {
     limit: 0,
     page: 0,
     totalPages: 0,
-    pagingCounter: 1,
+    pagingCounter: 0,
     hasPrevPage: false,
     hasNextPage: false,
     prevPage: null,
@@ -31,12 +31,15 @@ const DiarySlice = createSlice({
   name: 'Diary',
   initialState,
   reducers: {
-    setHomeWorks: (state, { payload }: PayloadAction<GetAllHomeWorks>) => {
-      const { docs, ...pagination } = payload;
-      state.homeworks = docs.reduce((acc, curr) => {
-        acc["homework_" + curr._id] = curr;
-        return acc;
-      }, {} as Record<string, HomeWork>);
+    setHomeWorks: (state, { payload }: PayloadAction<GetAllHomeWorks & { isFresh: boolean }>) => {
+      const { docs, isFresh, ...pagination } = payload;
+      state.homeworks = {
+        ...(isFresh ? {} : state.homeworks),
+        ...docs.reduce((acc, curr) => {
+          acc["homework_" + curr._id] = curr;
+          return acc;
+        }, {} as Record<string, HomeWork>)
+      };
       state.pagination = pagination;
     },
     setHomeWork: (state, { payload }: PayloadAction<Partial<HomeWork>>) => {

@@ -1,25 +1,38 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CreateHomeWorkPayload, GetAllHomeWorks, HomeWork } from '../../Types/Diary';
 import { callApi } from '../../Service/api';
-import { allApiPaths } from '../../Service/apiPaths';
+import { allApiPaths, ApiPaths } from '../../Service/apiPaths';
 import { setLoading } from '../slices/common.slice';
 import { removeHomeWork, setHomeWork, setHomeWorks } from '../slices/diary.slice';
 import { asyncShowError, asyncShowSuccess } from './common.action';
+import { RootState } from '..';
 
 export const asyncGetAllHomeWorks = createAsyncThunk(
   'getAllHomeWork',
-  async (_, { dispatch }) => {
-    dispatch(setLoading(true));
+  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
+    const { page, totalPages } = (getState() as RootState).diary?.pagination ?? {}
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetAllHomeWorks>({
-      path: allApiPaths.getPath('getAllHomeWork'),
+      path: (allApiPaths.getPath('getAllHomeWork') +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setHomeWorks(res.data!)
+        setHomeWorks({ ...res.data!, isFresh })
       );
     }
 
@@ -30,20 +43,31 @@ export const asyncGetAllHomeWorks = createAsyncThunk(
 
 export const asyncGetAllChildHomeWorks = createAsyncThunk(
   'getAllChildHomeWork',
-  async ({ childId }: { childId: string }, { dispatch }) => {
-    dispatch(setLoading(true));
+  async ({ childId, isFresh }: { childId: string, isFresh: boolean }, { dispatch, getState }) => {
+
+    const { page, totalPages } = (getState() as RootState).diary?.pagination ?? {}
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetAllHomeWorks>({
-      path: allApiPaths.getPath('getAllChildHomework', {
-        childId
-      }),
+      path: (allApiPaths.getPath('getAllChildHomework', { childId }) +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setHomeWorks(res.data!)
+        setHomeWorks({ ...res.data!, isFresh })
       );
     }
 
