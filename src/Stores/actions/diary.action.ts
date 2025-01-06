@@ -10,7 +10,8 @@ import { RootState } from '..';
 export const asyncGetAllHomeWorks = createAsyncThunk(
   'getAllHomeWork',
   async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
-    const { page, totalPages } = (getState() as RootState).diary?.pagination ?? {}
+    let { page, totalPages } = { ...(getState() as RootState).diary?.pagination }
+    page = isFresh ? 0 : page
 
     if (page >= totalPages && totalPages) {
       return {
@@ -45,7 +46,8 @@ export const asyncGetAllChildHomeWorks = createAsyncThunk(
   'getAllChildHomeWork',
   async ({ childId, isFresh }: { childId: string, isFresh: boolean }, { dispatch, getState }) => {
 
-    const { page, totalPages } = (getState() as RootState).diary?.pagination ?? {}
+    let { page, totalPages } = { ...(getState() as RootState).diary?.pagination }
+    page = isFresh ? 0 : page
 
     if (page >= totalPages && totalPages) {
       return {

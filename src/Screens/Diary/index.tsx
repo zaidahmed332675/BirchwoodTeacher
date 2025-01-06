@@ -1,26 +1,24 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   View
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';
 import { DiaryCard } from '../../Components/DiaryCard';
 import { Layout } from '../../Components/Layout';
+import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
 import { NotFound } from '../../Components/NotFound';
+import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
 import { asyncGetAllChildHomeWorks, asyncGetAllHomeWorks } from '../../Stores/actions/diary.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectHomeWorks } from '../../Stores/slices/diary.slice';
-import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
-import { SearchModal } from '../../Components/SearchModal';
-import { LoadIndicator } from '../../Components/LoadIndicator';
-import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
-import { useFocusEffect } from '@react-navigation/native';
+import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 

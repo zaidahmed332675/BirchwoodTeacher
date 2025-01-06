@@ -43,7 +43,10 @@ const DiarySlice = createSlice({
       state.pagination = pagination;
     },
     setHomeWork: (state, { payload }: PayloadAction<Partial<HomeWork>>) => {
-      state.homeworks["homework_" + payload._id] = { ...state.homeworks["homework_" + payload._id], ...payload };
+      state.homeworks = {
+        ["homework_" + payload._id]: { ...state.homeworks["homework_" + payload._id], ...payload },
+        ...state.homeworks
+      }
     },
     removeHomeWork: (state, { payload }: PayloadAction<{ _id: string }>) => {
       delete state.homeworks["homework_" + payload._id];
