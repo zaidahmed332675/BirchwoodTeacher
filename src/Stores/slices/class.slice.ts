@@ -12,7 +12,7 @@ interface ClassSliceState {
   classRoom: ClassRoom;
   attendance: ChildAttendance; // Record<string, ChildAttendance>
   children: Record<string, Child>;
-  pagination: PaginationProps;
+  pagination: PaginationProps; // children pagination
   chatRooms: Record<string, {
     messages: Record<string, Message>,
     messagePagination: MessagePaginationProps

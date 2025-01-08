@@ -142,7 +142,7 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
       }
     }
 
-    dispatch(setLoading(false));
+    // dispatch(setLoading(false));
     return res;
   }
 );

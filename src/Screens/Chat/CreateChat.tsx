@@ -7,8 +7,7 @@ import {
   Composer,
   GiftedChat,
   IMessage,
-  InputToolbar,
-  LoadEarlier,
+  InputToolbar
 } from 'react-native-gifted-chat';
 import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
@@ -17,9 +16,8 @@ import { asyncCreateChat, asyncCreateChatRoomMessage, asyncGetMessagesByChatRoom
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChatRoomMessages, selectChatRoomPagination, selectChildById, setChatRoomMessage } from '../../Stores/slices/class.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { ChatRoom, CreateChatPayload, CreateChatRoomMessagePayload, CreateChatRoomMessageResponse, MessagesResponse } from '../../Types/Class';
-import { ChatStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
+import { ChatStackParams } from '../../Types/NavigationTypes';
 import { socket } from '../../Utils/socket';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
@@ -84,9 +82,10 @@ const CreateChat = ({ route }: Props) => {
 
   const dispatch = useAppDispatch();
 
-  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch<CreateChatPayload, ChatRoom>(asyncCreateChat);
-  const [messagesLoader, getMessages] = useLoaderDispatch<{ chatRoomId: string }, MessagesResponse>(asyncGetMessagesByChatRoomId);
-  const [_, createMessage] = useLoaderDispatch<CreateChatRoomMessagePayload, CreateChatRoomMessageResponse>(asyncCreateChatRoomMessage);
+  const [createChatLoader, createChat, setCreateChatLoader] = useLoaderDispatch(asyncCreateChat);
+  const [messagesLoader, getMessages] = useLoaderDispatch(asyncGetMessagesByChatRoomId);
+  const [_, createMessage] = useLoaderDispatch(asyncCreateChatRoomMessage);
+
   const { childId, chatRoomId } = route.params
 
   const child = useAppSelector(selectChildById(childId));

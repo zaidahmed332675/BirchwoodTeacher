@@ -10,25 +10,26 @@ import { DataLoader } from '../../Components/DataLoader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Layout } from '../../Components/Layout';
+import { NotFound } from '../../Components/NotFound';
 import { ImageBox } from '../../Components/UploadImage';
 import { VIcon } from '../../Components/VIcon';
 import { asyncGetClassRoomById } from '../../Stores/actions/class.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren, selectClassRoom } from '../../Stores/slices/class.slice';
+import { colors } from '../../Theme/colors';
 import { Child } from '../../Types/Class';
 import {
   ClassStackParams,
   EChatStack,
   EMainStack
 } from '../../Types/NavigationTypes';
-import { colors } from '../../Theme/colors';
-import { attendanceEnum, getCheckInBtnColor } from '../../Utils/options';
-import { NotFound } from '../../Components/NotFound';
+import { attendanceEnum } from '../../Utils/options';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
 
 const MyClass = ({ }: Props) => {
   const navigation = useNavigation<NavigationProp<ClassStackParams>>();
+
   const [loading, getClassRoomById] = useLoaderDispatch(asyncGetClassRoomById);
   let classRoom = useAppSelector(selectClassRoom);
   let children = useAppSelector(selectChildren);
@@ -39,7 +40,7 @@ const MyClass = ({ }: Props) => {
     }
   }, [getClassRoomById]);
 
-  if (loading) {
+  if (loading && !classRoom._id) {
     return <DataLoader />;
   }
 
