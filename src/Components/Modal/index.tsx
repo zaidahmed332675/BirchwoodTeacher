@@ -35,7 +35,7 @@ export const AppModal = ({
                 type="Ionicons"
                 name="close-circle-outline"
                 size={26}
-                color={colors.theme.primary}
+                color={colors.theme.white}
               />
             </TouchableOpacity>
           </View>

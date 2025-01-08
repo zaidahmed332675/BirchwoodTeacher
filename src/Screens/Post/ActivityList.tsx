@@ -1,7 +1,7 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
-  FlatList,
   StyleSheet,
   TouchableOpacity,
   View
@@ -10,26 +10,35 @@ import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { Layout } from '../../Components/Layout';
+import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
+import { NotFound } from '../../Components/NotFound';
 import { ImageBox } from '../../Components/UploadImage';
 import { asyncGetAllActivities } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectActivities } from '../../Stores/slices/post.slice';
+import { colors } from '../../Theme/colors';
 import {
   EPostStack,
   PostStackParams,
 } from '../../Types/NavigationTypes';
 import { Activity } from '../../Types/Post';
 import { vh, vw } from '../../Utils/units';
-import { colors } from '../../Theme/colors';
+import { selectAppLoader } from '../../Stores/slices/common.slice';
 
 type Props = StackScreenProps<PostStackParams, 'activityList'>;
 
 const ActivityList = ({ navigation }: Props) => {
   const [loading, getActivities] = useLoaderDispatch(asyncGetAllActivities);
-  let activities = useAppSelector(selectActivities);
+
+  const activities = useAppSelector(selectActivities);
+  const appLoading = useAppSelector(selectAppLoader)
+
+  const loadData = (isFresh = false, ignoreLoading = false) => {
+    if (!loading || ignoreLoading) getActivities({ isFresh })
+  }
 
   useEffect(() => {
-    getActivities()
+    loadData(true, true)
   }, [getActivities]);
 
   const renderItem = ({
@@ -40,11 +49,12 @@ const ActivityList = ({ navigation }: Props) => {
     return (
       <TouchableOpacity
         style={styles.card}
-        onPress={() =>
+        onPress={() => {
           navigation.navigate(EPostStack.createPost, {
             activityId: item._id,
             postId: ''
           })
+        }
         }>
         <View style={styles.iconContainer}>
           <ImageBox image={{ uri: item.image }} _imageStyle={styles.featureIcons} />
@@ -62,7 +72,7 @@ const ActivityList = ({ navigation }: Props) => {
     );
   };
 
-  if (loading) {
+  if (loading && !activities.length) {
     return <DataLoader />
   }
 
@@ -76,12 +86,17 @@ const ActivityList = ({ navigation }: Props) => {
           title="Select Activity"
         />
       }>
-      <FlatList
-        data={activities}
-        renderItem={renderItem}
-        keyExtractor={item => item._id.toString()}
-        numColumns={2}
-      />
+
+      {activities.length ?
+        <LoadMoreFlatList
+          uuidKey='_id'
+          numColumns={2}
+          data={activities}
+          renderItem={renderItem}
+          loadMore={loadData}
+          loading={!appLoading && loading}
+        />
+        : <NotFound text={`No activities available\nPlease add a new activity`} />}
     </Layout>
   );
 };

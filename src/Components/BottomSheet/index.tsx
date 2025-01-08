@@ -1,18 +1,23 @@
 import {
+  BottomSheetFooterProps,
   BottomSheetModal,
   BottomSheetModalProps,
-  BottomSheetModalProvider,
-  BottomSheetView,
+  BottomSheetView
 } from '@gorhom/bottom-sheet';
-import React, { Ref, forwardRef } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { FC, Ref, forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { BackHandler, StyleSheet } from 'react-native';
 import { colors } from '../../Theme/colors';
+import { BottomSheetMethods, BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { SpringConfig } from 'react-native-reanimated/lib/typescript/reanimated2/animation/springUtils';
+import { WithTimingConfig } from 'react-native-reanimated';
 
 interface AppBottomSheetProps extends Partial<BottomSheetModalProps> {
   children: React.ReactNode;
+  footerComponent?: FC<BottomSheetFooterProps>;
   snapPoints?: string[];
   _sheetStyle?: object;
   _handleStyle?: object;
+  isSheetOpen: boolean;
 }
 
 export const AppBottomSheet = forwardRef(
@@ -22,29 +27,61 @@ export const AppBottomSheet = forwardRef(
       _sheetStyle,
       _handleStyle,
       children,
+      footerComponent,
+      isSheetOpen,
       ...rest
     }: AppBottomSheetProps,
-    ref: Ref<BottomSheetModal>
+    ref
   ) => {
+
+    const bottomSheetRef = useRef<BottomSheetModal>(null)
+
+    useImperativeHandle(ref, () => {
+      const methods = bottomSheetRef.current as BottomSheetModalMethods;
+      return {
+        present: () => methods?.present(),
+        dismiss: () => methods?.dismiss(),
+      };
+    });
+
+    useEffect(() => {
+      const handleBackPress = () => {
+        if (isSheetOpen) {
+          bottomSheetRef.current?.dismiss()
+          return true;
+        }
+        return false;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      return () => backHandler.remove();
+    }, [isSheetOpen]);
+
     return (
-      <BottomSheetModalProvider>
-        <BottomSheetModal
-          ref={ref}
-          backgroundStyle={{
-            borderRadius: 40,
-          }}
-          enablePanDownToClose
-          handleStyle={[styles.handleStyle, _handleStyle]}
-          handleIndicatorStyle={{ backgroundColor: 'white' }}
-          index={0}
-          snapPoints={snapPoints}
-          style={styles.bottomSheet}
-          {...rest}>
-          <BottomSheetView style={[styles.bottomSheetView, _sheetStyle]}>
-            {children}
-          </BottomSheetView>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
+      <BottomSheetModal
+        ref={bottomSheetRef}
+        enableDismissOnClose
+        enablePanDownToClose
+        // index={0}
+        // keyboardBehavior={keyboardBehavior}
+        // keyboardBehavior="extend"
+        // android_keyboardInputMode='adjustResize'
+        keyboardBlurBehavior="restore"
+        handleStyle={[styles.handleStyle, _handleStyle]}
+        handleIndicatorStyle={{ backgroundColor: colors.theme.white }}
+        snapPoints={snapPoints}
+        footerComponent={footerComponent}
+        style={styles.bottomSheet}
+        backgroundStyle={{
+          borderRadius: 40,
+        }}
+        {...rest}
+      >
+        <BottomSheetView style={[styles.bottomSheetView, _sheetStyle]}>
+          {children}
+        </BottomSheetView>
+      </BottomSheetModal>
     );
   }
 );

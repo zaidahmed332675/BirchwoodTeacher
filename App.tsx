@@ -6,6 +6,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 import AppRouting from './src/Navigation';
 import { store } from './src/Stores';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 function App(): JSX.Element {
 
@@ -16,19 +17,21 @@ function App(): JSX.Element {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <FlashMessage
-            position={
-              Platform.OS === 'ios'
-                ? 'top'
-                : { top: StatusBar.currentHeight, left: 0, right: 0 }
-            }
-            duration={2000}
-            icon="auto"
-            animated={true}
-          />
-          <AppRouting />
-        </SafeAreaView>
+        <BottomSheetModalProvider>
+          <SafeAreaView style={{ flex: 1 }}>
+            <FlashMessage
+              position={
+                Platform.OS === 'ios'
+                  ? 'top'
+                  : { top: StatusBar.currentHeight, left: 0, right: 0 }
+              }
+              duration={2000}
+              icon="auto"
+              animated={true}
+            />
+            <AppRouting />
+          </SafeAreaView>
+        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </Provider>
   );

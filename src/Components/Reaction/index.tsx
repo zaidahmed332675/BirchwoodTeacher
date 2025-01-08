@@ -7,15 +7,15 @@ import { VIcon } from '../VIcon';
 interface ReactionProps {
   handleLike: () => void;
   handleLove: () => void;
-  toggleComments?: () => void;
+  handleSheetPresent?: () => void;
   post: Post
 }
 
-export const Reaction = ({ post, handleLike, handleLove, toggleComments }: ReactionProps) => {
+export const Reaction = ({ post, handleLike, handleLove, handleSheetPresent }: ReactionProps) => {
   return (
     <View style={styles.reaction}>
       <View style={styles.reactionActions}>
-        <TouchableOpacity style={[styles.action]} onPress={handleLike}>
+        <TouchableOpacity style={[styles.action, post.likes.length ? styles.actionSelected : {}]} onPress={handleLike}>
           <VIcon
             type="FontAwesome"
             name={post.likes.length ? "thumbs-up" : "thumbs-o-up"}
@@ -24,7 +24,7 @@ export const Reaction = ({ post, handleLike, handleLove, toggleComments }: React
             style={styles.moreAction}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action} onPress={handleLove}>
+        <TouchableOpacity style={[styles.action, post.loves.length ? styles.actionSelected : {}]} onPress={handleLove}>
           <VIcon
             type="FontAwesome"
             name={post.loves.length ? "heart" : "heart-o"}
@@ -33,7 +33,7 @@ export const Reaction = ({ post, handleLike, handleLove, toggleComments }: React
             style={styles.moreAction}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action} onPress={toggleComments}>
+        <TouchableOpacity style={styles.action} onPress={handleSheetPresent}>
           <VIcon
             type="Ionicons"
             name="chatbubble-ellipses-outline"
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   action: {
-    backgroundColor: colors.theme.primary,
+    backgroundColor: colors.theme.greyAlt,
     width: 40,
     height: 40,
     borderRadius: 50,

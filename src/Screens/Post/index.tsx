@@ -1,7 +1,7 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  FlatList,
   StyleSheet,
   View
 } from 'react-native';
@@ -9,7 +9,7 @@ import { ActivityPost } from '../../Components/ActivityPost';
 import { CustomHeader } from '../../Components/CustomHeader';
 import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
-import { LoadIndicator } from '../../Components/LoadIndicator';
+import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
 import { NotFound } from '../../Components/NotFound';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
@@ -17,30 +17,31 @@ import { asyncGetAllChildPosts, asyncGetAllClassPosts, asyncGetAllPosts } from '
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectPosts } from '../../Stores/slices/post.slice';
+import { colors } from '../../Theme/colors';
 import {
   EPostStack,
   PostStackParams,
 } from '../../Types/NavigationTypes';
-import { colors } from '../../Theme/colors';
+import { selectAppLoader } from '../../Stores/slices/common.slice';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 
+/** Tab Index
+ * 0- All
+ * 1- Class
+ * 2- Child
+ * **/
+
 const Post = ({ navigation }: Props) => {
-  // const searchModalRef = useRef();
-
-  /** Tab Index
-   * 0- All
-   * 1- Class
-   * 2- Child
-   * **/
-
   const [tabIndex, setTabIndex] = useState<number>(1);
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [childId, setChildId] = useState<string>("");
 
-  const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts);
-  const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts, false);
+  const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts, false);
+  const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
   const [childloading, getAllChildPosts] = useLoaderDispatch(asyncGetAllChildPosts, false);
+
+  const appLoading = useAppSelector(selectAppLoader)
 
   let posts = useAppSelector(selectPosts);
   let children = useAppSelector(selectChildren);
@@ -51,34 +52,20 @@ const Post = ({ navigation }: Props) => {
     else setChildId('')
   };
 
-  const loadData = useCallback(() => {
-    if (tabIndex === 0 || tabIndex === 1) getAllPosts()
-    // if (tabIndex === 1) getAllClassPosts()
-    if (tabIndex === 2 && childId) getAllChildPosts({ childId })
-  }, [tabIndex, childId])
+  const loadData = (isFresh = false, ignoreLoading = false) => {
+    if (tabIndex === 0 && (ignoreLoading || !loading)) getAllPosts({ isFresh })
+    if (tabIndex === 1 && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
+    if (tabIndex === 2 && childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
+  }
 
   useEffect(() => {
     if (!isSearchModalOpen && !childId && tabIndex === 2) {
       return setTabIndex(1)
     }
-
-    loadData()
+    loadData(true, true)
   }, [tabIndex, childId, isSearchModalOpen]);
 
-  const filterPosts = () => {
-    switch (tabIndex) {
-      case 1:
-        return posts.filter(post => post.type === 'CLASS');
-      case 2:
-        return posts.filter(post => post.type === 'CHILD' && post.children?.includes(childId));
-      default:
-        return posts;
-    }
-  };
-
-  const filteredPosts = filterPosts();
-
-  if (!filteredPosts.length && (loading || childloading)) {
+  if ((loading || classloading || childloading) && !posts.length) {
     return <DataLoader />;
   }
 
@@ -105,7 +92,6 @@ const Post = ({ navigation }: Props) => {
       </View>
 
       <SearchModal
-        label=""
         value={childId ? childId : []}
         onChange={setChildId}
         required={true}
@@ -125,16 +111,15 @@ const Post = ({ navigation }: Props) => {
         }}
       />
 
-      {filteredPosts.length ? <FlatList
-        data={filteredPosts}
-        renderItem={({ item }) => <ActivityPost item={item} />}
-        keyExtractor={item => item._id.toString()}
-        onEndReached={loadData}
-        initialNumToRender={10}
-        maxToRenderPerBatch={10}
-        windowSize={5}
-        ListFooterComponent={() => filteredPosts.length && (loading || childloading) ? <LoadIndicator /> : null}
-      /> : <NotFound text={`No posts available\nPlease add a new post`} />}
+      {posts.length ?
+        <LoadMoreFlatList
+          uuidKey='_id'
+          data={posts}
+          renderItem={({ item }) => <ActivityPost item={item} />}
+          loadMore={loadData}
+          loading={!appLoading && (loading || classloading || childloading)}
+        />
+        : <NotFound text={`No posts available\nPlease add a new post`} />}
     </Layout>
   );
 };

@@ -9,18 +9,32 @@ import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncGetAllActivities = createAsyncThunk(
   'getAllActivities',
-  async (_, { dispatch }) => {
-    dispatch(setLoading(true));
+  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
+
+    let { page, totalPages } = { ...(getState() as RootState).post?.activitiesPagination }
+    page = isFresh ? 0 : page
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetActivities>({
-      path: allApiPaths.getPath('getActivities'),
+      path: (allApiPaths.getPath('getActivities') +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setActivities(res.data!)
+        setActivities({ ...res.data!, isFresh })
       );
     }
 
@@ -31,10 +45,11 @@ export const asyncGetAllActivities = createAsyncThunk(
 
 export const asyncGetAllPosts = createAsyncThunk(
   'getAllPosts',
-  async (_, { getState, dispatch }) => {
-    const { page, totalPages } = (getState() as RootState).post?.pagination ?? {}
+  async ({ isFresh }: { isFresh: boolean }, { getState, dispatch }) => {
+    let { page, totalPages } = { ...(getState() as RootState).post?.pagination }
+    page = isFresh ? 0 : page
 
-    if (page >= totalPages) {
+    if (page >= totalPages && totalPages) {
       return {
         status: true,
         message: 'You\'ve reached the end of the list'
@@ -54,7 +69,7 @@ export const asyncGetAllPosts = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setPosts(res.data!)
+        setPosts({ ...res.data!, isFresh })
       );
     }
 
@@ -65,22 +80,34 @@ export const asyncGetAllPosts = createAsyncThunk(
 
 export const asyncGetAllClassPosts = createAsyncThunk(
   'getAllClassPosts',
-  async (_, { dispatch, getState }) => {
-    dispatch(setLoading(true));
+  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
 
-    const classRoomId: string = (getState() as RootState).user.user?.classroom?._id
+    const classRoomId = (getState() as RootState).user.user?.classroom?._id
+
+    let { page, totalPages } = { ...(getState() as RootState).post?.pagination }
+    page = isFresh ? 0 : page
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetAllClassPosts>({
-      path: allApiPaths.getPath('getAllClassPosts', {
-        classRoomId
-      }),
+      path: (allApiPaths.getPath('getAllClassPosts', { classRoomId }) +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setPosts(res.data!)
+        setPosts({ ...res.data!, isFresh })
       );
     }
 
@@ -91,20 +118,32 @@ export const asyncGetAllClassPosts = createAsyncThunk(
 
 export const asyncGetAllChildPosts = createAsyncThunk(
   'getAllChildPosts',
-  async ({ childId }: { childId: string }, { dispatch }) => {
-    dispatch(setLoading(true));
+  async ({ childId, isFresh }: { childId: string, isFresh: boolean }, { dispatch, getState }) => {
+
+    let { page, totalPages } = { ...(getState() as RootState).post?.pagination }
+    page = isFresh ? 0 : page
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    if (!page) {
+      dispatch(setLoading(true));
+    }
 
     const res = await callApi<GetAllClassPosts>({
-      path: allApiPaths.getPath('getAllChildPosts', {
-        childId
-      }),
+      path: (allApiPaths.getPath('getAllChildPosts', { childId }) +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setPosts(res.data!)
+        setPosts({ ...res.data!, isFresh })
       );
     }
 
@@ -118,7 +157,7 @@ export const asyncCreatePost = createAsyncThunk(
   async (data: FormData, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{ newPost: Post }, FormData>({
+    const res = await callApi<{ newSavedPost: Post }, FormData>({
       method: "POST",
       path: allApiPaths.getPath('createPost'),
       isFormData: true,
@@ -128,7 +167,7 @@ export const asyncCreatePost = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setPost(res.data?.newPost!))
+      dispatch(setPost(res.data?.newSavedPost!))
       dispatch(asyncShowSuccess(res.message))
     }
 
@@ -223,21 +262,36 @@ export const asyncLovePost = createAsyncThunk(
 
 export const asyncGetCommentsByPostId = createAsyncThunk(
   'getCommentsByPostId',
-  async ({ postId }: { postId: string }, { dispatch }) => {
+  async ({ postId, isFresh }: { postId: string, isFresh: boolean }, { dispatch, getState }) => {
+
+    let { page, totalPages } = { ...(getState() as RootState).post?.commentsPagination }
+    page = isFresh ? 0 : page
+
+    if (page >= totalPages && totalPages) {
+      return {
+        status: true,
+        message: 'You\'ve reached the end of the list'
+      }
+    }
+
+    // if (!page) {
+    //   dispatch(setLoading(true));
+    // }
+
     const res = await callApi<GetAllPostComments>({
-      path: allApiPaths.getPath('getAllPostComments', {
-        postId
-      }),
+      path: (allApiPaths.getPath('getAllPostComments', { postId }) +
+        `?limit=${10}&page=${(page ?? 0) + 1}`) as ApiPaths,
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
       dispatch(
-        setComments({ postId, ...res.data! })
+        setComments({ ...res.data!, isFresh })
       );
     }
 
+    // dispatch(setLoading(false));
     return res;
   }
 );
@@ -247,22 +301,18 @@ export const asyncCreatePostComment = createAsyncThunk(
   async (data: { postId: string, comment: { content: string } }, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{ newComment: Comment }, { content: string }>({
+    const res = await callApi<{ newComment: Comment }, { content: string, authorType: string }>({
       method: "POST",
       path: allApiPaths.getPath('createPostComment', {
         postId: data.postId
       }),
-      body: { ...data.comment }
+      body: { ...data.comment, authorType: 'teacher' }
     });
 
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setComment({
-        postId: data.postId,
-        comment: res.data?.newComment!
-      }))
-      dispatch(asyncShowSuccess(res.message));
+      dispatch(setComment(res.data?.newComment!))
     }
 
     dispatch(setLoading(false));

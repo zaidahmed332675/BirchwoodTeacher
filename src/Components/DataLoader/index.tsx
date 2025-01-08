@@ -6,7 +6,7 @@ import { CustomHeader } from '../CustomHeader';
 import { GrayMediumText } from '../GrayMediumText';
 import { Layout } from '../Layout';
 
-export const DataLoader = ({ text = 'Loading Data' }) => {
+export const DataLoader = ({ text = 'Loading Data...' }) => {
   return (
     <Layout customHeader={<CustomHeader title="Loading..." />}>
       <View style={styles.noItem}>

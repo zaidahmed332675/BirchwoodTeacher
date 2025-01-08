@@ -42,7 +42,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
         setValue
     } = useForm<any>({
         defaultValues: {
-            content: 'Post 001',
+            content: '',
         },
     });
 

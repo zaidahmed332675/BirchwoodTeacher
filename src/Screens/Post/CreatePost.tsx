@@ -1,4 +1,4 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetFooter, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CheckBox } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
@@ -20,6 +20,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { isImage, isVideo } from '../../Utils/options';
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 type Props = StackScreenProps<PostStackParams, 'createPost'>;
 
@@ -30,7 +31,7 @@ interface textEditorRefProps {
 }
 
 const CreatePost = ({ navigation, route }: Props) => {
-  const sheetRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheetModalMethods>(null);
   const textEditorRef = useRef<textEditorRefProps | null>(null);
   let { activityId, postId } = route?.params
 
@@ -151,7 +152,8 @@ const CreatePost = ({ navigation, route }: Props) => {
       <RichTextEditor ref={textEditorRef} selectionLimit={0} />
       <AppBottomSheet
         ref={sheetRef}
-        snapPoints={['50%', '75%']}
+        isSheetOpen={isSheetOpen}
+        snapPoints={['40%']}
         enableDismissOnClose
         onDismiss={() => {
           setSheetOpen(false);
@@ -161,7 +163,26 @@ const CreatePost = ({ navigation, route }: Props) => {
         }}
         _sheetStyle={{
           backgroundColor: colors.theme.primary,
-        }}>
+        }}
+        footerComponent={({ animatedFooterPosition }) => <BottomSheetFooter animatedFooterPosition={animatedFooterPosition}>
+          <AppButton
+            title='Done'
+            onPress={() => {
+              sheetRef.current?.dismiss();
+              setSheetOpen(false);
+            }}
+            btnStyle={{
+              width: '85%',
+              height: 50,
+              marginTop: 0,
+              backgroundColor: colors.theme.secondary,
+              borderWidth: 0,
+              marginVertical: 10,
+            }}
+          />
+        </BottomSheetFooter>
+        }
+      >
         <CreatePostModalContent
           audience={audience}
           setAudience={setAudience}
@@ -170,15 +191,8 @@ const CreatePost = ({ navigation, route }: Props) => {
         />
       </AppBottomSheet>
       <AppButton
-        title={isSheetOpen ? 'Done' : 'Post Now'}
-        onPress={() => {
-          if (isSheetOpen) {
-            sheetRef.current?.dismiss();
-            setSheetOpen(false);
-          } else {
-            handleSend();
-          }
-        }}
+        title={isEdit ? 'Update Post' : 'Post Now'}
+        onPress={handleSend}
         btnStyle={{
           width: '95%',
           height: 50,
@@ -205,17 +219,8 @@ const CreatePostModalContent = ({
   students,
   setStudents,
 }: CreatePostModalContentProps) => {
-  const searchModalRef = useRef();
-
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   let children = useAppSelector(selectChildren);
-
-  useEffect(() => {
-    let item = searchModalRef.current?.selectedItem;
-    if (item) {
-      setStudents(item);
-    }
-  }, [isSearchModalOpen, setStudents]);
 
   return (
     <View style={styles.contentContainer}>
@@ -269,7 +274,11 @@ const CreatePostModalContent = ({
       </View>
       {audience === 1 && (
         <SearchModal
+          placeholder="Please select"
+          value={students?.length ? students : []}
+          onChange={setStudents}
           isMultiple={true}
+          required={true}
           open={isSearchModalOpen}
           setOpen={setSearchModalOpen}
           children={children.map(child => {
@@ -281,8 +290,11 @@ const CreatePostModalContent = ({
               ...childData,
             })
           })}
-          selectedItems={students}
-          ref={searchModalRef}
+          // _style={{
+          //   borderColor: colors.input.background,
+          //   backgroundColor: colors.input.background,
+          //   borderRadius: 10,
+          // }}
           multipleText={`${students?.length} ${students?.length > 1 ? 'children' : 'child'
             } have been selected`}
         />

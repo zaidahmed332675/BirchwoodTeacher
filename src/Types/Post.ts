@@ -1,5 +1,6 @@
 import { ClassRoom } from "./Class";
 import { PaginationProps } from "./Common";
+import { User } from "./User";
 
 export interface Activity {
   _id: string;
@@ -31,7 +32,7 @@ export interface Comment {
   _id: string;
   content: string;
   post: string;
-  author: string;
+  author: User;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,9 +52,9 @@ export interface CreatePostPayload {
 }
 
 export interface GetAllClassPosts extends PaginationProps {
-  docs: Post[]
+  docs: Post[];
 }
 
 export interface GetAllPostComments extends PaginationProps {
-  docs: Comment[]
+  docs: Comment[];
 }

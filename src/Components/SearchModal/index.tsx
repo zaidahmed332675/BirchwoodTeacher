@@ -136,7 +136,7 @@ export const SearchModal = forwardRef(
                   alignItems: 'center',
                 }}>
                 <View>
-                  <Image
+                  {/* <Image
                     source={props.item.checkIn ? pDot : aDot}
                     style={{
                       height: 10,
@@ -148,7 +148,7 @@ export const SearchModal = forwardRef(
                       left: 3,
                       zIndex: 1,
                     }}
-                  />
+                  /> */}
                   <Image
                     source={dp1}
                     style={{

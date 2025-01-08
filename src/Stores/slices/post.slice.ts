@@ -5,40 +5,55 @@ import {
 } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { PaginationProps } from '../../Types/Common';
-import { Activity, Comment, GetActivities, GetAllClassPosts, Post } from '../../Types/Post';
+import { Activity, Comment, GetActivities, GetAllClassPosts, GetAllPostComments, Post } from '../../Types/Post';
 
 interface PostSliceState {
   activities: Record<string, Activity>;
+  activitiesPagination: PaginationProps;
+
   posts: Record<string, Post>;
-  postsComments: Record<string, {
-    comments: Record<string, Comment>,
-    commentsPagination: any
-  }>;
   pagination: PaginationProps,
+
+  comments: Record<string, Comment>;
+  commentsPagination: PaginationProps;
+}
+
+const pagination = {
+  totalDocs: 0,
+  limit: 0,
+  page: 0,
+  totalPages: 0,
+  pagingCounter: 0,
+  hasPrevPage: false,
+  hasNextPage: false,
+  prevPage: null,
+  nextPage: null
 }
 
 const initialState: PostSliceState = {
   activities: {},
+  activitiesPagination: { ...pagination },
+
   posts: {},
-  postsComments: {},
-  pagination: {} as PaginationProps,
+  pagination: { ...pagination },
+
+  comments: {},
+  commentsPagination: { ...pagination }
 };
 
 const PostSlice = createSlice({
   name: 'Post',
   initialState,
   reducers: {
-    setPosts: (state, { payload }: PayloadAction<GetAllClassPosts>) => {
-      const { docs, ...pagination } = payload;
-
+    setPosts: (state, { payload }: PayloadAction<GetAllClassPosts & { isFresh: boolean }>) => {
+      const { docs, isFresh, ...pagination } = payload;
       state.posts = {
-        ...state.posts,
+        ...(isFresh ? {} : state.posts),
         ...docs.reduce((acc, curr) => {
           acc["post_" + curr._id] = curr;
           return acc;
         }, {} as Record<string, Post>)
-      }
-
+      };
       state.pagination = pagination;
     },
     setPost: (state, { payload }: PayloadAction<Partial<Post>>) => {
@@ -50,22 +65,22 @@ const PostSlice = createSlice({
     removePost: (state, { payload }: PayloadAction<{ _id: string }>) => {
       delete state.posts["post_" + payload._id];
     },
-    setComments: (state, { payload }: PayloadAction<{ docs: Comment[] } & { postId: string }>) => {
-      const { docs, postId } = payload;
-      state.postsComments["post_" + postId] = state.postsComments["post_" + postId] || { comments: {}, commentPagination: {} };
-      docs.forEach((comment) => {
-        state.postsComments["post_" + postId].comments[`comment_${comment._id}`] = comment;
-      });
-    },
-    setComment: (state, { payload }: PayloadAction<{ postId: string, comment: Comment }>) => {
-
-      const { postId, comment } = payload;
-      const postKey = "post_" + postId;
-
-      state.postsComments[postKey].comments = {
-        [`comment_${comment._id}`]: comment,
-        ...state.postsComments[postKey].comments,
+    setComments: (state, { payload }: PayloadAction<GetAllPostComments & { isFresh: boolean }>) => {
+      const { docs, isFresh, ...pagination } = payload;
+      state.comments = {
+        ...(isFresh ? {} : state.comments),
+        ...docs.reduce((acc, curr) => {
+          acc["comment_" + curr._id] = curr;
+          return acc;
+        }, {} as Record<string, Comment>)
       };
+      state.commentsPagination = pagination;
+    },
+    setComment: (state, { payload }: PayloadAction<Comment>) => {
+      state.comments = {
+        ["comment_" + payload._id]: { ...state.comments["comment_" + payload._id], ...payload },
+        ...state.comments
+      }
     },
     setLikeDislike: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {
       const postKey = "post_" + payload._id;
@@ -97,13 +112,16 @@ const PostSlice = createSlice({
         }
       }
     },
-    setActivities: (state, { payload }: PayloadAction<GetActivities>) => {
-      const { docs, ...pagination } = payload;
-      state.activities = docs.reduce((acc, curr) => {
-        acc["activity_" + curr._id] = curr;
-        return acc;
-      }, {} as Record<string, Activity>);
-      state.pagination = pagination;
+    setActivities: (state, { payload }: PayloadAction<GetActivities & { isFresh: boolean }>) => {
+      const { docs, isFresh, ...pagination } = payload;
+      state.activities = {
+        ...(isFresh ? {} : state.activities),
+        ...docs.reduce((acc, curr) => {
+          acc["activity_" + curr._id] = curr;
+          return acc;
+        }, {} as Record<string, Activity>)
+      };
+      state.activitiesPagination = pagination;
     },
     setActivity: (state, { payload }: PayloadAction<Partial<Activity>>) => {
       state.activities["activity_" + payload._id] = { ...state.activities["activity_" + payload._id], ...payload };
@@ -111,11 +129,15 @@ const PostSlice = createSlice({
     removeActivity: (state, { payload }: PayloadAction<Partial<Activity>>) => {
       delete state.activities["activity_" + payload._id]
     },
+    resetCommentsAndPaginationState: (state) => {
+      state.comments = {};
+      state.commentsPagination = {} as PaginationProps;
+    },
     resetPostState: _ => initialState,
   },
 });
 
-export const { setPosts, setPost, removePost, setLikeDislike, setLoveUnlove, setComments, setComment, setActivities, setActivity, removeActivity, resetPostState } =
+export const { setPosts, setPost, removePost, setLikeDislike, setLoveUnlove, setComments, setComment, setActivities, setActivity, removeActivity, resetCommentsAndPaginationState, resetPostState } =
   PostSlice.actions;
 
 export default PostSlice.reducer;
@@ -142,8 +164,7 @@ export const selectActivities = createDraftSafeSelector(
 //     children => children["child_" + childId] as Child
 //   );
 
-export const selectPostComments = (postId: string) =>
-  createDraftSafeSelector(
-    [(state: RootState) => state.post.postsComments],
-    postsComments => Object.values(postsComments?.["post_" + postId]?.comments || {})
-  );
+export const selectPostComments = createDraftSafeSelector(
+  [(state: RootState) => state.post],
+  state => Object.values(state.comments || {}) as Comment[]
+);

@@ -1,41 +1,40 @@
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useAnimations } from '@react-native-media-console/reanimated';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { formatDistanceToNow } from 'date-fns';
 import lodash from 'lodash';
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React, { useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import VideoPlayer from 'react-native-media-console';
-import { asyncCreatePostComment, asyncDeletePost, asyncGetCommentsByPostId, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
+import { getImagePath } from '../../Service/axios';
+import { asyncDeletePost, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectPostComments } from '../../Stores/slices/post.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { colors } from '../../Theme/colors';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { Post } from '../../Types/Post';
 import { isImage, isVideo } from '../../Utils/options';
-import { getImagePath } from '../../Service/axios';
-import { colors } from '../../Theme/colors';
-import { AppInput } from '../AppInput';
-import { Comment } from '../Comment';
+import { AppBottomSheet } from '../BottomSheet';
+import { Comments } from '../Comment';
 import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 export const ActivityPost = ({ item: post }: { item: Post }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
 
+  const sheetRef = useRef<BottomSheetModalMethods>(null);
+
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
   const [likeLoading, likePost] = useLoaderDispatch(asyncLikePost, false);
   const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
-  const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId, false);
-  const [createCommentLoading, createPostComment] = useLoaderDispatch(asyncCreatePostComment);
-  const [deletePostLoading, deletePost] = useLoaderDispatch(asyncDeletePost);
+  const [_, deletePost] = useLoaderDispatch(asyncDeletePost);
 
   const profile = useAppSelector(selectUserProfile)
-  const comments = useAppSelector(selectPostComments(post._id))
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
-  const [toggleComments, setToggleComments] = useState(false)
-
 
   const handleLike = () => {
     if (likeLoading) return
@@ -45,28 +44,6 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const handleLove = () => {
     if (loveLoading) return
     lovePost({ postId: post._id })
-  }
-
-  const handleGetComments = () => {
-    setToggleComments((state) => !state)
-    if (toggleComments || commentLoading) return
-    getPostComments({ postId: post._id })
-  }
-
-  const {
-    control,
-    handleSubmit,
-    reset
-  } = useForm<any>({
-    defaultValues: {
-      content: '',
-    },
-  });
-
-  const handleOnCommmentSubmit = async (comment: Record<'content', string>) => {
-    if (!comment.content) return
-    let response = await createPostComment({ postId: post._id, comment })
-    if (response.status) reset()
   }
 
   const handlePostDelete = () => {
@@ -84,6 +61,7 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   }
 
   const media = lodash.shuffle([...post.images, ...post.videos]);
+  const snapPoints = useMemo(() => ["75"], []);
 
   return (
     <View style={styles.container}>
@@ -182,48 +160,37 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
           }}
         />
         <GrayMediumText
-          text={`${comments.length} Comments`}
+          text={`${post.commentsCount ?? 0} Comments`}
           _style={{
             fontWeight: 'normal',
             fontSize: 12
           }}
         />
       </View>
-      <Reaction post={post} handleLike={handleLike} handleLove={handleLove} toggleComments={handleGetComments} />
-      {toggleComments && <View style={styles.comments}>
-        {!commentLoading ? comments.length ? comments.map((comment) => {
-          return <Comment key={comment._id} comment={comment} />
-        }) : <GrayMediumText _style={styles.timeStamp} text={"No Comments Found!"} />
-          : <GrayMediumText _style={styles.timeStamp} text={"Loading Comments!"} />}
-        <Controller
-          name="content"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <AppInput
-                label=''
-                placeholder="Write a comment..."
-                value={value}
-                onChange={onChange}
-                _containerStyle={{ marginVertical: 0, flex: 1 }}
-              />
-              <View>
-                <TouchableOpacity onPress={handleSubmit(handleOnCommmentSubmit)}>
-                  <VIcon
-                    type="MaterialCommunityIcons"
-                    name={"send-circle"}
-                    size={45}
-                    color={colors.theme.primary}
-                    style={{
-                      marginLeft: 5
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-      </View>}
+      <Reaction post={post} handleLike={handleLike} handleLove={handleLove} handleSheetPresent={() => sheetRef.current?.present()} />
+      <AppBottomSheet
+        ref={sheetRef}
+        isSheetOpen={isSheetOpen}
+        enableDynamicSizing={false}
+        onChange={(index) => {
+          setIsSheetOpen(index >= 0)
+        }}
+        onDismiss={() => {
+          sheetRef.current?.dismiss()
+          setIsSheetOpen(false)
+        }}
+        snapPoints={snapPoints}
+        enableDismissOnClose
+        enablePanDownToClose
+        _handleStyle={{
+          backgroundColor: colors.theme.greyAlt,
+        }}
+        _sheetStyle={{
+          backgroundColor: colors.theme.white,
+        }}
+      >
+        {isSheetOpen && <Comments isSheetOpen={isSheetOpen} postId={post?._id} />}
+      </AppBottomSheet>
     </View>
   );
 };
