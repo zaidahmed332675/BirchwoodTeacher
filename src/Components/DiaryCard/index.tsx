@@ -22,9 +22,9 @@ export const DateCard = ({ formattedDate: { day, date, month, year } }: { format
 };
 
 export const DiaryCard = ({ item, showChildrenLabel = false }: { item: HomeWork, showChildrenLabel: boolean }) => {
+  const navigation = useNavigation<NavigationProp<DiaryStackParams>>()
 
   const [_, deleteHomeWork] = useLoaderDispatch(asyncDeleteHomeWork);
-  const navigation = useNavigation<NavigationProp<DiaryStackParams>>()
 
   const handleHomeWorkDelete = () => {
     Alert.alert('Warning', 'Are you sure you want to delete this home work record permanently?', [

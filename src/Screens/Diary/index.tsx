@@ -1,6 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View
@@ -19,6 +18,7 @@ import { selectChildren } from '../../Stores/slices/class.slice';
 import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { colors } from '../../Theme/colors';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
+import { selectAppLoader } from '../../Stores/slices/common.slice';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
@@ -27,11 +27,12 @@ const Diary = ({ navigation }: Props) => {
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [childId, setChildId] = useState("");
 
-  const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks, false);
+  const [loading, getAllHomeWorks] = useLoaderDispatch(asyncGetAllHomeWorks);
   const [childloading, getAllChildHomeWorks] = useLoaderDispatch(asyncGetAllChildHomeWorks, false);
 
   let homeworks = useAppSelector(selectHomeWorks);
   let children = useAppSelector(selectChildren);
+  const appLoading = useAppSelector(selectAppLoader)
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
@@ -39,21 +40,16 @@ const Diary = ({ navigation }: Props) => {
     else setChildId('')
   };
 
-  const loadData = (isFresh: boolean = false) => {
-    if (tabIndex === 0 && !loading) getAllHomeWorks({ isFresh })
-    if (tabIndex === 1 && childId && !childloading) getAllChildHomeWorks({ childId, isFresh })
+  const loadData = (isFresh = false, ignoreLoading = false) => {
+    if (tabIndex === 0 && (ignoreLoading || !loading)) getAllHomeWorks({ isFresh })
+    if (tabIndex === 1 && childId && (ignoreLoading || !childloading)) getAllChildHomeWorks({ childId, isFresh })
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      loadData(true)
-    }, [tabIndex, childId])
-  );
 
   useEffect(() => {
     if (!isSearchModalOpen && !childId && tabIndex === 1) {
       return setTabIndex(0)
     }
+    loadData(true, true)
   }, [tabIndex, childId, isSearchModalOpen]);
 
   if ((loading || childloading) && !homeworks.length) {
@@ -75,7 +71,7 @@ const Diary = ({ navigation }: Props) => {
         <CustomSwitch
           selectionMode={tabIndex}
           roundCorner={true}
-          options={['Class', 'Child']}
+          options={['All', 'Child']}
           onSelectSwitch={onSelectSwitch}
           selectionColor={colors.theme.secondary}
         />
@@ -135,7 +131,7 @@ const Diary = ({ navigation }: Props) => {
           data={homeworks}
           renderItem={({ item }) => <View style={styles.diaryRecord}><DiaryCard item={item} showChildrenLabel={tabIndex == 0} /></View>}
           loadMore={loadData}
-          loading={loading || childloading}
+          loading={!appLoading && (loading || childloading)}
         />
         : <NotFound text={`No home work available\nPlease add a new home work`} />}
     </Layout>
