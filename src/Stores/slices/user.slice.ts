@@ -9,8 +9,8 @@ import { RootState } from '../index';
 
 interface UserSliceState {
   user: User;
-  attendance: UserAttendance;
-  holidays: Record<string, Record<string, Holiday>>;
+  attendance: Record<string, UserAttendance>;
+  holidays: Record<string, Holiday>;
   token: string | null;
 }
 
@@ -32,17 +32,22 @@ const UserSlice = createSlice({
     ) => {
       state.user = { ...state.user, ...payload };
     },
-    setUserAttendance: (state, { payload }: PayloadAction<UserAttendance>) => {
-      state.attendance = payload;
+    setUserAttendance: (state, { payload }: PayloadAction<UserAttendance & { month: string, year: string }>) => {
+      const { year, month, attendance, stats } = payload
+      const date = `${year}-${month}`
+      state.attendance[date] = { attendance, stats };
     },
     setHolidays: (state, { payload }: PayloadAction<Holiday[]>) => {
       state.holidays = {}
       payload.forEach(holiday => {
         const date = format(holiday.date, 'yyyy-MM');
         if (!state.holidays?.[date]) {
-          state.holidays[date] = {}
+          state.holidays[date] = {} as Holiday
         }
-        state.holidays[date][holiday._id] = holiday;
+        state.holidays[date] = {
+          ...state.holidays[date],
+          ...holiday
+        };
       });
     },
     resetUserState: _ => initialState,
@@ -64,13 +69,14 @@ export const selectUserProfile = createDraftSafeSelector(
   state => state.user
 );
 
-export const selectUserAttendance = createDraftSafeSelector(
-  [(state: RootState) => state.user],
-  state => state.attendance
-);
+export const selectUserAttendance = (monthWithYear: string) =>
+  createDraftSafeSelector(
+    [(state: RootState) => state.user.attendance],
+    attendance => attendance?.[monthWithYear]
+  );
 
 export const selectHolidaysMonthWise = (monthWithYear: string) =>
   createDraftSafeSelector(
     [(state: RootState) => state.user.holidays],
-    holidays => Object.values(holidays?.[monthWithYear] || {})
+    holidays => Object.values(holidays?.[monthWithYear] || {}) as Holiday[]
   );

@@ -326,7 +326,7 @@ export const asyncUserMonthlyAttendance = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUserAttendance(res.data ?? ({} as UserAttendanceResponse)));
+      dispatch(setUserAttendance({ ...res.data!, month, year }));
     }
 
     dispatch(setLoading(false));

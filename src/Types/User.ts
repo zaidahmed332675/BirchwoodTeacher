@@ -97,13 +97,14 @@ export interface UserExperience {
 
 export interface UserCheckInOutLeave {
   _id: string;
-  teacher: string;
+  teacher: User;
   checkIn: string | null;
   checkOut: string | null;
   leaveReason: string;
   sickDescription: string;
   leaveType: string;
   status: string;
+  createdAt: string;
 }
 
 export interface UserCheckInOutResponse extends Omit<UserCheckInOutLeave, 'teacher'> {
@@ -112,7 +113,7 @@ export interface UserCheckInOutResponse extends Omit<UserCheckInOutLeave, 'teach
 
 export interface UserAttendance {
   [index: string]: any;
-  attendance: Record<string, any>[];
+  attendance: UserCheckInOutLeave[];
   stats: {
     PRESENT: number;
     ABSENT: number;

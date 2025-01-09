@@ -23,6 +23,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { VIcon } from '../../Components/VIcon';
 import { asyncShowError } from '../../Stores/actions/common.action';
 import { attendanceEnum } from '../../Utils/options';
+import { selectChildren } from '../../Stores/slices/class.slice';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -30,6 +31,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const profile = useAppSelector(selectUserProfile)
   const [_, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
+  const childrens = useAppSelector(selectChildren)
 
   useEffect(() => {
     if (profile?.classroom?._id) getChildrenByClassId()
@@ -202,7 +204,7 @@ const HomeScreen = ({ navigation }: Props) => {
             <Image source={icons.dollar} style={styles.topCardIcon} />
           </View>
           <GlroyBold
-            text="35"
+            text={String(childrens.length)}
             _style={{
               fontSize: 20,
               color: colors.text.black,

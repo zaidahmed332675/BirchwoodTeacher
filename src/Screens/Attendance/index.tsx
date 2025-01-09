@@ -1,4 +1,4 @@
-import { format, getMonth, getYear } from 'date-fns';
+import { compareAsc, format, getMonth, getYear, isToday } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { AppCalender } from '../../Components/AppCalender';
@@ -15,78 +15,56 @@ import {
   useLoaderDispatch
 } from '../../Stores/hooks';
 import { selectHolidaysMonthWise, selectUserAttendance } from '../../Stores/slices/user.slice';
-import { attendanceEnum } from '../../Utils/options';
 import { colors } from '../../Theme/colors';
-import { DataLoader } from '../../Components/DataLoader';
+import { attendanceEnum } from '../../Utils/options';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [calenderMonthYear, setCalenderMonthYear] = useState(new Date());
-  const [switchLoader, setSwitchLoader] = useState(false);
+  const [attendanceMonthYear, setAttendanceMonthYear] = useState(new Date());
+  const [holidaysMonthYear, setHolidaysMonthYear] = useState(new Date());
 
   const [attendanceLoader, getUserMonthlyAttendnace] = useLoaderDispatch(asyncUserMonthlyAttendance);
   const [holidayLoader, getAllHolidays] = useLoaderDispatch(asyncGetAllHolidays, false);
 
-  const userAttendance = useAppSelector(selectUserAttendance);
-  const monthWiseHolidays = useAppSelector(selectHolidaysMonthWise(format(calenderMonthYear, 'yyyy-MM')));
+  const monthlyWserAttendance = useAppSelector(selectUserAttendance(format(attendanceMonthYear, 'yyyy-M')));
+  const monthlyUserHolidays = useAppSelector(selectHolidaysMonthWise(format(holidaysMonthYear, 'yyyy-MM')));
 
-  const [isHolidayCalled, setIsHolidayCalled] = useState(false)
-  useEffect(() => {
-    if (tabIndex === 0) getUserMonthlyAttendnace({
-      month: getMonth(calenderMonthYear) + 1,
-      year: getYear(calenderMonthYear),
+  const loadData = (ignoreLoading = false) => {
+    if (tabIndex === 0 && (!attendanceLoader || ignoreLoading)) getUserMonthlyAttendnace({
+      month: getMonth(attendanceMonthYear) + 1,
+      year: getYear(attendanceMonthYear),
     });
+    if (tabIndex === 1 && (!holidayLoader)) getAllHolidays()
+  }
 
-    const loadData = async () => {
-      let res = await getAllHolidays()
-      if (res.status) {
-        setIsHolidayCalled(true)
-      }
-    }
-
-    if (tabIndex === 1 && !isHolidayCalled) {
-      loadData()
-    }
-
-    setSwitchLoader(false)
-  }, [tabIndex, calenderMonthYear, getUserMonthlyAttendnace, getAllHolidays]);
+  useEffect(() => {
+    loadData(true)
+  }, [tabIndex, attendanceMonthYear, holidaysMonthYear, getUserMonthlyAttendnace, getAllHolidays]);
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
-    setSwitchLoader(true)
   };
 
-  const handleMonthChange = (date: Date) => {
-    setCalenderMonthYear(date);
-  };
-
-  const attendanceData = userAttendance?.attendance?.reduce((acc, curr) => {
-    let formatedDate = format(new Date(curr.checkIn), 'yyyy-MM-dd');
+  const attendanceData = monthlyWserAttendance?.attendance?.reduce((acc, curr) => {
+    let formatedDate = curr.createdAt ? format(new Date(curr.createdAt), 'yyyy-MM-dd') : '';
     return {
       ...acc,
       [formatedDate]: {
-        checkInDate: formatedDate,
-        checkIn: curr.teacher.checkIn,
+        entryDate: formatedDate,
         status: curr.status,
       },
     };
-  }, []);
+  }, {} as Record<string, { entryDate: string; status?: string }>);
 
-  const holidaysData = monthWiseHolidays?.reduce((acc, curr) => {
+  const holidaysData = monthlyUserHolidays?.reduce((acc, curr) => {
     let formatedDate = format(new Date(curr.date), 'yyyy-MM-dd');
     return {
       ...acc,
       [formatedDate]: {
-        ...curr,
-        checkInDate: formatedDate,
-        isHoliday: true,
+        entryDate: formatedDate,
       },
     };
-  }, []);
-
-  if (switchLoader) {
-    return <DataLoader />;
-  }
+  }, {} as Record<string, { entryDate: string }>);
 
   return (
     <Layout
@@ -105,14 +83,76 @@ const Attendance = () => {
         {tabIndex === 0 ? (
           <AppCalender
             data={attendanceData}
-            calenderMonthYear={calenderMonthYear}
-            handleMonthChange={handleMonthChange}
+            calenderMonthYear={attendanceMonthYear}
+            handleMonthChange={setAttendanceMonthYear}
+            customDatesStyles={date => {
+              let calenderDate = format(date, 'yyyy-MM-dd');
+              let calenderDateUserEntry = attendanceData?.[calenderDate];
+              const isTodayDate = isToday(date);
+
+              const isDateMatched = !isNaN(compareAsc(calenderDate, calenderDateUserEntry?.entryDate)) || undefined;
+
+              let baseStyle = {};
+              let textStyle = styles.daysLabelStyle;
+
+              if (isDateMatched) {
+                if (calenderDateUserEntry?.status === attendanceEnum.PRESENT) {
+                  baseStyle = styles.presentDaysStyle;
+                  textStyle = styles.textStyle;
+                } else if (calenderDateUserEntry?.status === attendanceEnum.ABSENT) {
+                  baseStyle = styles.absentDaysStyle;
+                  textStyle = styles.textStyle;
+                } else if (calenderDateUserEntry?.status === attendanceEnum.LEAVE) {
+                  baseStyle = styles.leaveDaysStyle;
+                  textStyle = styles.textStyle;
+                }
+              } else if (date.getDay() === 0) {
+                baseStyle = styles.weekEndDaysStyle;
+              }
+
+              // Apply today's style on top of the base style
+              if (isTodayDate) {
+                baseStyle = [baseStyle, styles.todayStyle];
+              }
+
+              return {
+                style: baseStyle,
+                textStyle,
+              };
+            }}
           />
         ) : (
           <AppCalender
             data={holidaysData}
-            calenderMonthYear={calenderMonthYear}
-            handleMonthChange={handleMonthChange}
+            calenderMonthYear={holidaysMonthYear}
+            handleMonthChange={setHolidaysMonthYear}
+            customDatesStyles={date => {
+              const calenderDate = format(date, 'yyyy-MM-dd');
+              const calenderDateUserEntry = holidaysData?.[calenderDate];
+              const isTodayDate = isToday(date);
+
+              const isDateMatched = !isNaN(compareAsc(calenderDate, calenderDateUserEntry?.entryDate)) || undefined;
+
+              let baseStyle = {};
+              let textStyle = styles.daysLabelStyle;
+
+              if (isDateMatched) {
+                baseStyle = styles.presentDaysStyle;
+                textStyle = styles.textStyle;
+              } else if (date.getDay() === 0) {
+                baseStyle = styles.weekEndDaysStyle;
+              }
+
+              // Apply today's style on top of the base style
+              if (isTodayDate) {
+                baseStyle = [baseStyle, styles.todayStyle];
+              }
+
+              return {
+                style: baseStyle,
+                textStyle,
+              };
+            }}
           />
         )}
         {tabIndex === 1 && (
@@ -128,9 +168,9 @@ const Attendance = () => {
       </View>
 
       {tabIndex === 1 ? (
-        monthWiseHolidays.length ? <FlatList
+        monthlyUserHolidays.length ? <FlatList
           contentContainerStyle={{ gap: 10, paddingBottom: 15 }}
-          data={monthWiseHolidays}
+          data={monthlyUserHolidays}
           renderItem={({ item }) => <HolidayCard holiday={item} />}
           keyExtractor={item => item._id}
         /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} _textStyle={{ fontSize: 18 }} text={"Currently, there are no holidays available for this month."} />
@@ -139,17 +179,17 @@ const Attendance = () => {
           <AttendanceCard
             type={attendanceEnum.PRESENT}
             title="Present"
-            count={userAttendance.stats?.PRESENT ?? 0o0}
+            count={monthlyWserAttendance?.stats?.PRESENT ?? 0o0}
           />
           <AttendanceCard
             type={attendanceEnum.ABSENT}
             title="Absent"
-            count={userAttendance.stats?.ABSENT ?? 0o0}
+            count={monthlyWserAttendance?.stats?.ABSENT ?? 0o0}
           />
           <AttendanceCard
             type={attendanceEnum.LEAVE}
             title="Leave"
-            count={userAttendance.stats?.LEAVE ?? 0o0}
+            count={monthlyWserAttendance?.stats?.LEAVE ?? 0o0}
           />
         </View>
       )}
@@ -165,6 +205,32 @@ const styles = StyleSheet.create({
   },
   calender: {
     paddingTop: 20
+  },
+  daysLabelStyle: {
+    fontSize: 13,
+  },
+  textStyle: {
+    color: colors.theme.white,
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  presentDaysStyle: {
+    backgroundColor: colors.theme.darkGreen,
+  },
+  absentDaysStyle: {
+    backgroundColor: colors.theme.darkRed,
+  },
+  leaveDaysStyle: {
+    backgroundColor: colors.theme.secondary,
+  },
+  weekEndDaysStyle: {
+    backgroundColor: colors.theme.lightSecondary,
+  },
+  todayStyle: {
+    borderWidth: 2,
+    borderRadius: 50,
+    borderStyle: 'dashed',
+    borderColor: colors.theme.primary
   }
 });
 
