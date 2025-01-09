@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { StrictMode, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -12,18 +12,18 @@ import { icons } from '../../Assets/icons';
 import { GlroyBold } from '../../Components/GlroyBoldText';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { Header } from '../../Components/Header';
+import { VIcon } from '../../Components/VIcon';
 import { store } from '../../Stores';
 import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
+import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.action';
 import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
-import { vh, vw } from '../../Utils/units';
-import { appShadow, colors } from '../../Theme/colors';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
-import { VIcon } from '../../Components/VIcon';
-import { asyncShowError } from '../../Stores/actions/common.action';
-import { attendanceEnum } from '../../Utils/options';
 import { selectChildren } from '../../Stores/slices/class.slice';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { appShadow, colors } from '../../Theme/colors';
+import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
+import { attendanceEnum } from '../../Utils/options';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -38,6 +38,7 @@ const HomeScreen = ({ navigation }: Props) => {
   }, [profile?.classroom?._id, getChildrenByClassId]);
 
   const isClassBasedLocked = !profile?.classroom?._id
+  const isNotCheckedIn = profile?.todayAttendance?.status !== attendanceEnum.PRESENT;
 
   const data = [
     {
@@ -86,7 +87,7 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: profile.todayAttendance?.status !== attendanceEnum.PRESENT },
+    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: isNotCheckedIn },
     { id: 9, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // {
     //   id: 5,
@@ -121,7 +122,7 @@ const HomeScreen = ({ navigation }: Props) => {
     if (route === EMainStack.logOut) {
       return await store.dispatch(asyncSignOut()).unwrap();
     } else if (route === EMainStack.checkOut) {
-      if (isLocked) return store.dispatch(asyncShowError('Checkout unavailable while on leave'))
+      if (isLocked) return store.dispatch(asyncShowError('Check-out is available only for staff who are marked as checked-in'))
       const date = new Date();
       const checkOutDateTime = date.toISOString();
       return await store.dispatch(asyncCheckOutUser({ checkOut: checkOutDateTime })).unwrap();
@@ -131,7 +132,7 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
-  const renderItem = ({
+  const renderItem = useCallback(({
     item,
   }: {
     item: {
@@ -172,7 +173,7 @@ const HomeScreen = ({ navigation }: Props) => {
         />
       </TouchableOpacity>
     );
-  };
+  }, [isClassBasedLocked, isNotCheckedIn]);
 
   const headerCards = () => {
     return (
