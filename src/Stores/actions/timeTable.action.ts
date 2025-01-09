@@ -20,7 +20,6 @@ export const asyncGetAllClassTimeTable = createAsyncThunk(
       }),
     });
 
-    // console.log(res, 'respons is here')
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {

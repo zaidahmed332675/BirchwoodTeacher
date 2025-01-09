@@ -21,9 +21,9 @@ export default function TimeTable({ navigation }: Props) {
   const [selectedDay, setSelectedDay] = useState('MON');
 
   const [timeTableLoader, getAllClassTimeTable] = useLoaderDispatch(asyncGetAllClassTimeTable);
-  const timeTableByDay = useAppSelector(selectTimeTableByDay(selectedDay));
-
   const [_, deleteTimeTableRecord] = useLoaderDispatch(asyncDeleteTimeTableRecord);
+
+  const timeTableByDay = useAppSelector(selectTimeTableByDay(selectedDay));
 
   useEffect(() => {
     getAllClassTimeTable();
@@ -86,7 +86,7 @@ export default function TimeTable({ navigation }: Props) {
     setSelectedDay(value);
   };
 
-  if (timeTableLoader) {
+  if (timeTableLoader && !timeTableByDay.length) {
     return <DataLoader />
   }
 

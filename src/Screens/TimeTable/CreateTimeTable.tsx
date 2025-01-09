@@ -59,7 +59,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
 
       let body = {} as typeof data
 
-      body.classroom = data.classroom
+
 
       if (data.day !== timeTableRecordById?.day) {
         body.day = data.day;
@@ -83,12 +83,21 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       if (Object.keys(body).length === 0) {
         return dispatch(asyncShowError('No changes have been made!'));
       } else {
+        body.classroom = data.classroom
         let res = isEdit ? await updateTimeTableRecord({ timeTableRecordId: timeTableRecordById._id, prevDay: timeTableRecordById.day, data: body }) : await createTimeTableRecord(data)
         if (res.status) navigation.navigate(ETimeTableStack.timeTable)
       }
     },
     [dispatch, createTimeTableRecord]
   );
+
+  const parseTimeString = (timeString: string) => {
+    const [time, meridian] = timeString.split(' ');
+    const [hours, minutes = 0] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(meridian === 'PM' ? hours + 12 : hours, minutes, 0, 0);
+    return date;
+  };
 
   useEffect(() => {
     if (isEdit) {
@@ -97,8 +106,8 @@ export default function CreateTimeTable({ navigation, route }: Props) {
       setValue('meta', timeTableRecordById.meta);
       setValue('subject', timeTableRecordById.subject);
       setValue('description', timeTableRecordById.description);
-      // setValue('startTime', timeTableRecordById.startTime);
-      // setValue('endTime', timeTableRecordById.endTime);
+      setValue('startTime', parseTimeString(timeTableRecordById.startTime));
+      setValue('endTime', parseTimeString(timeTableRecordById.endTime));
     } else {
       setValue('classroom', profile?.classroom?._id);
     }
