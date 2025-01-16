@@ -14,7 +14,7 @@ import { selectChildById, selectCurrentWeekAttendance } from '../../Stores/slice
 import { colors } from '../../Theme/colors';
 import { ChildCheckInOutResponse } from '../../Types/Class';
 import { ClassStackParams } from '../../Types/NavigationTypes';
-import { vh } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { getCheckInBtnColor, getCheckInBtnLabel } from '../../Utils/options';
 
 type Props = StackScreenProps<ClassStackParams, 'childInfo'>;
@@ -62,7 +62,7 @@ const ChildInfo = ({ route }: Props) => {
     return (
       <View
         key={indx}
-        style={[styles.reportCard, { marginTop: indx !== 0 ? 20 : 5 }]}>
+        style={[styles.reportCard, { marginTop: indx !== 0 ? vh * 2.63 : vh * 0.66 }]}>
         <View style={{ flex: 1 }}>
           <GrayMediumText
             text={items.title}
@@ -73,7 +73,7 @@ const ChildInfo = ({ route }: Props) => {
           <GrayMediumText
             text={items.description}
             _style={{
-              fontSize: 12,
+              fontSize: vh * 1.58, // 12
               color: colors.theme.grey,
               fontWeight: 'normal',
             }}
@@ -83,12 +83,12 @@ const ChildInfo = ({ route }: Props) => {
           title="View Report"
           onPress={() => { }}
           btnStyle={{
-            paddingVertical: 8,
-            paddingHorizontal: 20,
+            paddingVertical: vh * 1.05, // 8
+            paddingHorizontal: vw * 5.56, // 20
             bordeRadius: 100,
           }}
           textStyle={{
-            fontSize: 10,
+            fontSize: vh * 1.32, // 10
           }}
         />
       </View>
@@ -103,27 +103,23 @@ const ChildInfo = ({ route }: Props) => {
             <ImageBox image={{ uri: child.image }} _imageStyle={styles.profilePhoto} />
             <GlroyBold
               text={`${child.firstName} ${child.lastName}`}
-              _style={{ marginVertical: 8, color: colors.theme.black }}
+              _style={styles.childName}
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <GrayMediumText text={child.classroom.classroomName} />
               <GrayMediumText
                 text={'|'}
                 _style={{
-                  fontSize: 16,
-                  marginHorizontal: 5,
+                  fontSize: vh * 2.11, // 16
+                  marginHorizontal: vw * 1.39, // 5
                 }}
               />
               <GrayMediumText text={`Roll No: ${child.rollNumber}`} />
             </View>
           </View>
-
-          <View style={{ alignItems: 'center', marginTop: 8 }}>
-            <AppButton title={getCheckInBtnLabel(child?.todayAttendance?.status)} onPress={handleCheckIn} btnStyle={{ backgroundColor: getCheckInBtnColor(child?.todayAttendance?.status) }} />
-          </View>
-
+          <AppButton title={getCheckInBtnLabel(child?.todayAttendance?.status)} onPress={handleCheckIn} btnStyle={{ backgroundColor: getCheckInBtnColor(child?.todayAttendance?.status), marginTop: vh * 1.05 }} />
           <View
-            style={{ alignItems: 'center', marginTop: 30, marginBottom: 10 }}>
+            style={styles.sectionTitleBox}>
             <GrayMediumText
               text="Current Weekly Attendance"
               _style={{
@@ -131,19 +127,14 @@ const ChildInfo = ({ route }: Props) => {
               }}
             />
           </View>
-
           <View style={styles.attendanceTableContainer}>
             <View style={styles.tableHeading}>
               {['Date', 'Check-in', 'Check-out'].map((item, indx) => {
                 return (
                   <View
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      paddingVertical: 5,
-                    }}
+                    style={styles.tableHeadingBox}
                     key={indx}>
-                    <Text style={{ fontSize: 14, color: colors.theme.black }}>
+                    <Text style={{ fontSize: vh * 1.84, color: colors.theme.black }}>
                       {item}
                     </Text>
                   </View>
@@ -151,7 +142,6 @@ const ChildInfo = ({ route }: Props) => {
               })}
             </View>
             <View style={{ margin: 1 }} />
-
             {Array.from({ length: 5 }).map((_, indx) => {
               const weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
               const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item?.createdAt ?? "")) || {} as ChildCheckInOutResponse
@@ -187,9 +177,8 @@ const ChildInfo = ({ route }: Props) => {
               );
             })}
           </View>
-
           <View
-            style={{ alignItems: 'center', marginTop: 30, marginBottom: 10 }}>
+            style={styles.sectionTitleBox}>
             <GrayMediumText
               text="Reports"
               _style={{
@@ -197,7 +186,6 @@ const ChildInfo = ({ route }: Props) => {
               }}
             />
           </View>
-
           {reports.map((items, indx) => reportsCards(items, indx))}
         </View>
       </ScrollView>
@@ -210,13 +198,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: vh * 2.5,
   },
-  checkInBtn: {
-    backgroundColor: colors.theme.darkGreen,
-    borderColor: 'white'
-  },
   profilePhoto: {
-    width: 100,
-    height: 100,
+    width: vw * 27.78, // 100
+    height: vh * 13.16, // 100
     borderWidth: 2,
     borderColor: colors.theme.primary,
   },
@@ -231,7 +215,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: colors.theme.borderColor,
-    padding: 5,
+    paddingVertical: vh * 0.66, // 5
+    paddingHorizontal: vw * 1.39, // 5
+  },
+  tableHeadingBox: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: vh * 0.66, // 5
   },
   tableItems: {
     flexDirection: 'row',
@@ -242,22 +232,33 @@ export const styles = StyleSheet.create({
     borderBottomColor: colors.theme.borderColor,
   },
   attendanceItem: {
-    padding: 15,
+    paddingVertical: vh * 1.97, // 15
+    paddingHorizontal: vw * 4.17, // 15
     flex: 1,
     textAlign: 'center',
     color: colors.theme.black,
-    fontSize: 13,
+    fontSize: vh * 1.71, // 13
     alignSelf: 'center',
   },
   reportCard: {
     borderWidth: 1,
-    padding: 10,
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
     backgroundColor: colors.theme.greyAlt,
     borderColor: colors.theme.borderColor,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
+  sectionTitleBox: {
+    alignItems: 'center',
+    marginTop: vh * 3.95, // 30
+    marginBottom: vh * 1.32, // 10
+  },
+  childName: {
+    marginVertical: vh * 1.05,
+    color: colors.theme.black
+  }
 });
 
 export default ChildInfo;

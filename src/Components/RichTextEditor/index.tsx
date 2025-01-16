@@ -26,6 +26,7 @@ import { GrayMediumText } from '../GrayMediumText';
 import { AppModal } from '../Modal';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
+import { vh } from '../../Utils/units';
 
 export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, selectionLimit?: number }>(({ enableToolbar = true, selectionLimit = 1 }, ref) => {
     // const videoPlayerRef = useRef<typeof VideoPlayer | null>(null);
@@ -145,7 +146,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
                         {
                             media.map((media, index) => {
                                 if (isImage(media.fileName! || media.uri!)) {
-                                    return <View key={`${media.fileName || media.uri}_${index}`} style={{ height: 200 }}>
+                                    return <View key={`${media.fileName || media.uri}_${index}`} style={{ height: vh * 26.32 }}>
                                         <ImageBox image={media} _imageStyle={{ height: '100%', width: '100%', resizeMode: 'cover', borderRadius: 8 }} />
                                         <TouchableOpacity onPress={handleMediaDelete} style={{
                                             position: 'absolute',
@@ -182,7 +183,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
                                             borderRadius: 10
                                         }}
                                         style={{
-                                            height: 200,
+                                            height: vh * 26.32,
                                             width: '100%'
                                         }}
                                     />

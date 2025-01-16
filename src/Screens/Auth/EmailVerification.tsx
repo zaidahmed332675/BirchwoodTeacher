@@ -13,7 +13,7 @@ import { useAppDispatch } from '../../Stores/hooks';
 import { colors } from '../../Theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { EmailVerificationPayload } from '../../Types/User';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'emailVerification'>;
 
@@ -55,7 +55,7 @@ export default function EmailVerification({ navigation }: Props) {
         <View style={styles.heading}>
           <GlroyBold
             text={'Forgot Password ?'}
-            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
+            _style={{ color: colors.theme.primary, fontSize: vh * 2.8 }}
           />
         </View>
         <GrayMediumText
@@ -98,9 +98,7 @@ export default function EmailVerification({ navigation }: Props) {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title={'Submit'}
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.submitBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -116,15 +114,19 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: vh * 2.63, // 20
+    paddingHorizontal: vw * 5.56 // 20
   },
   para: {
     textAlign: 'center',
-    marginTop: 15,
+    marginTop: vh * 1.97, // 15
     lineHeight: 22,
   },
   heading: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

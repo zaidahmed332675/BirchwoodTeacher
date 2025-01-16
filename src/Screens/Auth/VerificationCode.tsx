@@ -13,7 +13,7 @@ import { useAppDispatch } from '../../Stores/hooks';
 import { colors } from '../../Theme/colors';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { OtpVerificationPayload } from '../../Types/User';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'verificaionCode'>;
 
@@ -43,7 +43,7 @@ export default function VerificationCode({ navigation, route }: Props) {
     async (body: OtpVerificationPayload) => {
       const res = await dispatch(asyncOtpVerification(body)).unwrap();
 
-      if (res.status) {
+      if (!res.status) {
         navigation.navigate(EAuthStack.resetPassword, {
           email: body.email,
           code: body.code,
@@ -60,7 +60,7 @@ export default function VerificationCode({ navigation, route }: Props) {
         <View style={styles.heading}>
           <GlroyBold
             text={'Verification Code ?'}
-            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
+            _style={{ color: colors.theme.primary, fontSize: vh * 2.8 }}
           />
         </View>
         <GrayMediumText
@@ -103,9 +103,7 @@ export default function VerificationCode({ navigation, route }: Props) {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title={'Verify'}
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.submitBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -121,15 +119,19 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: vh * 2.63, // 20
+    paddingHorizontal: vw * 5.56 // 20
   },
   para: {
     textAlign: 'center',
-    marginTop: 15,
+    marginTop: vh * 1.97, // 15
     lineHeight: 22,
   },
   heading: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

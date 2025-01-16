@@ -23,6 +23,7 @@ import {
   PostStackParams,
 } from '../../Types/NavigationTypes';
 import { selectAppLoader } from '../../Stores/slices/common.slice';
+import { vh } from '../../Utils/units';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 
@@ -126,7 +127,7 @@ const Post = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20
     flexDirection: 'row',
     justifyContent: 'center',
   },

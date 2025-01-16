@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
   },
   noItemText: {
     color: colors.theme.primary,
-    fontSize: 22,
+    fontSize: vh * 2.89, // 22
   },
 });

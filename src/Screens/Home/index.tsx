@@ -164,12 +164,7 @@ const HomeScreen = ({ navigation }: Props) => {
         </View>
         <GlroyBold
           text={item.title}
-          _style={{
-            fontSize: 14,
-            color: colors.text.black,
-            marginTop: 8,
-            textAlign: 'center',
-          }}
+          _style={styles.cardTitle}
         />
       </TouchableOpacity>
     );
@@ -178,7 +173,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const headerCards = () => {
     return (
       <View style={styles.twoCardsTopContainer}>
-        <View style={[styles.twoCardsTop, { marginRight: 10 }]}>
+        <View style={styles.twoCardsTop}>
           <View
             style={[
               styles.cardInnerView,
@@ -188,15 +183,11 @@ const HomeScreen = ({ navigation }: Props) => {
           </View>
           <GlroyBold
             text="80.39%"
-            _style={{
-              fontSize: 20,
-              color: colors.text.black,
-              marginVertical: 3,
-            }}
+            _style={styles.attendanceCardText}
           />
           <GrayMediumText text="Attendance" />
         </View>
-        <View style={[styles.twoCardsTop, { marginLeft: 10 }]}>
+        <View style={styles.twoCardsTop}>
           <View
             style={[
               styles.cardInnerView,
@@ -206,11 +197,7 @@ const HomeScreen = ({ navigation }: Props) => {
           </View>
           <GlroyBold
             text={String(childrens.length)}
-            _style={{
-              fontSize: 20,
-              color: colors.text.black,
-              marginVertical: 3,
-            }}
+            _style={styles.totalStudentCardText}
           />
           <GrayMediumText text={'Total Students'} />
         </View>
@@ -237,101 +224,74 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  topCardIcon: {
-    height: 35,
-    width: 35,
-    resizeMode: 'contain',
-  },
-  featureIcons: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
   twoCardsTopContainer: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20
+    marginBottom: vh * 1.32, // 10
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  cardInnerView: {
-    margin: 15,
-    height: 70,
-    width: 70,
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 20,
   },
   twoCardsTop: {
     ...appShadow(4),
     borderRadius: 10,
     height: vh * 23,
     width: vw * 38,
-    marginBottom: 12,
     alignItems: 'center',
+    justifyContent: 'center'
   },
-  profile_text: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.theme.white,
-  },
-  profile_container: {
-    marginTop: vh * 8,
-    margin: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  student_year: {
-    backgroundColor: colors.theme.white,
-    paddingHorizontal: 12,
-    padding: 1.5,
-    borderRadius: 12,
-  },
-  student_icon: {
-    marginLeft: 5,
-    height: 25,
-    width: 25,
-    borderRadius: 25,
+  cardInnerView: {
+    height: vh * 9.21, // 70
+    width: vw * 19.44, // 70
+    borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.theme.white,
   },
-  student_icon_img: {
-    height: 15,
-    width: 15,
+  topCardIcon: {
+    width: vw * 9.72, // 35
+    height: vh * 4.61, // 35
+    resizeMode: 'contain',
   },
-  profilePhoto: {
-    width: 60,
-    height: 60,
-    borderWidth: 2,
-    borderColor: colors.theme.white,
+  attendanceCardText: {
+    fontSize: vh * 2.63, // 20
+    color: colors.text.black,
+    marginVertical: vh * 0.39, // 3
+  },
+  totalStudentCardText: {
+    fontSize: vh * 2.63, // 20
+    color: colors.text.black,
+    marginVertical: vh * 0.39, // 3
   },
   card: {
-    margin: 10,
+    marginVertical: vh * 1.32, // 10
+    marginHorizontal: vw * 2.78, // 10
     backgroundColor: colors.card.card1,
     justifyContent: 'center',
     position: 'relative',
     height: vh * 15,
     width: vw * 38,
     borderRadius: 10,
-    padding: 15,
+    paddingVertical: vh * 1.97, // 15
+    paddingHorizontal: vw * 4.17, // 15
+  },
+  cardTitle: {
+    fontSize: vh * 1.84, // 14
+    color: colors.text.black,
+    marginTop: vh * 1.05, // 8
+    textAlign: 'center',
   },
   iconContainer: {
-    height: 34,
-    width: 34,
+    height: vh * 4.47, // 34
+    width: vw * 9.44, // 34
     borderRadius: 12,
     alignSelf: 'center',
+  },
+  featureIcons: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
   },
   flatListContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    borderColor: colors.theme.primary,
-    backgroundColor: colors.theme.primary,
-    borderBottomLeftRadius: 38,
-    borderBottomRightRadius: 38,
   },
 });
 

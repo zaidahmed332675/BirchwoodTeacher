@@ -17,7 +17,7 @@ import * as Progress from 'react-native-progress';
 import { asyncCheckInUser } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
@@ -35,15 +35,15 @@ const FormatedText = ({ onPress }: FormatTextProps) => {
       style={{
         backgroundColor: colors.theme.secondary,
         width: vw * 60,
-        height: vw * 60,
-        borderRadius: vw * 60,
+        height: vh * 28.42,
+        borderRadius: (vw * 60) / 2,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
       }}>
       <GrayMediumText
         _style={{
-          fontSize: vw * 12,
+          fontSize: vh * 5.71,
           textAlign: 'center',
           color: colors.theme.white,
         }}
@@ -52,7 +52,7 @@ const FormatedText = ({ onPress }: FormatTextProps) => {
 
       <GlroyBold
         _style={{
-          fontSize: vw * 5,
+          fontSize: vh * 2.37,
           textAlign: 'center',
           color: colors.theme.white,
         }}
@@ -101,8 +101,6 @@ export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => voi
     const date = new Date();
     const checkInDateTime = date.toISOString();
 
-    // console.log(checkInDateTime)
-
     const res = await dispatch(
       asyncCheckInUser({ checkIn: checkInDateTime })
     ).unwrap();
@@ -115,22 +113,11 @@ export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => voi
     <View style={styles.container}>
       <AppButton
         title="Apply for leave"
-        btnStyle={{
-          paddingHorizontal: 20,
-          paddingVertical: 6,
-          backgroundColor: colors.theme.darkRed,
-          borderColor: colors.theme.darkRed,
-          marginBottom: 20,
-        }}
+        btnStyle={styles.btnLeave}
         onPress={handleLeave}
       />
       <GrayMediumText
-        _style={{
-          color: colors.theme.primary,
-          fontSize: vw * 5,
-          textAlign: 'center',
-          marginBottom: 10,
-        }}
+        _style={styles.title}
         text={
           !seconds
             ? 'Please ensure to check in on time'
@@ -138,30 +125,15 @@ export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => voi
         }
       />
       <GrayMediumText
-        _style={{
-          color: colors.theme.primary,
-          fontSize: vw * 3,
-          textAlign: 'center',
-          fontWeight: 'normal',
-        }}
+        _style={styles.desc}
         text={
           'Reminder: If you have not yet checked in, please do so to avoid being marked absent'
         }
       />
       <View
-        style={{
-          backgroundColor: colors.theme.primary,
-          paddingVertical: 8,
-          width: vw * 70,
-          borderRadius: 50,
-          marginVertical: 20,
-        }}>
+        style={styles.dateLabel}>
         <GrayMediumText
-          _style={{
-            color: colors.theme.white,
-            textAlign: 'center',
-            fontSize: vw * 6,
-          }}
+          _style={styles.dateLabelText}
           text={format(new Date(), 'LLLL dd yyyy')}
         />
       </View>
@@ -178,12 +150,7 @@ export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => voi
       />
       <TouchableOpacity onPress={handleSkip}>
         <GrayMediumText
-          _style={{
-            color: colors.theme.primary,
-            fontSize: vw * 4,
-            textAlign: 'center',
-            marginTop: 50,
-          }}
+          _style={styles.skipText}
           text={`Want to skip this \n check-in and continue?`}
         />
       </TouchableOpacity>
@@ -195,7 +162,43 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
-    // paddingVertical: 30,
+    paddingHorizontal: vw * 2.78, // 10
   },
+  btnLeave: {
+    paddingHorizontal: vw * 5.56, // 20
+    paddingVertical: vh * 0.79, // 6
+    backgroundColor: colors.theme.darkRed,
+    borderColor: colors.theme.darkRed,
+    marginBottom: vh * 2.63, // 20
+  },
+  title: {
+    color: colors.theme.primary,
+    fontSize: vh * 2.37,
+    textAlign: 'center',
+    marginBottom: vh * 1.32, // 10
+  },
+  desc: {
+    color: colors.theme.primary,
+    fontSize: vh * 1.42,
+    textAlign: 'center',
+    fontWeight: 'normal',
+  },
+  dateLabel: {
+    backgroundColor: colors.theme.primary,
+    paddingVertical: vh * 1.05, // 8
+    width: vw * 70,
+    borderRadius: 50,
+    marginVertical: vh * 2.63, // 20
+  },
+  dateLabelText: {
+    color: colors.theme.white,
+    textAlign: 'center',
+    fontSize: vh * 2.84,
+  },
+  skipText: {
+    color: colors.theme.primary,
+    fontSize: vh * 1.89,
+    textAlign: 'center',
+    marginTop: vh * 6.58, // 50
+  }
 });

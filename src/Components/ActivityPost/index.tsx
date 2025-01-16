@@ -21,6 +21,7 @@ import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { vh, vw } from '../../Utils/units';
 
 export const ActivityPost = ({ item: post }: { item: Post }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
@@ -149,21 +150,21 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
           text={`${post.likes.length} Likes`}
           _style={{
             fontWeight: 'normal',
-            fontSize: 12
+            fontSize: vh * 1.58, // 12
           }}
         />
         <GrayMediumText
           text={`${post.loves.length} Loved`}
           _style={{
             fontWeight: 'normal',
-            fontSize: 12
+            fontSize: vh * 1.58, // 12
           }}
         />
         <GrayMediumText
           text={`${post.commentsCount ?? 0} Comments`}
           _style={{
             fontWeight: 'normal',
-            fontSize: 12
+            fontSize: vh * 1.58, // 12
           }}
         />
       </View>
@@ -198,7 +199,7 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
 const styles = StyleSheet.create({
   container: {
     borderColor: colors.theme.greyAlt,
-    paddingTop: 20,
+    paddingTop: vh * 2.63, // 20
     borderBottomWidth: 0.5,
   },
   header: {
@@ -211,25 +212,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+    width: vw * 13.89, // 50,
+    height: vh * 6.58, // 50,
+    borderRadius: (vw * 13.89) / 2,
+    marginRight: vw * 2.78, // 10
     borderWidth: 1,
     borderColor: colors.theme.greyAlt2,
   },
   userName: {
-    fontSize: 16,
+    fontSize: vh * 2.11, // 16
     color: colors.text.dimBlack,
   },
   timeStamp: {
-    fontSize: 12,
+    fontSize: vh * 1.58, // 12
     fontWeight: 'normal',
     color: '#888',
   },
   postText: {
-    fontSize: 14,
-    marginVertical: 10,
+    fontSize: vh * 1.84, // 14
+    marginVertical: vh * 1.32, // 10
     color: colors.text.dimBlack,
   },
   postImage: {
@@ -237,11 +238,5 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
     resizeMode: 'cover'
-  },
-  comments: {
-    paddingVertical: 20,
-    borderTopWidth: 0.5,
-    borderColor: colors.theme.greyAlt,
-    gap: 20,
   },
 });

@@ -20,6 +20,7 @@ import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { colors } from '../../Theme/colors';
 import { UserEducation } from '../../types/User';
 import { format, isValid } from 'date-fns';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<ProfileStackParams, 'editEducation'>;
 
@@ -127,22 +128,13 @@ export default function EditEducation({ navigation }: Props) {
                       justifyContent: 'space-between',
                     }}>
                     <GlroyBold
-                      _style={{
-                        color: colors.theme.primary,
-                        fontSize: 22,
-                      }}
+                      _style={styles.listItemTitle}
                       text={`Institute - 0${index + 1}`}
                     />
                     {fields.length > 1 && (
                       <TouchableOpacity
                         onPress={() => removeEducationField(index)}
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: colors.theme.primary,
-                          borderRadius: 8,
-                          padding: 4,
-                        }}>
+                        style={styles.listItemRemove}>
                         <VIcon
                           type="Ionicons"
                           name="close"
@@ -240,16 +232,12 @@ export default function EditEducation({ navigation }: Props) {
               bordered
               title={'Add Education'}
               onPress={addEducationField}
-              btnStyle={{
-                marginVertical: 10,
-              }}
+              btnStyle={styles.listItemAdd}
             />
 
             <AppButton
               title={user?.education?.length ? 'Update' : 'Submit'}
-              btnStyle={{
-                marginVertical: 10,
-              }}
+              btnStyle={styles.submitBtn}
               onPress={handleSubmit(onSubmit)}
             />
           </ScrollView>
@@ -296,17 +284,11 @@ export const NestedFieldArray = ({ control, nestIndex, fieldName, rules, fieldLa
                   value={value}
                   onChange={onChange}
                   required
-                  _containerStyle={{
-                    flex: 1,
-                    marginVertical: 0,
-                    marginBottom: 10,
-                  }}
+                  _containerStyle={styles.nestInput}
                 />
                 {fields.length > 1 && <TouchableOpacity
                   onPress={() => remove(index)}
-                  style={{
-                    paddingLeft: 10
-                  }}
+                  style={styles.nestDeleteBtn}
                 >
                   <VIcon
                     type="AntDesign"
@@ -322,20 +304,14 @@ export const NestedFieldArray = ({ control, nestIndex, fieldName, rules, fieldLa
           {errors.edu?.[nestIndex]?.[fieldName]?.[index]?.[fieldName]?.message && (
             <GrayMediumText
               text={errors.edu[nestIndex][fieldName][index][fieldName].message}
-              _style={{ color: colors.theme.lightRed, marginBottom: 10 }}
+              _style={styles.nestInputError}
             />
           )}
         </View>
       ))}
       <TouchableOpacity
         onPress={() => append({ school: "" })}
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: colors.theme.primary,
-          borderRadius: 8,
-          paddingVertical: 6,
-        }}>
+        style={styles.nestAppendBtn}>
         <VIcon
           type="FontAwesome"
           name="plus"
@@ -350,17 +326,54 @@ export const NestedFieldArray = ({ control, nestIndex, fieldName, rules, fieldLa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: vh * 2.63, // 20
   },
   groupContainer: {},
   fieldGroup: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20
   },
   labelStyle: {
-    fontSize: 12,
-    marginBottom: 5,
+    fontSize: vh * 1.58, // 12
+    marginBottom: vh * 0.66, // 5
     fontWeight: 'bold',
     color: colors.text.altGrey,
-    marginTop: 10
+    marginTop: vh * 1.32 // 10
   },
+  listItemTitle: {
+    color: colors.theme.primary,
+    fontSize: vh * 2.89, // 22
+  },
+  listItemAdd: {
+    marginVertical: vh * 1.32 // 10
+  },
+  listItemRemove: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.theme.primary,
+    borderRadius: 8,
+    paddingVertical: vh * 0.53, // 4
+    paddingHorizontal: vw * 1.11, // 4,
+  },
+  nestInput: {
+    flex: 1,
+    marginVertical: 0,
+    marginBottom: vh * 1.32 // 10
+  },
+  nestInputError: {
+    color: colors.theme.lightRed,
+    marginBottom: vh * 1.32 // 10
+  },
+  nestAppendBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.theme.primary,
+    borderRadius: 8,
+    paddingVertical: vh * 0.79, // 6
+  },
+  nestDeleteBtn: {
+    paddingLeft: vw * 2.78, // 10
+  },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { vh } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
 
@@ -45,11 +45,11 @@ export const AppInput = ({
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
   return (
-    <View style={[{ marginVertical: 10 }, _containerStyle]}>
+    <View style={[styles.container, _containerStyle]}>
       {label && <Text style={styles.labelStyle}>
         {label} {required && <Text style={{ color: 'red' }}>*</Text>}
       </Text>}
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={styles.inputContainer}>
         <TextInput
           keyboardType={keyboardType}
           multiline={isMultiple}
@@ -58,8 +58,8 @@ export const AppInput = ({
           style={[
             styles.textInputField,
             {
-              fontSize: placeholderSize || 12,
-              height: isMultiple ? vh * 15 : 40,
+              fontSize: placeholderSize || vh * 1.58, // 12
+              height: isMultiple ? vh * 15 : vh * 5.26 // 40
             },
             inputStyle,
           ]}
@@ -87,18 +87,25 @@ export const AppInput = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: vh * 1.32, // 10
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   textInputField: {
+    flex: 1,
     borderWidth: 1.5,
     borderColor: colors.input.background,
     color: colors.text.black,
     backgroundColor: colors.input.background,
     borderRadius: 10,
-    paddingHorizontal: 7,
-    flex: 1,
+    paddingHorizontal: vw * 1.94, // 7
   },
   labelStyle: {
-    fontSize: 12,
-    marginBottom: 5,
+    fontSize: vh * 1.58, // 12
+    marginBottom: vh * 0.66, // 5
     fontWeight: 'bold',
     color: colors.text.altGrey,
   },

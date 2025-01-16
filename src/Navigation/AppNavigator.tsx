@@ -22,6 +22,7 @@ import ProfileNavigator from './ProfileNavigator';
 import TimetableNavigator from './TimetableNavigator';
 import { socket } from '../Utils/socket';
 import { ClassRoom } from '../Types/Class';
+import { vh, vw } from '../Utils/units';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -145,13 +146,13 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.theme.white },
   content: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: vw * 2.78, // 10
+    paddingTop: vh * 1.32, // 10
   },
   card: {
     flex: 1,
     borderRadius: 20,
-    marginBottom: 10,
+    marginBottom: vh * 1.32, // 10
     ...appShadow(4),
   },
 });

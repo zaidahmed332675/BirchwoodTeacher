@@ -22,7 +22,7 @@ import { asyncUserLeave } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { ERootStack, MainStackParams } from '../../Types/NavigationTypes';
 import { leaveTypeEnum } from '../../Utils/options';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 import { LeavePayload } from '../../types/User';
 import { AppDatePicker } from '../AppDatePicker';
@@ -86,7 +86,7 @@ export const LeaveForm = ({ }) => {
         <View style={styles.heading}>
           <GlroyBold
             text={'Applying for a Leave ?'}
-            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
+            _style={{ color: colors.theme.primary, fontSize: vh * 2.8 }}
           />
         </View>
         <View>
@@ -209,9 +209,7 @@ export const LeaveForm = ({ }) => {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title="Apply"
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.submitBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -221,15 +219,19 @@ export const LeaveForm = ({ }) => {
 };
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
-    paddingVertical: 30,
+    flex: 1,
+    paddingHorizontal: vw * 2.78, // 10
+    paddingVertical: vh * 3.95, // 30
   },
   para: {
     textAlign: 'center',
     lineHeight: 22,
   },
   heading: {
-    marginVertical: 15,
+    marginVertical: vh * 1.97, // 15
     alignItems: 'center',
   },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

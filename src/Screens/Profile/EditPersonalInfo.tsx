@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<ProfileStackParams, 'editPersonalInfo'>;
 
@@ -333,9 +334,7 @@ export default function EditPersonalInfo({ navigation }: Props) {
 
             <AppButton
               title={'Update'}
-              btnStyle={{
-                marginVertical: 10,
-              }}
+              btnStyle={styles.submitBtn}
               onPress={handleSubmit(onSubmit)}
             />
           </ScrollView>
@@ -348,19 +347,22 @@ export default function EditPersonalInfo({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: vh * 2.63, // 20
   },
   profileGrid: {
-    marginBottom: 24,
+    marginBottom: vh * 3.16, // 24
   },
   profile: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 13,
+    paddingHorizontal: vw * 3.61, // 13
     width: '100%',
   },
   profilePhoto: {
     borderWidth: 3,
     borderColor: colors.theme.primary,
   },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

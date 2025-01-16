@@ -19,6 +19,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { socket } from '../../Utils/socket';
+import { vh } from '../../Utils/units';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   messageContainer: {
-    marginBottom: 20,
+    marginBottom: vh * 2.63, // 20
   },
 });
 

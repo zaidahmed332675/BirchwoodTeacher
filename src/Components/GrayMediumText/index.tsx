@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 import { colors } from '../../Theme/colors';
+import { vh } from '../../Utils/units';
 
 interface GrayMediumTextProps {
   text: any;
@@ -13,7 +14,7 @@ export const GrayMediumText = ({ text, _style }: GrayMediumTextProps) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 14,
+    fontSize: vh * 1.84, // 14
     fontWeight: 'bold',
     color: colors.text.grey,
   },

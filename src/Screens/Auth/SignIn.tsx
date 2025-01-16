@@ -22,7 +22,7 @@ import { asyncLogin } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
 import { LoginUserPayload } from '../../Types/User';
-import { vh } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 
 type Props = StackScreenProps<AuthStackParams, 'signIn'>;
@@ -67,7 +67,7 @@ const SignIn = ({ navigation }: Props) => {
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center', marginVertical: vh * 5 }}>
+        <View style={styles.mainLogo}>
           <MainLogo />
         </View>
         <View style={styles.formContainer}>
@@ -143,13 +143,11 @@ const SignIn = ({ navigation }: Props) => {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title="Sign In"
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.signInBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
-        <View style={{ alignItems: 'center', marginVertical: 10 }}>
+        <View style={styles.childLogoBox}>
           <Image
             source={chil_logo}
             resizeMode="contain"
@@ -165,24 +163,36 @@ const SignIn = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingVertical: vh * 2.63, // 20
+    paddingHorizontal: vw * 5.56, // 20
     justifyContent: 'center',
+  },
+  mainLogo: {
+    alignItems: 'center',
+    marginVertical: vh * 5
   },
   formContainer: {
     flex: 1,
     justifyContent: 'flex-end',
   },
   forgotPasswordContainer: {
-    marginTop: 10,
+    marginTop: vh * 1.32, // 10
     alignItems: 'flex-end',
   },
   forgotPasswordText: {
     textDecorationLine: 'underline',
     color: colors.theme.primary,
   },
+  childLogoBox: {
+    alignItems: 'center',
+    marginVertical: vh * 1.32, // 10
+  },
   childLogo: {
     height: 180,
     width: 320,
+  },
+  signInBtn: {
+    marginVertical: vh * 1.32, // 10
   },
 });
 

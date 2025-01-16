@@ -21,6 +21,7 @@ import { CreateTimeTableRecordPayload } from '../../Types/TimeTable';
 import { DaysEnum } from '../../Utils/options';
 import { DropDown } from '../../Components/DropDown';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<TimeTableStackParams, 'createTimeTable'>;
 
@@ -297,7 +298,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
             <AppButton
               title={'Submit'}
               btnStyle={{
-                marginVertical: 10,
+                marginVertical: vh * 1.32,
               }}
               onPress={handleSubmit(onSubmit)}
             />
@@ -311,15 +312,15 @@ export default function CreateTimeTable({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: vh * 2.63, // 20
   },
   profileGrid: {
-    marginBottom: 24,
+    marginBottom: vh * 3.16, // 24
   },
   profile: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 13,
+    paddingHorizontal: vw * 3.61, // 13,
     width: '100%',
   },
   profilePhoto: {

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { colors } from '../../Theme/colors';
 import { GrayMediumText } from '../GrayMediumText';
+import { vh } from '../../Utils/units';
 
 export interface NotFoundProps {
   text: string;
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   text: {
-    fontSize: 22,
+    fontSize: vh * 2.89, // 22
     textAlign: 'center',
     color: colors.theme.primary
   },

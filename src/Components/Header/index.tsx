@@ -1,14 +1,13 @@
-import { StyleSheet, Text, View, Image, StatusBar } from 'react-native';
 import React, { useState } from 'react';
-import { vh, vw } from '../../Utils/units';
-import { GlroyBold } from '../../Components/GlroyBoldText';
-import { colors } from '../../Theme/colors';
-import student from '../../Assets/icons/student.png';
-import { appShadow } from '../../Theme/colors';
+import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import student from '../../Assets/icons/student.png';
+import { GlroyBold } from '../../Components/GlroyBoldText';
 import { ImageBox } from '../../Components/UploadImage';
 import { useAppSelector } from '../../Stores/hooks';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { colors } from '../../Theme/colors';
+import { vh, vw } from '../../Utils/units';
 
 export const Header = () => {
   const user = useAppSelector(selectUserProfile);
@@ -34,13 +33,9 @@ export const Header = () => {
         <View>
           <GlroyBold text={`Hi ${profile.name}`} _style={styles.profile_text} />
           <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 3,
-            }}>
+            style={styles.year_icon_box}>
             <View style={styles.student_year}>
-              <Text style={{ fontSize: 12, color: colors.theme.black }}>
+              <Text style={styles.year}>
                 {profile.year}
               </Text>
             </View>
@@ -64,96 +59,56 @@ export const Header = () => {
 };
 
 const styles = StyleSheet.create({
-  topCardIcon: {
-    height: 35,
-    width: 35,
-    resizeMode: 'contain',
-  },
-  featureIcons: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-  twoCardsTopContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  cardInnerView: {
-    margin: 15,
-    height: 70,
-    width: 70,
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  twoCardsTop: {
-    ...appShadow(4),
-    borderRadius: 10,
-    height: vh * 23,
-    width: vw * 38,
-    marginBottom: 12,
-    alignItems: 'center',
-  },
   profile_text: {
-    fontSize: 16,
+    fontSize: vh * 2.11, // 16
     fontWeight: 'bold',
     color: colors.theme.white,
   },
   profile_container: {
     marginTop: vh * 8,
-    margin: 20,
+    marginVertical: vh * 2.63, // 20
+    marginHorizontal: vw * 5.56, // 20
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  year_icon_box: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: vh * 0.39, // 3
+  },
   student_year: {
     backgroundColor: colors.theme.white,
-    paddingHorizontal: 12,
-    padding: 1.5,
+    paddingHorizontal: vw * 3.33, // 12,
+    paddingVertical: vh * 0.4, // 3,
     borderRadius: 12,
+  },
+  year: {
+    fontSize: vh * 1.58, // 12
+    color: colors.theme.black
   },
   student_icon: {
     marginLeft: 5,
-    height: 25,
-    width: 25,
+    height: vh * 3.29, // 25
+    width: vw * 6.94, // 25
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.theme.white,
   },
   student_icon_img: {
-    height: 15,
-    width: 15,
+    height: vh * 1.97, // 15
+    width: vw * 4.17, // 15
   },
   profilePhoto: {
-    width: 60,
-    height: 60,
+    width: vw * 16.67, // 60
+    height: vh * 7.89, // 60
     borderWidth: 2,
     borderColor: colors.theme.white,
   },
-  card: {
-    margin: 10,
-    backgroundColor: colors.card.card1,
-    justifyContent: 'center',
-    height: vh * 15,
-    width: vw * 38,
-    borderRadius: 10,
-    padding: 15,
-  },
-  iconContainer: {
-    height: 34,
-    width: 34,
-    borderRadius: 12,
-    alignSelf: 'center',
-  },
-  flatListContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   header: {
-    paddingHorizontal: 20,
-    paddingBottom: 10,
+    paddingHorizontal: vw * 5.56, // 20
+    paddingBottom: vh * 1.32, // 10
     borderColor: colors.theme.primary,
     backgroundColor: colors.theme.primary,
     borderBottomLeftRadius: 38,

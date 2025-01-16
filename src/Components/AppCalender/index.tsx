@@ -3,6 +3,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native';
 import CalendarPicker, { CustomDatesStylesFunc } from 'react-native-calendar-picker';
 import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
+import { vh, vw } from '../../Utils/units';
 
 interface AppCalenderProps {
   calenderMonthYear: Date;
@@ -18,7 +19,7 @@ const PrevIcon = () => (
     size={22}
     color={colors.theme.primary}
     style={{
-      paddingLeft: 15,
+      paddingLeft: vw * 4.17, // 15,
     }}
   />
 );
@@ -30,7 +31,7 @@ const NextIcon = () => (
     size={22}
     color={colors.theme.primary}
     style={{
-      paddingRight: 15,
+      paddingRight: vw * 4.17, // 15,
     }}
   />
 );
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     overflow: 'hidden',
-    paddingVertical: 6,
+    paddingVertical: vh * 0.79, // 6
     width: '100%',
   },
   // selectedRangeStartStyle: {
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   daysLabelStyle: {
-    fontSize: 13,
+    fontSize: vh * 1.71, // 13
   },
   // textStyle: {
   //   color: colors.theme.white,

@@ -21,6 +21,7 @@ import { colors } from '../../Theme/colors';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { isImage, isVideo } from '../../Utils/options';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<PostStackParams, 'createPost'>;
 
@@ -135,13 +136,7 @@ const CreatePost = ({ navigation, route }: Props) => {
             }
             bordered
             suffix
-            btnStyle={{
-              alignSelf: 'flex-start',
-              marginTop: 5,
-              borderRadius: 6,
-              paddingHorizontal: 10,
-              paddingVertical: 0,
-            }}
+            btnStyle={styles.audienceBtn}
             onPress={() => {
               setSheetOpen(true);
               sheetRef.current?.present();
@@ -171,19 +166,12 @@ const CreatePost = ({ navigation, route }: Props) => {
               sheetRef.current?.dismiss();
               setSheetOpen(false);
             }}
-            btnStyle={{
-              width: '85%',
-              height: 50,
-              marginTop: 0,
-              backgroundColor: colors.theme.secondary,
-              borderWidth: 0,
-              marginVertical: 10,
-            }}
+            btnStyle={styles.postDoneBtn}
           />
         </BottomSheetFooter>
         }
       >
-        <CreatePostModalContent
+        <PostBottomSheetContent
           audience={audience}
           setAudience={setAudience}
           students={students}
@@ -193,44 +181,32 @@ const CreatePost = ({ navigation, route }: Props) => {
       <AppButton
         title={isEdit ? 'Update Post' : 'Post Now'}
         onPress={handleSend}
-        btnStyle={{
-          width: '95%',
-          height: 50,
-          marginTop: 0,
-          backgroundColor: colors.theme.secondary,
-          borderWidth: 0,
-          marginVertical: 10,
-        }}
+        btnStyle={[styles.postDoneBtn, { width: "95%" }]}
       />
     </Layout>
   );
 };
 
-interface CreatePostModalContentProps {
+interface PostBottomSheetContentProps {
   audience: number;
   setAudience: React.Dispatch<React.SetStateAction<number>>;
   students: string[];
   setStudents: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CreatePostModalContent = ({
+const PostBottomSheetContent = ({
   audience,
   setAudience,
   students,
   setStudents,
-}: CreatePostModalContentProps) => {
+}: PostBottomSheetContentProps) => {
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   let children = useAppSelector(selectChildren);
 
   return (
     <View style={styles.contentContainer}>
       <Text
-        style={{
-          marginVertical: 20,
-          color: colors.text.white,
-          fontWeight: 'bold',
-          fontSize: 18,
-        }}>
+        style={styles.contentTitle}>
         Choose Audience
       </Text>
       <View>
@@ -238,16 +214,12 @@ const CreatePostModalContent = ({
           checked={audience === 0}
           title="Class"
           textStyle={{
-            fontSize: 16,
+            fontSize: vh * 2.11, // 16
             color: colors.text.white,
           }}
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
-          containerStyle={{
-            backgroundColor: 'transparent',
-            padding: 0,
-            marginVertical: 8,
-          }}
+          containerStyle={styles.checkBox}
           checkedColor={colors.theme.white}
           onIconPress={() => {
             setAudience(0);
@@ -258,16 +230,12 @@ const CreatePostModalContent = ({
           checked={audience === 1}
           title="Child"
           textStyle={{
-            fontSize: 16,
+            fontSize: vh * 2.11, // 16
             color: colors.text.white,
           }}
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
-          containerStyle={{
-            backgroundColor: 'transparent',
-            marginVertical: 8,
-            padding: 0,
-          }}
+          containerStyle={styles.checkBox}
           checkedColor={colors.theme.white}
           onIconPress={() => setAudience(1)}
         />
@@ -290,11 +258,6 @@ const CreatePostModalContent = ({
               ...childData,
             })
           })}
-          // _style={{
-          //   borderColor: colors.input.background,
-          //   backgroundColor: colors.input.background,
-          //   borderRadius: 10,
-          // }}
           multipleText={`${students?.length} ${students?.length > 1 ? 'children' : 'child'
             } have been selected`}
         />
@@ -305,31 +268,53 @@ const CreatePostModalContent = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 15,
+    paddingVertical: vh * 1.97, // 15
     backgroundColor: colors.theme.white,
     flexDirection: 'row',
     alignItems: 'center',
   },
   profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+    width: vw * 13.89, // 50
+    height: vh * 6.58, // 50
+    borderRadius: (vw * 13.89) / 2,
+    marginRight: vw * 1.32, // 10
     borderWidth: 2,
     borderColor: colors.theme.primary,
   },
   userName: {
-    fontSize: 16,
+    fontSize: vh * 2.11, // 16
     fontWeight: 'bold',
     color: colors.text.dimBlack,
   },
-  timeStamp: {
-    fontSize: 12,
-    color: '#888',
+  audienceBtn: {
+    alignSelf: 'flex-start',
+    marginTop: vh * 0.66, // 5
+    borderRadius: 6,
+    paddingHorizontal: vw * 2.78, // 10
+    paddingVertical: 0,
+  },
+  postDoneBtn: {
+    width: '85%',
+    height: vh * 6.58, // 50
+    marginTop: 0,
+    backgroundColor: colors.theme.secondary,
+    borderWidth: 0,
+    marginVertical: vh * 1.32, // 10
   },
   contentContainer: {
     backgroundColor: 'transparent',
   },
+  contentTitle: {
+    marginVertical: vh * 2.63, // 20
+    color: colors.text.white,
+    fontWeight: 'bold',
+    fontSize: vh * 2.37, // 18
+  },
+  checkBox: {
+    backgroundColor: 'transparent',
+    padding: 0,
+    marginVertical: vh * 1.05, // 8
+  }
 });
 
 export default CreatePost;

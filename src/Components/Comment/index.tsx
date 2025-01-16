@@ -16,6 +16,7 @@ import { LoadIndicator } from '../LoadIndicator';
 import { NotFound } from '../NotFound';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
+import { vh, vw } from '../../Utils/units';
 
 interface commentsProps {
   postId: string;
@@ -128,7 +129,7 @@ export const Comment = ({ comment }: { comment: CommentProps }) => {
         />
         <View style={styles.commentAction}>
           <GrayMediumText _style={{
-            fontSize: 10,
+            fontSize: vh * 1.32, // 10
           }} text={formatCommentTime(comment.createdAt)} />
         </View>
       </View>
@@ -145,7 +146,7 @@ export const Comment = ({ comment }: { comment: CommentProps }) => {
 
 const styles = StyleSheet.create({
   comments: {
-    paddingVertical: 10,
+    paddingVertical: vh * 1.32, // 10
     borderTopWidth: 0.5,
     borderColor: colors.theme.greyAlt,
     gap: 20,
@@ -157,9 +158,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   commentPic: {
-    width: 30,
-    height: 30,
-    borderRadius: 25,
+    width: vw * 8.33, // 30
+    height: vh * 3.95, // 30
+    borderRadius: (vw * 8.33) / 2, // 25
     marginRight: 10,
   },
   commentData: {
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   commentUserName: {
-    fontSize: 14,
+    fontSize: vh * 1.84, // 14
     color: colors.theme.black,
   },
   commentText: {
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   },
   commentAction: {
     flexDirection: 'row',
-    marginTop: 5,
+    marginTop: vh * 0.66, // 5
   },
   moreAction: {
     alignSelf: 'flex-start',

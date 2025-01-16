@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../Theme/colors';
 import { GlroyBold } from '../GlroyBoldText';
 import { VIcon } from '../VIcon';
+import { vh, vw } from '../../Utils/units';
 
 interface AppButtonProps {
   title: string;
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    paddingHorizontal: 50,
-    paddingVertical: 10,
+    paddingHorizontal: vw * 13.89, // 50
+    paddingVertical: vh * 1.32, // 10
     borderWidth: 1,
     borderColor: colors.theme.primary,
     backgroundColor: colors.theme.primary,
@@ -74,14 +75,14 @@ const styles = StyleSheet.create({
     color: colors.text.white,
   },
   borderedButtonText: {
-    fontSize: 14,
+    fontSize: vh * 1.74, // 14
     fontWeight: 'normal',
     color: colors.text.altGrey,
   },
   prefix: {
-    marginRight: 5,
+    marginRight: vw * 1.39, // 5
   },
   suffix: {
-    marginLeft: 5,
+    marginLeft: vw * 1.39, // 5
   },
 });

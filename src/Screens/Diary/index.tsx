@@ -19,6 +19,7 @@ import { selectHomeWorks } from '../../Stores/slices/diary.slice';
 import { colors } from '../../Theme/colors';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { selectAppLoader } from '../../Stores/slices/common.slice';
+import { vh } from '../../Utils/units';
 
 type Props = StackScreenProps<DiaryStackParams, 'diary'>;
 
@@ -140,13 +141,12 @@ const Diary = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   diaryRecord: {
-    backgroundColor: 'red',
-    marginBottom: 12,
+    marginBottom: vh * 1.58, // 12
   },
 });
 

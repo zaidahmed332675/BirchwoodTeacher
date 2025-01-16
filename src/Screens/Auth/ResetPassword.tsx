@@ -14,7 +14,7 @@ import { useAppDispatch } from '../../Stores/hooks';
 import { colors } from '../../Theme/colors';
 import { AuthStackParams, ERootStack } from '../../Types/NavigationTypes';
 import { ResetPasswordPayload } from '../../Types/User';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<AuthStackParams, 'resetPassword'>;
 
@@ -63,11 +63,11 @@ export default function ResetPassword({ navigation, route }: Props) {
   return (
     <View style={styles.container}>
       <AnimatedBackgroundImage additionalImage={reset_pass_child} />
-      <View style={[styles.bottomContainer, { flex: 1.3 }]}>
+      <View style={[styles.bottomContainer, { flex: 1 }]}>
         <View style={styles.heading}>
           <GlroyBold
             text={'Reset Password ?'}
-            _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
+            _style={{ color: colors.theme.primary, fontSize: vh * 2.8 }}
           />
         </View>
         <GrayMediumText
@@ -148,9 +148,7 @@ export default function ResetPassword({ navigation, route }: Props) {
         <View style={{ alignItems: 'center' }}>
           <AppButton
             title={'Reset'}
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.submitBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -166,15 +164,19 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: vh * 2.63, // 20
+    paddingHorizontal: vw * 5.56 // 20
   },
   para: {
     textAlign: 'center',
-    marginTop: 15,
+    marginTop: vh * 1.97, // 15
     lineHeight: 22,
   },
   heading: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { colors } from '../../Theme/colors';
+import { vh } from '../../Utils/units';
 
 interface GlroyBoldTextProps {
   text: string;
@@ -14,7 +15,7 @@ export const GlroyBold = ({ text, _style }: GlroyBoldTextProps) => {
 const styles = StyleSheet.create({
   text: {
     fontFamily: 'Glory-Bold',
-    fontSize: 16,
+    fontSize: vh * 2.11, // 16
     fontWeight: 'bold',
     color: colors.text.grey,
   },

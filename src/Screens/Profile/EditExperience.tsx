@@ -21,6 +21,7 @@ import { isArrayOfObjectsEqual } from '../../Utils/options';
 import { colors } from '../../Theme/colors';
 import { isValid } from 'date-fns';
 import { UserExperience } from '../../types/User';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<ProfileStackParams, 'editExperience'>;
 
@@ -109,22 +110,13 @@ export default function EditExperience({ navigation }: Props) {
                     justifyContent: 'space-between',
                   }}>
                   <GlroyBold
-                    _style={{
-                      color: colors.theme.primary,
-                      fontSize: 22,
-                    }}
+                    _style={styles.listItemTitle}
                     text={`Employment - 0${index + 1}`}
                   />
                   {fields.length > 1 && (
                     <TouchableOpacity
                       onPress={() => removeExperienceField(index)}
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: colors.theme.primary,
-                        borderRadius: 8,
-                        padding: 4,
-                      }}>
+                      style={styles.listItemRemove}>
                       <VIcon
                         type="Ionicons"
                         name="close"
@@ -279,15 +271,11 @@ export default function EditExperience({ navigation }: Props) {
             bordered
             title={'Add Experience'}
             onPress={addExperienceField}
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.listItemAdd}
           />
           <AppButton
             title={user?.employment?.length ? 'Update' : 'Submit'}
-            btnStyle={{
-              marginVertical: 10,
-            }}
+            btnStyle={styles.submitBtn}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -299,10 +287,28 @@ export default function EditExperience({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: vh * 2.63, // 20
   },
   groupContainer: {},
   fieldGroup: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20
   },
+  listItemTitle: {
+    color: colors.theme.primary,
+    fontSize: vh * 2.89, // 22
+  },
+  listItemAdd: {
+    marginVertical: vh * 1.32 // 10
+  },
+  listItemRemove: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.theme.primary,
+    borderRadius: 8,
+    paddingVertical: vh * 0.53, // 4
+    paddingHorizontal: vw * 1.11, // 4,
+  },
+  submitBtn: {
+    marginVertical: vh * 1.32 // 10
+  }
 });

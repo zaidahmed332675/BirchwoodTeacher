@@ -19,6 +19,7 @@ import {
 import { getImagePath } from '../../Service/axios';
 import { colors } from '../../Theme/colors';
 import { VIcon } from '../VIcon';
+import { vh, vw } from '../../Utils/units';
 
 interface UploadImageProps {
   isEditable?: boolean;
@@ -69,10 +70,7 @@ export const UploadImage = ({
 
   return (
     <View style={[style]}>
-      <View
-        style={{
-          borderRadius: 100,
-        }}>
+      <View>
         <ImageBox
           image={image}
           _imageStyle={_imageStyle}
@@ -201,9 +199,9 @@ export const VideoBox = ({ media }) => {
 
 const styles = StyleSheet.create({
   userImage: {
-    height: 120,
-    width: 120,
-    borderRadius: 200,
+    height: vh * 15.79, // 120
+    width: vw * 33.33, // 120
+    borderRadius: (vw * 33.33) / 2,
   },
   editBtn: {
     position: 'absolute',
@@ -211,18 +209,18 @@ const styles = StyleSheet.create({
     right: -6,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 46,
-    width: 46,
-    borderRadius: 50,
+    height: vh * 6.05, // 46
+    width: vw * 12.78, // 46
+    borderRadius: (vw * 12.78) / 2, // 50
     backgroundColor: '#F5F5F5',
     borderWidth: 5,
     borderColor: '#FFFFFF',
   },
   title: {
-    fontSize: 12,
+    fontSize: vh * 1.58, // 12
     lineHeight: 14.4,
     color: colors.theme.primary,
     textTransform: 'capitalize',
-    marginTop: 8,
+    marginTop: vh * 1.05, // 8
   },
 });

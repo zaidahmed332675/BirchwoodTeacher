@@ -14,6 +14,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { EProfileStack, ProfileStackParams } from '../../Types/NavigationTypes';
 import { colors } from '../../Theme/colors';
 import { format, isAfter } from 'date-fns';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<ProfileStackParams, 'profile'>;
 
@@ -24,27 +25,6 @@ const Profile = ({ navigation }: Props) => {
   useEffect(() => {
     getUserProfile();
   }, [getUserProfile]);
-
-  // const profileold = {
-  //   education: [
-  //     {
-  //       instituteName:
-  //         'Federal Urdu University of Arts, Science & Technology, Karachi.',
-  //       degree: "Bachelor's degree",
-  //       startingDate: '2016',
-  //       endingDate: '2020',
-  //       fieldOfStudy: 'Computer Science',
-  //     },
-  //   ],
-  //   experience: [
-  //     {
-  //       officeName: 'TheCoding Buzz',
-  //       designation: 'MERN Stack Developer',
-  //       startingDate: '2016',
-  //       endingDate: 'Present',
-  //     },
-  //   ],
-  // };
 
   if (loading) {
     return <DataLoader />;
@@ -69,10 +49,7 @@ const Profile = ({ navigation }: Props) => {
               }>{`${profile.firstName} ${profile.lastName}`}</Text>
           </View>
           <GlroyBold
-            _style={{
-              color: colors.theme.primary,
-              fontSize: 22,
-            }}
+            _style={styles.sectionTitle}
             text="Personal Information"
           />
           <View style={styles.userInfo}>
@@ -188,14 +165,11 @@ const Profile = ({ navigation }: Props) => {
 
         <View style={styles.item}>
           <GlroyBold
-            _style={{
-              color: colors.theme.primary,
-              fontSize: 22,
-            }}
+            _style={styles.sectionTitle}
             text="Education"
           />
           {profile.education.length ?
-            <View style={{ marginBottom: 50 }}>
+            <View style={styles.dataBox}>
               {profile.education?.map((edu, ind) => (
                 <View key={'edu-' + ind}>
                   {ind > 0 && (
@@ -253,11 +227,7 @@ const Profile = ({ navigation }: Props) => {
                 </View>
               ))}
             </View> :
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20
-            }}>
+            <View style={styles.noDataBox}>
               <GrayMediumText
                 _style={{
                   color: colors.theme.greyAlt2,
@@ -276,14 +246,11 @@ const Profile = ({ navigation }: Props) => {
 
         <View style={styles.item}>
           <GlroyBold
-            _style={{
-              color: colors.theme.primary,
-              fontSize: 22,
-            }}
+            _style={styles.sectionTitle}
             text="Experience"
           />
           {profile.employment.length ?
-            <View style={{ marginBottom: 50 }}>
+            <View style={styles.dataBox}>
               {profile.employment?.map((emp, ind) => (
                 <View key={'exp-' + ind}>
                   {ind > 0 && (
@@ -355,11 +322,7 @@ const Profile = ({ navigation }: Props) => {
                 </View>
               ))}
             </View> :
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20
-            }}>
+            <View style={styles.noDataBox}>
               <GrayMediumText
                 _style={{
                   color: colors.theme.greyAlt2,
@@ -389,43 +352,46 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     borderColor: colors.theme.secondary,
     borderRadius: 20,
-    paddingVertical: 20,
-    marginTop: 20,
+    paddingVertical: vh * 2.63, // 20
+    marginTop: vh * 2.63, // 20
   },
   profileGrid: {
-    marginBottom: 24,
+    marginBottom: vh * 3.16, // 24
   },
   profile: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 13,
+    paddingHorizontal: vw * 3.61, // 13
     width: '100%',
   },
   profilePhoto: {
     borderWidth: 3,
     borderColor: colors.theme.primary,
   },
+  sectionTitle: {
+    color: colors.theme.primary,
+    fontSize: vh * 2.89, // 22
+  },
   userInfo: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 50
+    marginBottom: vh * 6.58, // 50
   },
   userInfoItem: {
     minWidth: '50%',
     flexGrow: 1,
-    marginTop: 16,
-    paddingRight: 2,
+    marginTop: vh * 2.11, // 16
+    paddingRight: vw * 0.56, // 2
   },
   title: {
-    fontSize: 28,
+    fontSize: vh * 3.68, // 28
     lineHeight: 33.6,
     color: colors.theme.primary,
     textAlign: 'center',
-    marginTop: 24,
+    marginTop: vh * 3.16, // 24
   },
   actionsBtnView: {
     alignItems: 'center',
-    // marginTop: 50,
   },
   actionBtn: {
     flex: 1,
@@ -436,8 +402,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     borderColor: colors.theme.secondary,
     borderRadius: 20,
-    paddingTop: 16,
+    paddingTop: vh * 2.11, // 16
   },
+  dataBox: {
+    marginBottom: vh * 6.58, // 50
+  },
+  noDataBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: vh * 2.63, // 20
+    paddingHorizontal: vw * 5.56, // 20
+  }
 });
 
 export default Profile;

@@ -16,7 +16,7 @@ import {
 } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { MainStackParams } from '../../Types/NavigationTypes';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 import { ChangePasswordPayload } from '../../types/User';
 
@@ -60,7 +60,7 @@ function ChangePassword({ navigation }: Props) {
       <View style={styles.heading}>
         <GlroyBold
           text={'Change Password ?'}
-          _style={{ color: colors.theme.primary, fontSize: vw * 6 }}
+          _style={{ color: colors.theme.primary, fontSize: vh * 2.84 }}
         />
       </View>
       <GrayMediumText
@@ -170,7 +170,7 @@ function ChangePassword({ navigation }: Props) {
         <AppButton
           title="Update"
           btnStyle={{
-            marginVertical: 10,
+            marginVertical: vh * 1.32, // 10
           }}
           onPress={handleSubmit(onSubmit)}
         />
@@ -181,11 +181,11 @@ function ChangePassword({ navigation }: Props) {
 const styles = StyleSheet.create({
   para: {
     textAlign: 'center',
-    marginTop: 15,
+    marginTop: vh * 1.97, // 15
     lineHeight: 22,
   },
   heading: {
-    paddingTop: 30,
+    paddingTop: vh * 3.95, // 30
     justifyContent: 'center',
     alignItems: 'center',
   },

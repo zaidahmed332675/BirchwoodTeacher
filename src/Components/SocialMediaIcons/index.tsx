@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { icons } from '../../Assets/icons';
 import { GlroyBold } from '../GlroyBoldText';
 import { colors } from '../../Theme/colors';
+import { vh, vw } from '../../Utils/units';
 
 export const SocialMediaIcons = () => {
   return (
@@ -40,17 +41,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // marginTop: 10
   },
   icon: {
-    height: 35,
-    width: 35,
-    borderRadius: 35 / 2,
-    margin: 10,
+    height: vh * 4.61, // 35
+    width: vw * 9.72, // 35
+    borderRadius: (vw * 9.72) / 2,
+    marginVertical: vh * 1.32, // 10
+    marginHorizontal: vw * 2.78, // 10
   },
   text: {
     color: colors.text.black,
-    marginVertical: 5,
+    marginVertical: vh * 0.66, // 5
     alignSelf: 'center',
   },
 });

@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { CardStyleInterpolators, StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import aDot from '../../Assets/icons/absentDot.png';
@@ -24,6 +24,7 @@ import {
   EMainStack
 } from '../../Types/NavigationTypes';
 import { attendanceEnum } from '../../Utils/options';
+import { vh, vw } from '../../Utils/units';
 
 type Props = StackScreenProps<ClassStackParams, 'class'>;
 
@@ -51,9 +52,7 @@ const MyClass = ({ }: Props) => {
         childId: item._id
       })}>
       <View
-        style={{
-          alignSelf: 'flex-start',
-        }}>
+        style={styles.imageBox}>
         <Image
           source={item.todayAttendance?.status === attendanceEnum.PRESENT ? pDot : item.todayAttendance?.status === attendanceEnum.ABSENT ? aDot : pendingDot}
           style={styles.attendanceIcon}
@@ -63,30 +62,19 @@ const MyClass = ({ }: Props) => {
           _imageStyle={styles.dpStyle}
         />
       </View>
-      <View style={{ marginLeft: 10, flex: 1 }}>
+      <View style={styles.childInfo}>
         <GlroyBold text={`${item.firstName} ${item.lastName}`} _style={{ color: colors.text.black }} />
         <GrayMediumText
           text={`Roll No: ${item.rollNumber}`}
-          _style={{ fontSize: 12 }}
+          _style={styles.rollNoText}
         />
         <View>
-          {/* <GrayMediumText
-            text="Attendance: 20 | Absents: 2 | Leaves: 5"
-            _style={{ fontSize: 12 }}
-          /> */}
           {!item.todayAttendance?._id && (
             <View
-              style={{
-                marginTop: 10,
-                alignSelf: 'flex-start',
-                paddingVertical: 4,
-                paddingHorizontal: 12,
-                borderRadius: 10,
-                backgroundColor: colors.theme.primary,
-              }}>
+              style={styles.markAttendanceBtn}>
               <GrayMediumText
                 text="Mark Student Check-In"
-                _style={{ fontSize: 10, color: colors.theme.white }}
+                _style={styles.markAttendanceBtnText}
               />
             </View>
           )}
@@ -102,12 +90,7 @@ const MyClass = ({ }: Props) => {
             },
           });
         }}
-        style={{
-          alignSelf: 'flex-start',
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: 10,
-        }}>
+        style={styles.chatIconBox}>
         <VIcon
           type="Ionicons"
           name="chatbubbles-outline"
@@ -137,31 +120,55 @@ export default MyClass;
 const styles = StyleSheet.create({
   item: {
     borderRadius: 2,
-    paddingVertical: 15,
+    paddingVertical: vh * 1.97, // 15
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 0.2,
     borderColor: colors.theme.secondary,
   },
   dpStyle: {
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    resizeMode: 'contain',
+    height: vh * 6.58, // 50
+    width: vw * 13.89, // 50
     alignContent: 'flex-start',
+    borderRadius: (vw * 13.89) / 2, // 25
+    resizeMode: 'contain',
   },
   attendanceIcon: {
-    height: 10,
-    width: 10,
+    height: vh * 1.32, // 10
+    width: vw * 2.78, // 10
     resizeMode: 'contain',
     position: 'absolute',
     top: 3,
     left: 3,
     zIndex: 1,
   },
-  editIcon: {
-    height: 10,
-    width: 10,
-    resizeMode: 'contain',
+  imageBox: {
+    alignSelf: 'flex-start',
   },
+  childInfo: {
+    marginLeft: vw * 2.78, // 10
+    flex: 1
+  },
+  rollNoText: {
+    fontSize: vh * 1.58, // 12
+  },
+  markAttendanceBtn: {
+    marginTop: vh * 1.32, // 10
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    backgroundColor: colors.theme.primary,
+  },
+  markAttendanceBtnText: {
+    fontSize: vh * 1.32, // 10
+    color: colors.theme.white
+  },
+  chatIconBox: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
+  }
 });

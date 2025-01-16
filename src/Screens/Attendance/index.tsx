@@ -17,6 +17,7 @@ import {
 import { selectHolidaysMonthWise, selectUserAttendance } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import { attendanceEnum } from '../../Utils/options';
+import { vh, vw } from '../../Utils/units';
 
 const Attendance = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -160,8 +161,9 @@ const Attendance = () => {
             text="List of Holidays"
             _style={{
               color: colors.theme.black,
-              fontSize: 16,
-              margin: 15,
+              fontSize: vh * 2.11, // 16
+              marginVertical: vh * 1.97, // 15
+              marginHorizontal: vw * 4.17, // 15,
             }}
           />
         )}
@@ -169,13 +171,13 @@ const Attendance = () => {
 
       {tabIndex === 1 ? (
         monthlyUserHolidays.length ? <FlatList
-          contentContainerStyle={{ gap: 10, paddingBottom: 15 }}
+          contentContainerStyle={{ gap: 10, paddingBottom: vh * 1.97 }}
           data={monthlyUserHolidays}
           renderItem={({ item }) => <HolidayCard holiday={item} />}
           keyExtractor={item => item._id}
-        /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} _textStyle={{ fontSize: 18 }} text={"Currently, there are no holidays available for this month."} />
+        /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} _textStyle={{ fontSize: vh * 2.37 }} text={"Currently, there are no holidays available for this month."} />
       ) : (
-        <View style={{ marginTop: 30, gap: 10 }}>
+        <View style={styles.stats}>
           <AttendanceCard
             type={attendanceEnum.PRESENT}
             title="Present"
@@ -199,20 +201,20 @@ const Attendance = () => {
 
 const styles = StyleSheet.create({
   customSwitch: {
-    marginTop: 20,
+    marginTop: vh * 2.63, // 20
     flexDirection: 'row',
     justifyContent: 'center',
   },
   calender: {
-    paddingTop: 20
+    paddingTop: vh * 2.63, // 20
   },
   daysLabelStyle: {
-    fontSize: 13,
+    fontSize: vh * 1.71, // 13
   },
   textStyle: {
     color: colors.theme.white,
     fontWeight: 'bold',
-    fontSize: 13,
+    fontSize: vh * 1.71, // 13
   },
   presentDaysStyle: {
     backgroundColor: colors.theme.darkGreen,
@@ -231,6 +233,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderStyle: 'dashed',
     borderColor: colors.theme.primary
+  },
+  stats: {
+    marginTop: vh * 3.95, // 30
+    gap: 10
   }
 });
 

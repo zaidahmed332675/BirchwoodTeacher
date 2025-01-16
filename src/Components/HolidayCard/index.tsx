@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { vw } from '../../Utils/units';
+import { vh, vw } from '../../Utils/units';
 import { colors } from '../../Theme/colors';
 import { Holiday } from '../../types/User';
 import { GrayMediumText } from '../GrayMediumText';
@@ -29,14 +29,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.theme.greyAlt,
     borderRadius: 10,
-    padding: 10,
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
   },
   contentBody: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: vh * 1.32, // 10
   },
   date: {
-    fontSize: 12,
+    fontSize: vh * 1.58, // 12
   },
 });

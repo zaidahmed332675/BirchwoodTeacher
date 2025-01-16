@@ -9,6 +9,7 @@ import { colors } from '../../Theme/colors';
 import { HomeWork } from '../../Types/Diary';
 import { DiaryStackParams, EDiaryStack } from '../../Types/NavigationTypes';
 import { VIcon } from '../VIcon';
+import { vh, vw } from '../../Utils/units';
 
 export const DateCard = ({ formattedDate: { day, date, month, year } }: { formattedDate: { day: string; date: string, month: string, year: string } }) => {
   return (
@@ -85,13 +86,13 @@ export const DiaryCard = ({ item, showChildrenLabel = false }: { item: HomeWork,
             {item.description}
           </Text>
           <Text style={[styles.dueDate, {
-            marginTop: 20,
+            marginTop: vh * 2.63, // 20
             alignSelf: 'flex-start'
           }]}>
             Due Date: {format(dueDate, 'EEE dd yyyy')}
           </Text>
-          {showChildrenLabel && has(item, 'children') && <View style={{ alignSelf: "flex-start", borderWidth: 1, borderColor: colors.theme.darkRed, marginTop: 5, paddingVertical: 2, paddingHorizontal: 4, borderRadius: 5 }}>
-            <Text style={[styles.description, { color: colors.theme.darkRed, fontSize: 10 }]}>Children Assigned</Text>
+          {showChildrenLabel && has(item, 'children') && <View style={styles.childAssignedLabel}>
+            <Text style={[styles.description, { color: colors.theme.darkRed, fontSize: vh * 1.32 }]}>Children Assigned</Text>
           </View>}
         </View>
 
@@ -139,15 +140,16 @@ const styles = StyleSheet.create({
     borderColor: '#FFA500'
   },
   content: {
-    padding: 10,
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
     flex: 1,
     flexGrow: 1,
   },
   title: {
-    fontSize: 18,
+    fontSize: vh * 2.37, // 18
     color: colors.text.greyAlt2,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: vh * 1.32, // 10
   },
   description: {
     flexWrap: 'wrap',
@@ -160,8 +162,9 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     borderWidth: 0.5,
     borderColor: colors.theme.primary,
-    marginRight: 4,
-    padding: 10,
+    marginRight: vw * 1.11, // 4
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -173,6 +176,15 @@ const styles = StyleSheet.create({
   date: {
     color: colors.theme.primary,
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: vh * 3.16, // 24
   },
+  childAssignedLabel: {
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: colors.theme.darkRed,
+    marginTop: vh * 0.66, // 5
+    paddingVertical: vh * 0.26, // 2
+    paddingHorizontal: vw * 1.11, // 4
+    borderRadius: 5
+  }
 });

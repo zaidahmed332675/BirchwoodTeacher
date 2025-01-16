@@ -121,10 +121,10 @@ export default function TimeTable({ navigation }: Props) {
           data={timeTableByDay}
           keyExtractor={item => `time_table_record_${item._id}`}
           renderItem={renderItem}
-          ItemSeparatorComponent={() => <View style={{ margin: 10 }} />}
+          ItemSeparatorComponent={() => <View style={{ margin: vh * 1.32 }} />}
           contentContainerStyle={styles.flatListContainer}
         /> :
-          <NotFound _textStyle={{ fontSize: 18 }} text={"Currently, there are no timetable entries available for this day."} />}
+          <NotFound _textStyle={{ fontSize: vh * 2.37 }} text={"Currently, there are no timetable entries available for this day."} />}
       </View>
     </Layout>
   );
@@ -138,39 +138,40 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
   },
   cardContainer: {
     borderWidth: 1,
     borderColor: colors.theme.borderColor,
     width: vw * 80,
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 10
+    paddingVertical: vh * 1.32, // 10
+    paddingHorizontal: vw * 2.78, // 10
   },
   borderLine: {
     borderBottomWidth: 1,
     borderBottomColor: colors.theme.borderColor,
-    marginVertical: 10
+    marginVertical: vh * 1.32, // 10
   },
   itemContent: {
     gap: 5
   },
   subject: {
-    fontSize: 18,
+    fontSize: vh * 2.37, // 18
     color: colors.text.greyAlt2,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: vh * 1.32, // 10
   },
   titleText: {
-    fontSize: 14,
+    fontSize: vh * 1.84, // 14
     color: colors.theme.black
   },
   stepperContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: vw * 5.5,
-    marginVertical: 10,
+    marginVertical: vh * 1.32, // 10
     borderWidth: 1,
     borderColor: colors.theme.borderColor,
     borderRadius: vh * 2,
@@ -192,11 +193,11 @@ const styles = StyleSheet.create({
   },
   selectedTitle: {
     color: colors.theme.white,
-    fontSize: 12,
+    fontSize: vh * 1.58, // 12
     fontWeight: 'bold',
   },
   unSelectedTitle: {
-    fontSize: 12,
+    fontSize: vh * 1.58, // 12
     color: colors.theme.black
   },
 })

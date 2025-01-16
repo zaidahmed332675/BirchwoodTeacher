@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { colors } from '../../Theme/colors';
-import { statusBarHeight } from '../../Utils/units';
+import { statusBarHeight, vh, vw } from '../../Utils/units';
 import LinearGradient from 'react-native-linear-gradient';
 import { BottomBackground } from '../BottomBackground';
 // import { AppBottomSheet } from '../../Components/AppBottomSheet';
@@ -52,10 +52,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    marginTop: statusBarHeight + 30,
-    marginVertical: 30,
-    marginHorizontal: 10,
-    marginRight: 20,
+    marginTop: statusBarHeight + (vh * 3.95), // 30
+    marginVertical: vh * 3.95, // 30
+    marginHorizontal: vw * 2.78, // 10
+    marginRight: vw * 5.56, // 20
   },
   bottomSheet: {
     flex: 1,
@@ -72,9 +72,8 @@ const styles = StyleSheet.create({
   },
   bottomSheetViewContent: {
     flex: 1,
-    paddingHorizontal: 10,
-    marginHorizontal: 10,
-    // alignItems: 'center',
+    paddingHorizontal: vw * 2.78, // 10
+    marginHorizontal: vw * 2.78, // 10
     backgroundColor: colors.theme.white,
   },
 });

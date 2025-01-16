@@ -56,15 +56,13 @@ const ActivityList = ({ navigation }: Props) => {
           })
         }
         }>
-        <View style={styles.iconContainer}>
-          <ImageBox image={{ uri: item.image }} _imageStyle={styles.featureIcons} />
-        </View>
+        <ImageBox image={{ uri: item.image }} _imageStyle={styles.featureIcons} />
         <GlroyBold
           text={item.title}
           _style={{
-            fontSize: 14,
+            fontSize: vh * 1.84, // 14
             color: colors.text.black,
-            marginTop: 8,
+            marginTop: vh * 1.05, // 8
             textAlign: 'center',
           }}
         />
@@ -79,7 +77,7 @@ const ActivityList = ({ navigation }: Props) => {
   return (
     <Layout
       _styleSheetViewContent={{
-        marginTop: 20,
+        marginTop: vh * 2.63, // 20
       }}
       customHeader={
         <CustomHeader
@@ -103,24 +101,17 @@ const ActivityList = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   card: {
-    margin: 10,
     backgroundColor: colors.card.card1,
     justifyContent: 'center',
     alignItems: 'center',
     height: vh * 15,
     width: vw * 38,
     borderRadius: 10,
-    padding: 15,
-  },
-  iconContainer: {
-    height: 34,
-    width: 34,
-    borderRadius: 12,
-    alignSelf: 'center',
   },
   featureIcons: {
-    height: '100%',
-    width: '100%',
+    width: vw * 13.89, // 50
+    height: vh * 6.58, // 50
+    borderRadius: (vw * 13.89) / 2,
     resizeMode: 'contain',
   },
 });
