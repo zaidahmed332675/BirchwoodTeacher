@@ -10,24 +10,24 @@ export const SocialMediaIcons = () => {
     <>
       <GlroyBold text={'Sign In With'} _style={styles.text} />
       <View style={styles.icons_container}>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
           <Image
             source={icons.facebook}
-            style={styles.icon}
+            style={styles.image}
             resizeMode="contain"
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
           <Image
             source={icons.twitter}
-            style={styles.icon}
+            style={styles.image}
             resizeMode="contain"
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.icon}>
           <Image
             source={icons.instagram}
-            style={styles.icon}
+            style={styles.image}
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -47,11 +47,15 @@ const styles = StyleSheet.create({
     width: vw * 9.72, // 35
     borderRadius: (vw * 9.72) / 2,
     marginVertical: vh * 1.32, // 10
-    marginHorizontal: vw * 2.78, // 10
+    marginHorizontal: vw * 1.5, // 10
   },
   text: {
     color: colors.text.black,
     marginVertical: vh * 0.66, // 5
     alignSelf: 'center',
   },
+  image: {
+    width: '100%',
+    height: '100%',
+  }
 });

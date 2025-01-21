@@ -168,8 +168,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   mainLogo: {
-    alignItems: 'center',
-    marginVertical: vh * 5
+    width: "80%",
+    height: "15%",
+    marginVertical: vh * 5,
+    alignSelf: 'center',
   },
   formContainer: {
     flex: 1,
@@ -184,12 +186,14 @@ const styles = StyleSheet.create({
     color: colors.theme.primary,
   },
   childLogoBox: {
-    alignItems: 'center',
+    alignSelf: 'center',
+    width: "100%",
+    height: "20%",
     marginVertical: vh * 1.32, // 10
   },
   childLogo: {
-    height: 180,
-    width: 320,
+    height: "100%",
+    width: "100%",
   },
   signInBtn: {
     marginVertical: vh * 1.32, // 10

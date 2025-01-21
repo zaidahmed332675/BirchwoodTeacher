@@ -18,8 +18,10 @@ export const MainLogo = ({ _style }: MainLogoProps) => {
 
 const styles = StyleSheet.create({
   img: {
-    marginTop: 5,
-    height: 70,
-    width: '80%',
+    width: "100%",
+    height: "100%"
+    // marginTop: 5,
+    // height: 70,
+    // width: '80%',
   },
 });
