@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -6,24 +6,27 @@ import {
   Keyboard,
   Image,
   StatusBar,
+  ImageURISource,
 } from 'react-native';
 import main_bg_img from '../../Assets/images/animated_bg.png';
 import right_icon from '../../Assets/images/icon_right.png';
 import left_icon from '../../Assets/images/icon_left.png';
+import { vh } from '../../Utils/units';
 
 interface AnimatedBackgroundImageProps {
-  source?: string;
-  additionalImage?: unknown;
+  // source?: string;
+  additionalImage: Animated.WithAnimatedObject<ImageURISource>;
 }
 
 export const AnimatedBackgroundImage = ({
-  source,
+  // source,
   additionalImage,
 }: AnimatedBackgroundImageProps) => {
-  const [imageHeight] = useState(new Animated.Value(200)); // Initial height of the image
-  const additionalImageHeight = useMemo(() => new Animated.Value(320), []);
-  const additionalImageMarginTop = useMemo(() => new Animated.Value(-50), []);
-  const statusBarHeight = StatusBar.currentHeight || 0;
+  const [imageHeight] = useState(new Animated.Value(vh * 36.32)); // 200
+  const additionalImageHeight = useMemo(() => new Animated.Value(vh * 48), []); // 320
+  // const animatedOpacity = useRef(new Animated.Value(1)).current;
+  // const additionalImageMarginTop = useMemo(() => new Animated.Value(-10), []);
+  // const statusBarHeight = StatusBar.currentHeight || 0;
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -40,11 +43,11 @@ export const AnimatedBackgroundImage = ({
             duration: 300,
             useNativeDriver: false,
           }),
-          Animated.timing(additionalImageMarginTop, {
-            toValue: -20 - statusBarHeight, // Adjust the value based on your design (reduce margin top)
-            duration: 300,
-            useNativeDriver: false,
-          }),
+          // Animated.timing(additionalImageMarginTop, {
+          //   toValue: -20 - statusBarHeight, // Adjust the value based on your design (reduce margin top)
+          //   duration: 300,
+          //   useNativeDriver: false,
+          // }),
         ]).start();
       }
     );
@@ -54,20 +57,20 @@ export const AnimatedBackgroundImage = ({
       () => {
         Animated.parallel([
           Animated.timing(imageHeight, {
-            toValue: 200, // Back to the initial height
+            toValue: vh * 36.32, // Back to the initial height
             duration: 300,
             useNativeDriver: false,
           }),
           Animated.timing(additionalImageHeight, {
-            toValue: 320, // Back to the initial size
+            toValue: vh * 48, // Back to the initial size
             duration: 300,
             useNativeDriver: false,
           }),
-          Animated.timing(additionalImageMarginTop, {
-            toValue: -20 - statusBarHeight, // Back to the initial margin top
-            duration: 300,
-            useNativeDriver: false,
-          }),
+          // Animated.timing(additionalImageMarginTop, {
+          //   toValue: -20 - statusBarHeight, // Back to the initial margin top
+          //   duration: 300,
+          //   useNativeDriver: false,
+          // }),
         ]).start();
       }
     );
@@ -79,8 +82,8 @@ export const AnimatedBackgroundImage = ({
   }, [
     imageHeight,
     additionalImageHeight,
-    additionalImageMarginTop,
-    statusBarHeight,
+    // additionalImageMarginTop,
+    // statusBarHeight,
   ]);
 
   return (
@@ -96,7 +99,7 @@ export const AnimatedBackgroundImage = ({
             styles.additionalImageCenter,
             {
               height: additionalImageHeight,
-              marginTop: additionalImageMarginTop,
+              // marginTop: additionalImageMarginTop,
             },
           ]}
         />
@@ -118,33 +121,29 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    justifyContent: 'flex-end', // Align content to the bottom
   },
   additionalImageCenter: {
+    // backgroundColor: 'red',
     position: 'absolute',
-    width: 200,
-    height: 320,
-    left: 50, // Position it in the middle horizontally
-    bottom: -8,
-    marginLeft: 15, // Center the image horizontally
-    zIndex: 1, // Ensure the additional image is above the background image
+    width: "100%",
+    bottom: 0,
+    zIndex: 1,
     resizeMode: 'contain',
   },
   additionalImageLeft: {
     position: 'absolute',
     width: 30,
     height: 30,
-    top: 100, // Position it in the middle vertically
-    left: 80, // Position it in the middle horizontally
-    transform: [{ translateX: -50 }, { translateY: -50 }], // Center the image
+    top: 100,
+    left: 80,
+    transform: [{ translateX: -50 }, { translateY: -50 }],
   },
   additionalImageRight: {
     position: 'absolute',
     width: 45,
     height: 45,
     bottom: 40,
-    right: 5, // Position it in the middle vertically
-    // left: 10, // Position it in the middle horizontally
-    transform: [{ translateX: -50 }, { translateY: -50 }], // Center the image
+    right: 5,
+    transform: [{ translateX: -50 }, { translateY: -50 }],
   },
 });

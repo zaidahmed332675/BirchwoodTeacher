@@ -36,7 +36,7 @@ export interface LoginUserPayload {
 export interface LoginUserResponse {
   user: User;
   token: string;
-  todayAttendance: UserCheckInOutLeave;
+  todaysAttendance: UserCheckInOutLeave;
 }
 
 export interface EmailVerificationPayload {

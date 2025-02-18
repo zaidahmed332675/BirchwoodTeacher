@@ -5,8 +5,9 @@ import {
 } from '@reduxjs/toolkit';
 import { isSameWeek } from 'date-fns';
 import { RootState } from '..';
-import { Child, ChildAttendance, ClassResponse, ClassRoom, Message, MessagesResponse } from '../../Types/Class';
+import { Child, ChildAttendance, ClassResponse, ClassRoom, Message, MessagesResponse, Parent } from '../../Types/Class';
 import { MessagePaginationProps, PaginationProps } from '../../Types/Common';
+import { User } from '../../Types/User';
 
 interface ClassSliceState {
   classRoom: ClassRoom;
@@ -59,21 +60,64 @@ const ClassSlice = createSlice({
     setAttendances: (state, { payload }: PayloadAction<ChildAttendance>) => {
       state.attendance = payload;
     },
-    setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string }>) => {
-      const { chatRoomId, docs, ...pagination } = payload;
+    // setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string, isFresh: boolean }>) => {
+    //   const { chatRoomId, docs, ...pagination } = payload;
+
+    //   const chatRoomKey = `chatRoom_${chatRoomId}`;
+    //   state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
+    //   docs.forEach((message) => {
+    //     state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
+    //       ...message,
+    //       text: message.content,
+    //       user: {
+    //         _id: message.sender,
+    //         name: 'Sender Name',
+    //       },
+    //     };
+    //   });
+    //   state.chatRooms[chatRoomKey].messagePagination = pagination;
+    // },
+    // setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
+    //   const { chatRoomId, message } = payload;
+    //   const chatRoomKey = `chatRoom_${chatRoomId}`;
+    //   state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
+    //   state.chatRooms[chatRoomKey].messages = {
+    //     [`message_${message._id}`]: {
+    //       ...message,
+    //       text: message.content,
+    //       user: {
+    //         _id: message.sender,
+    //         name: 'Sender Name',
+    //       },
+    //     },
+    //     ...state.chatRooms[chatRoomKey].messages,
+    //   }
+    // },
+    setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string; isFresh: boolean }>) => {
+      const { chatRoomId, isFresh, docs, ...pagination } = payload;
 
       const chatRoomKey = `chatRoom_${chatRoomId}`;
-      state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
+
+      if (!state.chatRooms[chatRoomKey]) {
+        state.chatRooms[chatRoomKey] = { messages: {}, messagePagination: {} as MessagePaginationProps };
+      }
+
+      state.chatRooms[chatRoomKey].messages = isFresh ? {} : state.chatRooms[chatRoomKey].messages;
+
       docs.forEach((message) => {
         state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
           ...message,
           text: message.content,
           user: {
-            _id: message.sender,
-            name: 'Sender Name',
+            _id: message.sender?._id,
+            name:
+              message?.senderType === "teacher"
+                ? `${(message?.sender as User)?.firstName} ${(message?.sender as User)?.lastName}`
+                : `${(message?.sender as Parent)?.motherFirstName} ${(message?.sender as Parent)?.motherLastName}`,
           },
         };
       });
+
       state.chatRooms[chatRoomKey].messagePagination = pagination;
     },
     setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
@@ -85,8 +129,8 @@ const ClassSlice = createSlice({
           ...message,
           text: message.content,
           user: {
-            _id: message.sender,
-            name: 'Sender Name',
+            _id: message.sender?._id,
+            name: (message?.sender as User)?.firstName + (message?.sender as User)?.lastName,
           },
         },
         ...state.chatRooms[chatRoomKey].messages,

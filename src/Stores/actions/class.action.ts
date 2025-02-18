@@ -76,7 +76,7 @@ export const asyncCheckInChildByTeacher = createAsyncThunk(
     } else {
       if (res.data?.newAttendance?.children) {
         // REVIEW IT
-        dispatch(setChild({ _id: res.data.newAttendance.children, checkIn: true, todayAttendance: res.data.newAttendance }));
+        dispatch(setChild({ _id: res.data.newAttendance.children, todayAttendance: res.data.newAttendance }));
       }
       dispatch(asyncShowSuccess(res.message));
     }
@@ -127,7 +127,9 @@ export const asyncCreateChat = createAsyncThunk(
 
 export const asyncCreateChatRoomMessage = createAsyncThunk(
   'createChatRoomMessage',
-  async (data: CreateChatRoomMessagePayload, { dispatch }) => {
+  async (data: CreateChatRoomMessagePayload, { dispatch, getState }) => {
+    const sender = (getState() as RootState).user.user
+
     const res = await callApi<CreateChatRoomMessageResponse, CreateChatRoomMessagePayload>({
       method: 'POST',
       path: allApiPaths.getPath('createChatRoomMessage'),
@@ -138,7 +140,7 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.message?._id) {
-        dispatch(setChatRoomMessage({ chatRoomId: res.data.message.chat, message: res.data.message }));
+        dispatch(setChatRoomMessage({ chatRoomId: res.data.message.chat, message: { ...res.data.message, sender } }));
       }
     }
 
@@ -149,9 +151,10 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
 
 export const asyncGetMessagesByChatRoomId = createAsyncThunk(
   'getMessagesByChatRoomId',
-  async ({ chatRoomId }: { chatRoomId: string }, { getState, dispatch }) => {
+  async ({ chatRoomId, isFresh }: { chatRoomId: string, isFresh: boolean }, { getState, dispatch }) => {
 
-    const { page, pages } = (getState() as RootState).class.chatRooms?.["chatRoom_" + chatRoomId]?.messagePagination ?? {}
+    let { page, pages } = (getState() as RootState).class.chatRooms?.["chatRoom_" + chatRoomId]?.messagePagination ?? {}
+    page = isFresh ? 0 : page
 
     if (page >= pages) {
       return {
@@ -175,7 +178,7 @@ export const asyncGetMessagesByChatRoomId = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.docs?.length) {
-        dispatch(setChatRoomMessages({ chatRoomId, ...res.data }));
+        dispatch(setChatRoomMessages({ chatRoomId, ...res.data, isFresh }));
       }
     }
 

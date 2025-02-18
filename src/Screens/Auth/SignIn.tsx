@@ -40,7 +40,7 @@ const SignIn = ({ navigation }: Props) => {
     formState: { errors },
   } = useForm<LoginUserPayload>({
     defaultValues: {
-      email: 'zaidahmed332675@gmail.com',
+      email: 'teacher001@gmail.com',
       password: 'Teacher@123456',
     },
   });

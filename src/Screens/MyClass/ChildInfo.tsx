@@ -55,7 +55,7 @@ const ChildInfo = ({ route }: Props) => {
 
     const date = new Date();
     const checkInDateTime = date.toISOString();
-    checkInChildByTeacher({ children: childId, checkIn: checkInDateTime })
+    checkInChildByTeacher({ children: childId, checkIn: checkInDateTime, markedBy: 'TEACHER' })
   }, [checkInChildByTeacher]);
 
   const reportsCards = (items: any, indx: number) => {

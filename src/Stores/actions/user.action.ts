@@ -45,10 +45,10 @@ export const asyncLogin = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.token) {
-        let { todayAttendance, user, token } = res.data ?? {}
+        let { todaysAttendance, user, token } = res.data ?? {}
         dispatch(
           setUserState({
-            user: { ...user, todayAttendance },
+            user: { ...user, todayAttendance: todaysAttendance },
             holidays: {},
             attendance: {} as UserAttendance,
             token,

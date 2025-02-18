@@ -121,7 +121,7 @@ const CreateChat = ({ route }: Props) => {
   }, [child?.chats?._id])
 
   const onSend = useCallback(async (msg: IMessage[]) => {
-    let res = await createMessage({ chatId: child?.chats?._id, content: msg[0].text })
+    let res = await createMessage({ chatId: child?.chats?._id, content: msg[0].text, senderType: 'teacher' })
     if (res.status) {
       socket.emit('new message', {
         senderType: 'teacher',
@@ -143,12 +143,12 @@ const CreateChat = ({ route }: Props) => {
     }
 
     if (RoomId) {
-      getMessages({ chatRoomId: RoomId })
+      getMessages({ chatRoomId: RoomId, isFresh: true })
     }
   }, [])
 
   const handleLoadEarlierMessages = useCallback(async () => {
-    getMessages({ chatRoomId: child?.chats?._id })
+    getMessages({ chatRoomId: child?.chats?._id, isFresh: false })
   }, [])
 
   useEffect(() => {
