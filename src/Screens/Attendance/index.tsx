@@ -47,7 +47,7 @@ const Attendance = () => {
   };
 
   const attendanceData = monthlyWserAttendance?.attendance?.reduce((acc, curr) => {
-    let formatedDate = curr.createdAt ? format(new Date(curr.createdAt), 'yyyy-MM-dd') : '';
+    let formatedDate = curr.checkIn ? format(new Date(curr.checkIn), 'yyyy-MM-dd') : '';
     return {
       ...acc,
       [formatedDate]: {
@@ -108,7 +108,7 @@ const Attendance = () => {
                   textStyle = styles.textStyle;
                 }
               } else if (date.getDay() === 0) {
-                baseStyle = styles.weekEndDaysStyle;
+                textStyle = { ...styles.textStyle, ...styles.weekEndDaysStyle };
               }
 
               // Apply today's style on top of the base style
@@ -141,7 +141,7 @@ const Attendance = () => {
                 baseStyle = styles.presentDaysStyle;
                 textStyle = styles.textStyle;
               } else if (date.getDay() === 0) {
-                baseStyle = styles.weekEndDaysStyle;
+                textStyle = { ...styles.textStyle, ...styles.weekEndDaysStyle };
               }
 
               // Apply today's style on top of the base style
@@ -226,7 +226,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.theme.secondary,
   },
   weekEndDaysStyle: {
-    backgroundColor: colors.theme.lightSecondary,
+    color: colors.theme.darkRed,
+    fontWeight: '400',
   },
   todayStyle: {
     borderWidth: 2,

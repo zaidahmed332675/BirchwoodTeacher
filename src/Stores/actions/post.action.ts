@@ -157,7 +157,7 @@ export const asyncCreatePost = createAsyncThunk(
   async (data: FormData, { dispatch }) => {
     dispatch(setLoading(true));
 
-    const res = await callApi<{ newSavedPost: Post }, FormData>({
+    const res = await callApi<{ newPost: Post }, FormData>({
       method: "POST",
       path: allApiPaths.getPath('createPost'),
       isFormData: true,
@@ -167,7 +167,7 @@ export const asyncCreatePost = createAsyncThunk(
     if (!res.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setPost(res.data?.newSavedPost!))
+      dispatch(setPost(res.data?.newPost!))
       dispatch(asyncShowSuccess(res.message))
     }
 

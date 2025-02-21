@@ -1,4 +1,4 @@
-import { ClassRoom } from "./Class";
+import { ClassRoom, Parent } from "./Class";
 import { PaginationProps } from "./Common";
 import { User } from "./User";
 
@@ -14,7 +14,7 @@ export interface Activity {
 
 export interface Post {
   _id: string;
-  author: string;
+  author: Pick<User, '_id' | 'firstName' | 'lastName' | 'image'>;
   content: string;
   images: string[];
   videos: string[];
@@ -32,7 +32,7 @@ export interface Comment {
   _id: string;
   content: string;
   post: string;
-  author: User;
+  author: Pick<User, "_id" | "firstName" | "lastName" | "image"> | Pick<Parent, "_id" | "motherFirstName" | "motherLastName" | "image">;
   createdAt: string;
   updatedAt: string;
 }

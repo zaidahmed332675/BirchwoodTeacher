@@ -63,8 +63,9 @@ export const isArrayOfObjectsEqual = (
   return _.isEqual(xProps, yProps);
 };
 
-export const formatCommentTime = (commentDate: string) => {
+export const formatCommentTime = (createdAt: string) => {
   const now = new Date();
+  const commentDate = new Date(createdAt)
   const seconds = differenceInSeconds(now, commentDate);
   const minutes = differenceInMinutes(now, commentDate);
   const hours = differenceInHours(now, commentDate);

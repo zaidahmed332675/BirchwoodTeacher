@@ -20,10 +20,11 @@ import { colors } from '../../Theme/colors';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { socket } from '../../Utils/socket';
 import { vh } from '../../Utils/units';
+import { ImageBox } from '../../Components/UploadImage';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
 
-const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string }) => {
+const CustomChatHeader = ({ title, subTitle, image }: { title: string, subTitle: string, image: any }) => {
   const navigation = useNavigation();
 
   return (
@@ -44,13 +45,13 @@ const CustomChatHeader = ({ title, subTitle }: { title: string, subTitle: string
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Image
-            style={{
+          <ImageBox
+            image={{ uri: image }}
+            _imageStyle={{
               width: 40,
               height: 40,
               borderRadius: 50,
             }}
-            source={{ uri: 'https://picsum.photos/seed/picsum/200/300' }}
           />
           <View style={{
             marginLeft: 10,
@@ -167,7 +168,9 @@ const CreateChat = ({ route }: Props) => {
     <Layout
       customHeader={<CustomChatHeader
         title={`${child.firstName} ${child.lastName}`}
-        subTitle={`${child.parent?.motherFirstName} ${child.parent?.motherLastName} ( Mother )`} />}>
+        subTitle={`${child.parent?.motherFirstName} ${child.parent?.motherLastName} ( Mother )`}
+        image={child.image}
+      />}>
       <GiftedChat
         messagesContainerStyle={styles.messageContainer}
         renderAvatarOnTop={true}

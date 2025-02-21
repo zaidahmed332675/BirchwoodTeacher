@@ -14,9 +14,9 @@ import { NotFound } from '../../Components/NotFound';
 import { SearchModal } from '../../Components/SearchModal';
 import { CustomSwitch } from '../../Components/Switch';
 import { asyncGetAllChildPosts, asyncGetAllClassPosts, asyncGetAllPosts } from '../../Stores/actions/post.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
-import { selectPosts } from '../../Stores/slices/post.slice';
+import { selectPosts, setLikeDislike, setLoveUnlove } from '../../Stores/slices/post.slice';
 import { colors } from '../../Theme/colors';
 import {
   EPostStack,
@@ -24,6 +24,8 @@ import {
 } from '../../Types/NavigationTypes';
 import { selectAppLoader } from '../../Stores/slices/common.slice';
 import { vh } from '../../Utils/units';
+import { socket } from '../../Utils/socket';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 
@@ -42,10 +44,13 @@ const Post = ({ navigation }: Props) => {
   const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
   const [childloading, getAllChildPosts] = useLoaderDispatch(asyncGetAllChildPosts, false);
 
+  const profile = useAppSelector(selectUserProfile);
   const appLoading = useAppSelector(selectAppLoader)
 
   let posts = useAppSelector(selectPosts);
   let children = useAppSelector(selectChildren);
+
+  const dispatch = useAppDispatch()
 
   const onSelectSwitch = (index: number) => {
     setTabIndex(index);
@@ -58,6 +63,31 @@ const Post = ({ navigation }: Props) => {
     if (tabIndex === 1 && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
     if (tabIndex === 2 && childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
   }
+
+  const handlePostInteraction = (record: any) => {
+    let { userId, postId, interactionType } = record
+
+    if (userId === profile._id) return
+
+    if (['like', 'unlike'].includes(interactionType)) {
+      dispatch(setLikeDislike({
+        _id: postId,
+        userId
+      }))
+    } else if (['love', 'unlove'].includes(interactionType)) {
+      dispatch(setLoveUnlove({
+        _id: postId,
+        userId
+      }))
+    }
+  }
+
+  useEffect(() => {
+    socket.on('postInteraction', handlePostInteraction);
+    return () => {
+      socket.off('postInteraction', handlePostInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isSearchModalOpen && !childId && tabIndex === 2) {

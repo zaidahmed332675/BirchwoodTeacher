@@ -1,6 +1,6 @@
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import workerImage from '../../Assets/images/worker.png';
@@ -25,6 +25,7 @@ interface commentsProps {
 
 export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
   const dispatch = useAppDispatch()
+  const bottomSheetFlatListRef = useRef<BottomSheetFlatListMethods>(null)
 
   const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId);
   const [_, createPostComment] = useLoaderDispatch(asyncCreatePostComment);
@@ -59,7 +60,12 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
   const onSubmit = async (comment: Record<'content', string>) => {
     if (!comment.content) return
     let response = await createPostComment({ postId, comment })
-    if (response.status) reset()
+    if (response.status) {
+      reset()
+      if (bottomSheetFlatListRef.current) {
+        bottomSheetFlatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+      }
+    }
   }
 
   if (commentLoading && !comments.length) {
@@ -72,6 +78,7 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
         flexGrow: 1,
       }}>
         {comments.length ? <BottomSheetFlatList
+          ref={bottomSheetFlatListRef}
           data={comments}
           keyExtractor={(item) => item._id.toString()}
           renderItem={({ item: comment }) => <View style={styles.comments}><Comment key={comment._id} comment={comment} /></View>}
@@ -118,11 +125,14 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
 }
 
 export const Comment = ({ comment }: { comment: CommentProps }) => {
+
+  let fullName = "motherFirstName" in comment.author ? `${comment.author.motherFirstName} ${comment.author.motherLastName}` : `${comment.author.firstName} ${comment.author.lastName}`
+
   return (
     <View style={styles.comment}>
-      <ImageBox _imageStyle={styles.commentPic} image={workerImage} _containerStyle={styles.commentPicContainer} />
+      <ImageBox _imageStyle={styles.commentPic} image={{ uri: comment.author?.image }} _containerStyle={styles.commentPicContainer} />
       <View style={styles.commentData}>
-        <GrayMediumText text={`${comment.author?.firstName} ${comment.author?.lastName}`} _style={styles.commentUserName} />
+        <GrayMediumText text={`${fullName}`} _style={styles.commentUserName} />
         <GrayMediumText
           _style={styles.commentText}
           text={comment.content}

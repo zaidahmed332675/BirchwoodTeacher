@@ -11,6 +11,7 @@ import { vh, vw } from '../../Utils/units';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
 import { VIcon } from '../VIcon';
+import { ImageBox } from '../UploadImage';
 
 interface SearchModalProps {
   label: string;
@@ -112,23 +113,7 @@ export const SearchModal = ({
                   : colors.theme.white,
               }]}>
               <View>
-                {/* <Image
-                    source={props.item.checkIn ? pDot : aDot}
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 25,
-                      resizeMode: 'contain',
-                      position: 'absolute',
-                      top: 3,
-                      left: 3,
-                      zIndex: 1,
-                    }}
-                  /> */}
-                <Image
-                  source={dp1}
-                  style={styles.image}
-                />
+                <ImageBox image={{ uri: props.item.image }} _imageStyle={styles.image} />
               </View>
               <View style={{ marginLeft: vw * 2.78, flex: 1 }}>
                 <GlroyBold

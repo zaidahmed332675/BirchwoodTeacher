@@ -40,6 +40,8 @@ const LoadMoreFlatList = ({ uuidKey = "_id", data, loading, loadMore, renderItem
             windowSize={5}
             renderItem={renderItem}
             keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             onEndReached={({ distanceFromEnd }) => {
                 if (isScrollable && distanceFromEnd >= 0 && !!layoutSize) loadMore()
             }}

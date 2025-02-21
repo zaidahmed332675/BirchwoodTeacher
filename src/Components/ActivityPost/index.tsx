@@ -1,4 +1,4 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useAnimations } from '@react-native-media-console/reanimated';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { formatDistanceToNow } from 'date-fns';
@@ -8,20 +8,18 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import VideoPlayer from 'react-native-media-console';
 import { getImagePath } from '../../Service/axios';
 import { asyncDeletePost, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { useLoaderDispatch } from '../../Stores/hooks';
 import { colors } from '../../Theme/colors';
 import { EPostStack, PostStackParams } from '../../Types/NavigationTypes';
 import { Post } from '../../Types/Post';
 import { isImage, isVideo } from '../../Utils/options';
+import { vh, vw } from '../../Utils/units';
 import { AppBottomSheet } from '../BottomSheet';
 import { Comments } from '../Comment';
 import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
-import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { vh, vw } from '../../Utils/units';
 
 export const ActivityPost = ({ item: post }: { item: Post }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
@@ -34,7 +32,6 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
   const [loveLoading, lovePost] = useLoaderDispatch(asyncLovePost, false);
   const [_, deletePost] = useLoaderDispatch(asyncDeletePost);
 
-  const profile = useAppSelector(selectUserProfile)
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
 
   const handleLike = () => {
@@ -68,9 +65,9 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.author}>
-          <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
+          <ImageBox image={{ uri: post.author?.image }} _imageStyle={styles.profilePic} />
           <View>
-            <GrayMediumText _style={styles.userName} text={`${profile.firstName} ${profile.lastName}`} />
+            <GrayMediumText _style={styles.userName} text={`${post.author?.firstName} ${post.author?.lastName}`} />
             <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
           </View>
         </View>

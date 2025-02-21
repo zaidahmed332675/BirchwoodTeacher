@@ -61,8 +61,8 @@ export const AppCalender = ({
           color: colors.theme.white,
         }}
         selectedDayTextColor={colors.theme.white}
-        customDayHeaderStyles={() => {
-          return { textStyle: styles.daysLabelStyle };
+        customDayHeaderStyles={(day) => {
+          return { textStyle: { ...styles.daysLabelStyle, ...(day.dayOfWeek === 7 ? { color: colors.theme.darkRed } : {}) } };
         }}
         customDatesStyles={customDatesStyles}
       />
@@ -77,27 +77,6 @@ const styles = StyleSheet.create({
     paddingVertical: vh * 0.79, // 6
     width: '100%',
   },
-  // selectedRangeStartStyle: {
-  //   backgroundColor: colors.theme.primary,
-  //   borderTopLeftRadius: 6,
-  //   borderBottomLeftRadius: 6,
-  // },
-  // selectedRangeEndStyle: {
-  //   backgroundColor: colors.theme.primary,
-  //   borderTopRightRadius: 6,
-  //   borderBottomRightRadius: 6,
-  // },
-  // selectedRangeStyle: {
-  //   backgroundColor: colors.theme.primary,
-  // },
-  // nextTitleStyle: {
-  //   color: colors.theme.greyAlt,
-  //   fontSize: 12,
-  // },
-  // previousTitleStyle: {
-  //   color: colors.theme.greyAlt,
-  //   fontSize: 12,
-  // },
   monthYearHeaderWrapperStyle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -110,26 +89,4 @@ const styles = StyleSheet.create({
   daysLabelStyle: {
     fontSize: vh * 1.71, // 13
   },
-  // textStyle: {
-  //   color: colors.theme.white,
-  //   fontWeight: 'bold',
-  //   fontSize: 13,
-  // },
-  // presentDaysStyle: {
-  //   backgroundColor: colors.theme.darkGreen,
-  // },
-  // absentDaysStyle: {
-  //   backgroundColor: colors.theme.darkRed,
-  // },
-  // leaveDaysStyle: {
-  //   backgroundColor: colors.theme.secondary,
-  // },
-  // weekEndDaysStyle: {
-  //   backgroundColor: colors.theme.lightSecondary,
-  // },
-  // todayStyle: {
-  //   borderWidth: 2,
-  //   borderRadius: 50,
-  //   borderColor: colors.theme.lightGreen
-  // }
 });
