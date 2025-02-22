@@ -304,7 +304,7 @@ export const asyncUserLeave = createAsyncThunk(
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
     } else {
-      dispatch(setUser({ todayAttendance: res.data?.todayAttendance, checkIn: true }));
+      dispatch(setUser({ todayAttendance: res.data?.todayAttendance }));
       dispatch(asyncShowSuccess(res.message));
     }
     dispatch(setLoading(false));

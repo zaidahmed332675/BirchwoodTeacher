@@ -97,7 +97,7 @@ export interface UserExperience {
 
 export interface UserCheckInOutLeave {
   _id: string;
-  teacher: User;
+  teacher: string;
   checkIn: string | null;
   checkOut: string | null;
   leaveReason: string;
