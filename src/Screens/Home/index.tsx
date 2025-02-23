@@ -17,17 +17,20 @@ import { store } from '../../Stores';
 import { asyncGetChildrenByClassId } from '../../Stores/actions/class.action';
 import { asyncShowError } from '../../Stores/actions/common.action';
 import { asyncCheckOutUser, asyncSignOut } from '../../Stores/actions/user.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectChildren } from '../../Stores/slices/class.slice';
+import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectChildren, setChild } from '../../Stores/slices/class.slice';
 import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { appShadow, colors } from '../../Theme/colors';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { attendanceEnum } from '../../Utils/options';
 import { vh, vw } from '../../Utils/units';
+import { socket } from '../../Utils/socket';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+
+  const dispatch = useAppDispatch()
 
   const profile = useAppSelector(selectUserProfile)
   const [_, getChildrenByClassId] = useLoaderDispatch(asyncGetChildrenByClassId);
@@ -36,6 +39,20 @@ const HomeScreen = ({ navigation }: Props) => {
   useEffect(() => {
     if (profile?.classroom?._id) getChildrenByClassId()
   }, [profile?.classroom?._id, getChildrenByClassId]);
+
+  const handleCheckInAndLeave = (record: any) => {
+    let { childId, attendance } = record
+    dispatch(setChild({ _id: childId, todayAttendance: attendance }))
+  }
+
+  useEffect(() => {
+    socket.on(`childCheckIn`, handleCheckInAndLeave);
+    socket.on(`childLeave`, handleCheckInAndLeave);
+    return () => {
+      socket.off(`childCheckIn`, handleCheckInAndLeave);
+      socket.off(`childLeave`, handleCheckInAndLeave);
+    };
+  }, []);
 
   const isClassBasedLocked = !profile?.classroom?._id
   const isNotCheckedIn = profile?.todayAttendance?.status !== attendanceEnum.PRESENT;
@@ -87,7 +104,7 @@ const HomeScreen = ({ navigation }: Props) => {
       icon: featureIcons.change_password,
       route: EMainStack.changePassword,
     },
-    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: isNotCheckedIn },
+    { id: 8, title: 'Check Out', icon: featureIcons.logout, route: 'checkOut', isLocked: isNotCheckedIn, },
     { id: 9, title: 'Logout', icon: featureIcons.logout, route: 'logOut' },
     // {
     //   id: 5,

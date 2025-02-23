@@ -38,24 +38,6 @@ const AppNavigator = () => {
     dispatch(setUser({ classroom: { _id: record.classroom } as ClassRoom }))
   }
 
-  const handlePostInteraction = (record: any) => {
-    let { userId, postId, interactionType } = record
-
-    if (userId === profile._id) return
-
-    if (['like', 'unlike'].includes(interactionType)) {
-      dispatch(setLikeDislike({
-        _id: postId,
-        userId
-      }))
-    } else if (['love', 'unlove'].includes(interactionType)) {
-      dispatch(setLoveUnlove({
-        _id: postId,
-        userId
-      }))
-    }
-  }
-
   useEffect(() => {
     console.log("Connecting Socket!!");
     socket.on('connect', () => {
@@ -82,11 +64,9 @@ const AppNavigator = () => {
 
   useEffect(() => {
     socket.on('classNotice', handleClassAssignByAdmin);
-    socket.on('postInteraction', handlePostInteraction);
 
     return () => {
       socket.off('classNotice', handleClassAssignByAdmin);
-      socket.off('postInteraction', handlePostInteraction);
     };
   }, []);
 

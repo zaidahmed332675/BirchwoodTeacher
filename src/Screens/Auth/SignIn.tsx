@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import chil_logo from '../../Assets/images/logo/child_logo.png';
+import chil_logo from '../../Assets/images/logo/child_logo_transparent.png';
 import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
 import { GrayMediumText } from '../../Components/GrayMediumText';

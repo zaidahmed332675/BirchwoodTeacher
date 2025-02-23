@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import main_logo from '../../Assets/images/logo/main_logo.png';
+import main_logo from '../../Assets/images/logo/main_logo_transparent.png';
 
 interface MainLogoProps {
   _style?: object;
