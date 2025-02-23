@@ -57,9 +57,14 @@ const PostSlice = createSlice({
       state.pagination = pagination;
     },
     setPost: (state, { payload }: PayloadAction<Partial<Post>>) => {
-      state.posts = {
-        ["post_" + payload._id]: { ...state.posts["post_" + payload._id], ...payload },
-        ...state.posts
+      const postKey = "post_" + payload._id;
+      if (postKey in state.posts) {
+        state.posts[postKey] = { ...state.posts[postKey], ...payload };
+      } else {
+        state.posts = {
+          [postKey]: { ...state.posts[postKey], ...payload },
+          ...state.posts
+        }
       }
     },
     removePost: (state, { payload }: PayloadAction<{ _id: string }>) => {
@@ -77,9 +82,14 @@ const PostSlice = createSlice({
       state.commentsPagination = pagination;
     },
     setComment: (state, { payload }: PayloadAction<Comment>) => {
-      state.comments = {
-        ["comment_" + payload._id]: { ...state.comments["comment_" + payload._id], ...payload },
-        ...state.comments
+      const commentKey = "comment_" + payload._id;
+      if (commentKey in state.comments) {
+        state.comments[commentKey] = { ...state.comments[commentKey], ...payload };
+      } else {
+        state.comments = {
+          [commentKey]: { ...state.comments[commentKey], ...payload },
+          ...state.comments
+        }
       }
     },
     setLikeDislike: (state, { payload }: PayloadAction<{ _id: string, userId: string }>) => {

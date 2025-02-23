@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { asyncCreatePostComment, asyncGetCommentsByPostId } from '../../Stores/actions/post.action';
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { resetCommentsAndPaginationState, selectPostComments, setComment } from '../../Stores/slices/post.slice';
+import { resetCommentsAndPaginationState, selectPostComments, setComment, setPost } from '../../Stores/slices/post.slice';
 import { colors } from '../../Theme/colors';
 import { Comment as CommentProps } from '../../Types/Post';
 import { formatCommentTime } from '../../Utils/options';
@@ -50,14 +50,19 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
   }
 
   useEffect(() => {
-    socket.emit('joinPost', postId)
-    socket.on('newComment', handleNewComment)
-
+    socket.emit("joinPost", postId);
+    socket.on("newComment", handleNewComment);
     return () => {
-      socket.emit('leavePost', postId)
-      socket.off('newComment', handleNewComment)
-    }
-  }, [postId])
+      socket.emit("leavePost", postId);
+      socket.off("newComment", handleNewComment);
+    };
+  }, [postId]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setPost({ _id: postId, commentsCount: comments.length }));
+    };
+  }, [postId, comments.length]);
 
   useEffect(() => {
     if (isSheetOpen) {

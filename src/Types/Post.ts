@@ -26,6 +26,7 @@ export interface Post {
   loves: string[];
   createdAt: string;
   updatedAt: string;
+  commentsCount: number;
 }
 
 export interface Comment {
