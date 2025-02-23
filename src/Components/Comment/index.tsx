@@ -1,22 +1,21 @@
 import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
-import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import workerImage from '../../Assets/images/worker.png';
 import { asyncCreatePostComment, asyncGetCommentsByPostId } from '../../Stores/actions/post.action';
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { resetCommentsAndPaginationState, selectPostComments } from '../../Stores/slices/post.slice';
+import { resetCommentsAndPaginationState, selectPostComments, setComment } from '../../Stores/slices/post.slice';
 import { colors } from '../../Theme/colors';
 import { Comment as CommentProps } from '../../Types/Post';
 import { formatCommentTime } from '../../Utils/options';
+import { socket } from '../../Utils/socket';
+import { vh, vw } from '../../Utils/units';
 import { AppInput } from '../AppInput';
 import { GrayMediumText } from '../GrayMediumText';
 import { LoadIndicator } from '../LoadIndicator';
 import { NotFound } from '../NotFound';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
-import { vh, vw } from '../../Utils/units';
 
 interface commentsProps {
   postId: string;
@@ -45,6 +44,20 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
   const loadData = (isFresh = false, ignoreLoading = false) => {
     if (!commentLoading || ignoreLoading) getPostComments({ postId, isFresh })
   }
+
+  const handleNewComment = (record: { comment: CommentProps }) => {
+    dispatch(setComment(record.comment))
+  }
+
+  useEffect(() => {
+    socket.emit('joinPost', postId)
+    socket.on('newComment', handleNewComment)
+
+    return () => {
+      socket.emit('leavePost', postId)
+      socket.off('newComment', handleNewComment)
+    }
+  }, [postId])
 
   useEffect(() => {
     if (isSheetOpen) {
