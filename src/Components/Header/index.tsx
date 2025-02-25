@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import student from '../../Assets/icons/student.png';
 import { GlroyBold } from '../../Components/GlroyBoldText';
@@ -9,7 +9,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import { vh, vw } from '../../Utils/units';
 
-export const Header = () => {
+export const Header = ({ handleNavigation }) => {
   const user = useAppSelector(selectUserProfile);
   const currentYear = new Date().getFullYear();
 
@@ -49,10 +49,12 @@ export const Header = () => {
             </View>
           </View>
         </View>
-        <ImageBox
-          image={{ uri: profile.photo }}
-          _imageStyle={styles.profilePhoto}
-        />
+        <TouchableOpacity onPress={handleNavigation}>
+          <ImageBox
+            image={{ uri: profile.photo }}
+            _imageStyle={styles.profilePhoto}
+          />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );

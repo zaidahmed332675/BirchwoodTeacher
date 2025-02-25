@@ -32,11 +32,11 @@ export default function EmailVerification({ navigation }: Props) {
 
   const onSubmit = useCallback(
     async (body: EmailVerificationPayload) => {
-      const res = await dispatch(asyncEmailVerification(body)).unwrap();
+      const res = await dispatch(asyncEmailVerification({ email: body?.email?.toLowerCase() })).unwrap();
 
       if (res?.data?.encodedEmail) {
         navigation.navigate(EAuthStack.verificaionCode, {
-          email: body.email,
+          email: body?.email?.toLowerCase(),
         });
       }
     },

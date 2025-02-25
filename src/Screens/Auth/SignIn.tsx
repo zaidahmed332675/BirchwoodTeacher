@@ -17,7 +17,7 @@ import { AppInput } from '../../Components/AppInput';
 import { AppButton } from '../../Components/Button';
 import { GrayMediumText } from '../../Components/GrayMediumText';
 import { MainLogo } from '../../Components/MainLogo';
-import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
+// import { SocialMediaIcons } from '../../Components/SocialMediaIcons';
 import { asyncLogin } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { AuthStackParams, EAuthStack } from '../../Types/NavigationTypes';
@@ -47,7 +47,7 @@ const SignIn = ({ navigation }: Props) => {
 
   const onSubmit = useCallback(
     async (body: LoginUserPayload) => {
-      const res = await dispatch(asyncLogin(body)).unwrap();
+      const res = await dispatch(asyncLogin({ ...body, email: body?.email?.toLowerCase() })).unwrap();
       if (res.status) {
         navigation.navigate(EAuthStack.main);
       }
@@ -154,7 +154,7 @@ const SignIn = ({ navigation }: Props) => {
             style={styles.childLogo}
           />
         </View>
-        <SocialMediaIcons />
+        {/* <SocialMediaIcons /> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );

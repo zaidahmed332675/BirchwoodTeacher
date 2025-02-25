@@ -64,12 +64,12 @@ const HomeScreen = ({ navigation }: Props) => {
   const isNotCheckedIn = profile?.todayAttendance?.status !== attendanceEnum.PRESENT;
 
   const data = [
-    {
-      id: 1,
-      title: 'Profile',
-      icon: featureIcons.profile,
-      route: EMainStack.profileRoutes,
-    },
+    // {
+    //   id: 1,
+    //   title: 'Profile',
+    //   icon: featureIcons.profile,
+    //   route: EMainStack.profileRoutes,
+    // },
     {
       id: 2,
       title: 'My Class',
@@ -230,7 +230,9 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header handleNavigation={() => {
+        navigation.navigate(EMainStack.profileRoutes);
+      }} />
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}

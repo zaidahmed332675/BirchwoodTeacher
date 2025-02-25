@@ -68,7 +68,7 @@ const MyClass = ({ }: Props) => {
           text={`Roll No: ${item.rollNumber}`}
           _style={styles.rollNoText}
         />
-        <View>
+        {/* <View>
           {!item.todayAttendance?._id && (
             <View
               style={styles.markAttendanceBtn}>
@@ -78,7 +78,7 @@ const MyClass = ({ }: Props) => {
               />
             </View>
           )}
-        </View>
+        </View> */}
       </View>
       <TouchableOpacity
         onPress={() => {

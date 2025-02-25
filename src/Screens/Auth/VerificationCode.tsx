@@ -43,7 +43,7 @@ export default function VerificationCode({ navigation, route }: Props) {
     async (body: OtpVerificationPayload) => {
       const res = await dispatch(asyncOtpVerification(body)).unwrap();
 
-      if (!res.status) {
+      if (res.status) {
         navigation.navigate(EAuthStack.resetPassword, {
           email: body.email,
           code: body.code,

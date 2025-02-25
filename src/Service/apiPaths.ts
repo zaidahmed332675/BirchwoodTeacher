@@ -3,15 +3,15 @@ export enum AuthApiPaths {
 }
 
 export enum ResetPasswordApiPaths {
-  emailVerification = 'auth/emailVerificationCode',
-  codeVerification = 'auth/verifyRecoverCode',
-  resetPassword = 'auth/resetPassword',
+  emailVerification = 'teacher/auth/emailVerificationCode',
+  codeVerification = 'teacher/auth/verifyRecoverCode',
+  resetPassword = 'teacher/auth/resetPassword',
 }
 
 export enum ProfileApiPaths {
   profile = 'teacher/profile/getProfile',
   updateProfile = 'teacher/profile/updateProfile',
-  changePassword = 'profile/changePassword',
+  changePassword = 'teacher/profile/changePassword',
   checkIn = 'teacher/attendance/markCheckIn',
   checkOut = 'teacher/attendance/markCheckOut',
   markLeave = 'teacher/attendance/markLeave',
