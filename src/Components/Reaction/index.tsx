@@ -8,26 +8,27 @@ interface ReactionProps {
   handleLike: () => void;
   handleLove: () => void;
   handleSheetPresent?: () => void;
+  userId: string;
   post: Post
 }
 
-export const Reaction = ({ post, handleLike, handleLove, handleSheetPresent }: ReactionProps) => {
+export const Reaction = ({ userId, post, handleLike, handleLove, handleSheetPresent }: ReactionProps) => {
   return (
     <View style={styles.reaction}>
       <View style={styles.reactionActions}>
-        <TouchableOpacity style={[styles.action, post.likes.length ? styles.actionSelected : {}]} onPress={handleLike}>
+        <TouchableOpacity style={[styles.action, post.likes.includes(userId) ? styles.actionSelected : {}]} onPress={handleLike}>
           <VIcon
             type="FontAwesome"
-            name={post.likes.length ? "thumbs-up" : "thumbs-o-up"}
+            name={post.likes.includes(userId) ? "thumbs-up" : "thumbs-o-up"}
             size={16}
             color={colors.theme.white}
             style={styles.moreAction}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.action, post.loves.length ? styles.actionSelected : {}]} onPress={handleLove}>
+        <TouchableOpacity style={[styles.action, post.loves.includes(userId) ? styles.actionSelected : {}]} onPress={handleLove}>
           <VIcon
             type="FontAwesome"
-            name={post.loves.length ? "heart" : "heart-o"}
+            name={post.loves.includes(userId) ? "heart" : "heart-o"}
             size={16}
             color={colors.theme.white}
             style={styles.moreAction}

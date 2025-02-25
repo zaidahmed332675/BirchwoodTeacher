@@ -227,9 +227,11 @@ export const asyncLikePost = createAsyncThunk(
   async ({ postId }: { postId: string }, { getState, dispatch }) => {
     const userId = (getState() as RootState).user.user?._id
     const res = await callApi({
+      method: "POST",
       path: allApiPaths.getPath('likePost', {
         postId
       }),
+      body: { authorType: 'teacher' }
     });
 
     if (!res.status) {
@@ -246,9 +248,11 @@ export const asyncLovePost = createAsyncThunk(
   async ({ postId }: { postId: string }, { getState, dispatch }) => {
     const userId = (getState() as RootState).user.user?._id
     const res = await callApi({
+      method: "POST",
       path: allApiPaths.getPath('lovePost', {
         postId
       }),
+      body: { authorType: 'teacher' }
     });
 
     if (!res.status) {

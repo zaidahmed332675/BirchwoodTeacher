@@ -45,10 +45,16 @@ const HomeScreen = ({ navigation }: Props) => {
     dispatch(setChild({ _id: childId, todayAttendance: attendance }))
   }
 
+  const handleNotification = (notification: any) => {
+    console.log("Notification Received", notification);
+  }
+
   useEffect(() => {
+    socket.on(`notification`, handleNotification);
     socket.on(`childCheckIn`, handleCheckInAndLeave);
     socket.on(`childLeave`, handleCheckInAndLeave);
     return () => {
+      socket.off(`notification`, handleNotification);
       socket.off(`childCheckIn`, handleCheckInAndLeave);
       socket.off(`childLeave`, handleCheckInAndLeave);
     };

@@ -65,16 +65,17 @@ const Post = ({ navigation }: Props) => {
   }
 
   const handlePostInteraction = (record: any) => {
+    console.log(record, 'postInteraction')
     let { userId, postId, interactionType } = record
 
-    if (userId === profile._id) return
+    if (userId === profile?._id) return
 
-    if (['like', 'unlike'].includes(interactionType)) {
+    if (['Post Liked', 'Post UnLiked'].includes(interactionType)) {
       dispatch(setLikeDislike({
         _id: postId,
         userId
       }))
-    } else if (['love', 'unlove'].includes(interactionType)) {
+    } else if (['Post Loved', 'Post UnLoved'].includes(interactionType)) {
       dispatch(setLoveUnlove({
         _id: postId,
         userId
@@ -83,8 +84,10 @@ const Post = ({ navigation }: Props) => {
   }
 
   useEffect(() => {
+    socket.emit('livePostFeed');
     socket.on('postInteraction', handlePostInteraction);
     return () => {
+      socket.emit('leaveLivePostFeed');
       socket.off('postInteraction', handlePostInteraction);
     };
   }, []);
@@ -146,7 +149,7 @@ const Post = ({ navigation }: Props) => {
         <LoadMoreFlatList
           uuidKey='_id'
           data={posts}
-          renderItem={({ item }) => <ActivityPost item={item} />}
+          renderItem={({ item }) => <ActivityPost userId={profile?._id} item={item} />}
           loadMore={loadData}
           loading={!appLoading && (loading || classloading || childloading)}
         />

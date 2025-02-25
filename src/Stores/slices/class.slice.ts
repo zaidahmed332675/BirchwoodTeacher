@@ -11,7 +11,7 @@ import { User } from '../../Types/User';
 
 interface ClassSliceState {
   classRoom: ClassRoom;
-  attendance: ChildAttendance; // Record<string, ChildAttendance>
+  attendance: ChildAttendance;
   children: Record<string, Child>;
   pagination: PaginationProps; // children pagination
   chatRooms: Record<string, {
@@ -54,45 +54,9 @@ const ClassSlice = createSlice({
     setChild: (state, { payload }: PayloadAction<Partial<Child>>) => {
       state.children["child_" + payload._id] = { ...state.children["child_" + payload._id], ...payload };
     },
-    // setAttendances: (state, { payload }: PayloadAction<Partial<ChildAttendance>>) => {
-    //   state.attendances[payload._id] = { ...state.attendances[payload._id], ...payload };
-    // },
     setAttendances: (state, { payload }: PayloadAction<ChildAttendance>) => {
       state.attendance = payload;
     },
-    // setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string, isFresh: boolean }>) => {
-    //   const { chatRoomId, docs, ...pagination } = payload;
-
-    //   const chatRoomKey = `chatRoom_${chatRoomId}`;
-    //   state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
-    //   docs.forEach((message) => {
-    //     state.chatRooms[chatRoomKey].messages[`message_${message._id}`] = {
-    //       ...message,
-    //       text: message.content,
-    //       user: {
-    //         _id: message.sender,
-    //         name: 'Sender Name',
-    //       },
-    //     };
-    //   });
-    //   state.chatRooms[chatRoomKey].messagePagination = pagination;
-    // },
-    // setChatRoomMessage: (state, { payload }: PayloadAction<{ chatRoomId: string, message: Message }>) => {
-    //   const { chatRoomId, message } = payload;
-    //   const chatRoomKey = `chatRoom_${chatRoomId}`;
-    //   state.chatRooms[chatRoomKey] = state.chatRooms[chatRoomKey] || { messages: {}, messagePagination: {} };
-    //   state.chatRooms[chatRoomKey].messages = {
-    //     [`message_${message._id}`]: {
-    //       ...message,
-    //       text: message.content,
-    //       user: {
-    //         _id: message.sender,
-    //         name: 'Sender Name',
-    //       },
-    //     },
-    //     ...state.chatRooms[chatRoomKey].messages,
-    //   }
-    // },
     setChatRoomMessages: (state, { payload }: PayloadAction<MessagesResponse & { chatRoomId: string; isFresh: boolean }>) => {
       const { chatRoomId, isFresh, docs, ...pagination } = payload;
 
@@ -165,17 +129,6 @@ export const selectChildById = (childId: string) =>
     [(state: RootState) => state.class.children],
     children => children["child_" + childId] as Child
   );
-
-// export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
-//   createDraftSafeSelector(
-//     [(state: RootState) => state.class.attendances],
-//     attendances => {
-//       return attendances?.[_id]?.attendance?.map((attendance => {
-//         if (isSameWeek(attendance.createdAt, weekStart))
-//           return attendance
-//       }))
-//     }
-//   );
 
 export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
   createDraftSafeSelector(

@@ -50,11 +50,21 @@ const UserSlice = createSlice({
         };
       });
     },
+    setHoliday: (state, { payload }: PayloadAction<Holiday>) => {
+      const date = format(payload.date, 'yyyy-MM');
+      if (!state.holidays?.[date]) {
+        state.holidays[date] = {} as Holiday
+      }
+      state.holidays[date] = {
+        ...state.holidays[date],
+        ...payload
+      };
+    },
     resetUserState: _ => initialState,
   },
 });
 
-export const { setUserState, setUser, setUserAttendance, setHolidays, resetUserState } =
+export const { setUserState, setUser, setUserAttendance, setHolidays, setHoliday, resetUserState } =
   UserSlice.actions;
 
 export default UserSlice.reducer;

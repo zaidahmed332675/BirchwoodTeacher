@@ -21,7 +21,7 @@ import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 
-export const ActivityPost = ({ item: post }: { item: Post }) => {
+export const ActivityPost = ({ userId, item: post }: { userId: string, item: Post }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
 
   const sheetRef = useRef<BottomSheetModalMethods>(null);
@@ -165,7 +165,7 @@ export const ActivityPost = ({ item: post }: { item: Post }) => {
           }}
         />
       </View>
-      <Reaction post={post} handleLike={handleLike} handleLove={handleLove} handleSheetPresent={() => sheetRef.current?.present()} />
+      <Reaction userId={userId} post={post} handleLike={handleLike} handleLove={handleLove} handleSheetPresent={() => sheetRef.current?.present()} />
       <AppBottomSheet
         ref={sheetRef}
         isSheetOpen={isSheetOpen}
