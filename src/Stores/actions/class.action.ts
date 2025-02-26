@@ -75,7 +75,6 @@ export const asyncCheckInChildByTeacher = createAsyncThunk(
       dispatch(asyncShowError(res.message));
     } else {
       if (res.data?.newAttendance?.children) {
-        // REVIEW IT
         dispatch(setChild({ _id: res.data.newAttendance.children, todayAttendance: res.data.newAttendance }));
       }
       dispatch(asyncShowSuccess(res.message));

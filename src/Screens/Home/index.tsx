@@ -25,6 +25,7 @@ import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { attendanceEnum } from '../../Utils/options';
 import { vh, vw } from '../../Utils/units';
 import { socket } from '../../Utils/socket';
+import { ChildCheckInOutResponse } from '../../Types/Class';
 
 type Props = StackScreenProps<MainStackParams, 'home'>;
 
@@ -40,9 +41,16 @@ const HomeScreen = ({ navigation }: Props) => {
     if (profile?.classroom?._id) getChildrenByClassId()
   }, [profile?.classroom?._id, getChildrenByClassId]);
 
-  const handleCheckInAndLeave = (record: any) => {
-    let { childId, attendance } = record
-    dispatch(setChild({ _id: childId, todayAttendance: attendance }))
+  const handleChildCheckIn = (record: { childId: string, newAttendance: ChildCheckInOutResponse }) => {
+    let { childId, newAttendance } = record
+    dispatch(setChild({ _id: childId, todayAttendance: newAttendance }))
+  }
+
+  const handleChildLeave = (record: { childId: string, todayAttendance: ChildCheckInOutResponse }) => {
+    let { childId, todayAttendance } = record
+    if (todayAttendance?.children) {
+      dispatch(setChild({ _id: childId, todayAttendance }))
+    }
   }
 
   const handleNotification = (notification: any) => {
@@ -51,12 +59,12 @@ const HomeScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     socket.on(`notification`, handleNotification);
-    socket.on(`childCheckIn`, handleCheckInAndLeave);
-    socket.on(`childLeave`, handleCheckInAndLeave);
+    socket.on(`childCheckIn`, handleChildCheckIn);
+    socket.on(`childLeave`, handleChildLeave);
     return () => {
       socket.off(`notification`, handleNotification);
-      socket.off(`childCheckIn`, handleCheckInAndLeave);
-      socket.off(`childLeave`, handleCheckInAndLeave);
+      socket.off(`childCheckIn`, handleChildCheckIn);
+      socket.off(`childLeave`, handleChildLeave);
     };
   }, []);
 
