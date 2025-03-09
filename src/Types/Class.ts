@@ -124,13 +124,13 @@ export interface CategoryResponse extends PaginationProps {
 export interface ChildCheckInOutPayload {
   children: string;
   checkIn: string;
-  markedBy: string;
+  markedBy: 'TEACHER' | 'PARENT';
 }
 
 export interface ChildCheckInOutResponse {
   _id: string;
   children: string;
-  checkIn: string | null;
+  checkIn: string;
   checkOut: string | null;
   leaveReason: string;
   sickDescription: string;

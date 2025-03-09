@@ -9,7 +9,7 @@ import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import { vh, vw } from '../../Utils/units';
 
-export const Header = ({ handleNavigation }) => {
+export const Header = ({ handleNavigation = () => { } }: { handleNavigation?: () => void }) => {
   const user = useAppSelector(selectUserProfile);
   const currentYear = new Date().getFullYear();
 
@@ -31,8 +31,8 @@ export const Header = ({ handleNavigation }) => {
       />
       <View style={styles.profile_container}>
         <View>
-          <GlroyBold text={`Hi ${profile.name}`} _style={styles.profile_text} />
-          <View
+          <GlroyBold text={`Hi, ${profile.name}`} _style={styles.profile_text} />
+          {/* <View
             style={styles.year_icon_box}>
             <View style={styles.student_year}>
               <Text style={styles.year}>
@@ -47,7 +47,7 @@ export const Header = ({ handleNavigation }) => {
                 tintColor={colors.theme.primary}
               />
             </View>
-          </View>
+          </View> */}
         </View>
         <TouchableOpacity onPress={handleNavigation}>
           <ImageBox

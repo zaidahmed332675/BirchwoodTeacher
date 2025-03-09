@@ -124,7 +124,7 @@ export default function TimeTable({ navigation }: Props) {
           ItemSeparatorComponent={() => <View style={{ margin: vh * 1.32 }} />}
           contentContainerStyle={styles.flatListContainer}
         /> :
-          <NotFound _textStyle={{ fontSize: vh * 2.37 }} text={"Currently, there are no timetable entries available for this day."} />}
+          <NotFound text={"No timetable available\nPlease add a new timetable"} />}
       </View>
     </Layout>
   );

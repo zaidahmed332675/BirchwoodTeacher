@@ -134,7 +134,15 @@ const PostSlice = createSlice({
       state.activitiesPagination = pagination;
     },
     setActivity: (state, { payload }: PayloadAction<Partial<Activity>>) => {
-      state.activities["activity_" + payload._id] = { ...state.activities["activity_" + payload._id], ...payload };
+      const activityKey = "activity_" + payload._id;
+      if (activityKey in state.activities) {
+        state.activities[activityKey] = { ...state.activities[activityKey], ...payload };
+      } else {
+        state.activities = {
+          [activityKey]: { ...state.activities[activityKey], ...payload },
+          ...state.activities
+        }
+      }
     },
     removeActivity: (state, { payload }: PayloadAction<Partial<Activity>>) => {
       delete state.activities["activity_" + payload._id]

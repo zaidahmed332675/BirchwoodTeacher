@@ -127,7 +127,6 @@ export const asyncCreateChat = createAsyncThunk(
 export const asyncCreateChatRoomMessage = createAsyncThunk(
   'createChatRoomMessage',
   async (data: CreateChatRoomMessagePayload, { dispatch, getState }) => {
-    const sender = (getState() as RootState).user.user
 
     const res = await callApi<CreateChatRoomMessageResponse, CreateChatRoomMessagePayload>({
       method: 'POST',
@@ -137,10 +136,6 @@ export const asyncCreateChatRoomMessage = createAsyncThunk(
 
     if (!res?.status) {
       dispatch(asyncShowError(res.message));
-    } else {
-      if (res.data?.message?._id) {
-        dispatch(setChatRoomMessage({ chatRoomId: res.data.message.chat, message: { ...res.data.message, sender } }));
-      }
     }
 
     // dispatch(setLoading(false));

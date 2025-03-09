@@ -156,46 +156,46 @@ export const ImageBox = ({
   );
 };
 
-export const VideoBox = ({ media }) => {
-  const [videoLoader, setVideoLoader] = useState(true);
+// export const VideoBox = ({ media }) => {
+//   const [videoLoader, setVideoLoader] = useState(true);
 
-  return (<View style={[{ alignItems: 'center', justifyContent: 'center' }]}>
-    <VideoPlayer
-      useAnimations={useAnimations}
-      disableBack
-      paused={true}
-      onLoadStart={() => {
-        setVideoLoader(true);
-      }}
-      onLoad={() => {
-        setVideoLoader(false);
-      }}
-      poster={media.uri}
-      source={{
-        uri: media?.uri,
-      }}
-      resizeMode='contain'
-      containerStyle={{
-        borderRadius: 10
-      }}
-      style={{
-        height: 250,
-      }}
-    />
-    <View
-      style={[
-        styles.userImage,
-        { position: 'absolute', justifyContent: 'center' },
-      ]}>
-      <ActivityIndicator
-        animating={videoLoader}
-        size="large"
-        color={colors.theme.primary}
-      />
-    </View>
-  </View>
-  )
-}
+//   return (<View style={[{ alignItems: 'center', justifyContent: 'center' }]}>
+//     <VideoPlayer
+//       useAnimations={useAnimations}
+//       disableBack
+//       paused={true}
+//       onLoadStart={() => {
+//         setVideoLoader(true);
+//       }}
+//       onLoad={() => {
+//         setVideoLoader(false);
+//       }}
+//       poster={media.uri}
+//       source={{
+//         uri: media?.uri,
+//       }}
+//       resizeMode='contain'
+//       containerStyle={{
+//         borderRadius: 10
+//       }}
+//       style={{
+//         height: 250,
+//       }}
+//     />
+//     <View
+//       style={[
+//         styles.userImage,
+//         { position: 'absolute', justifyContent: 'center' },
+//       ]}>
+//       <ActivityIndicator
+//         animating={videoLoader}
+//         size="large"
+//         color={colors.theme.primary}
+//       />
+//     </View>
+//   </View>
+//   )
+// }
 
 const styles = StyleSheet.create({
   userImage: {

@@ -1,7 +1,9 @@
 import ax from 'axios';
-export const APP_URL = 'https://darkmodelabs.com:8201/';
-export const IMG_URL = APP_URL + 'uploads/';
-export const BASE_URL = APP_URL + 'api/';
+// export const APP_URL = 'https://darkmodelabs.com:8201';
+export const APP_URL = 'http://192.168.0.113:8201'; // FOR PHYSICAL DEVICE
+// export const APP_URL = 'http://10.0.2.2:8201'; // FOR EMULATOR
+export const IMG_URL = APP_URL + '/uploads/';
+export const BASE_URL = APP_URL + '/api/';
 
 export const getImagePath = (str: string) => IMG_URL + str;
 

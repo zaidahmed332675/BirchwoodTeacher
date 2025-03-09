@@ -70,7 +70,7 @@ const AppNavigator = () => {
     };
   }, []);
 
-  if (!attendanceEnum[profile?.todayAttendance?.status] && !profile.checkIn && !skipCheckIn) {
+  if (!attendanceEnum[profile?.todayAttendance?.status] && !skipCheckIn) {
     return (
       <View style={styles.container}>
         <Header />

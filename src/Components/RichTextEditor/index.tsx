@@ -27,8 +27,9 @@ import { AppModal } from '../Modal';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
 import { vh } from '../../Utils/units';
+import { AppVideoPlayer } from '../ActivityPost/AppVideoPlayer';
 
-export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, selectionLimit?: number }>(({ enableToolbar = true, selectionLimit = 1 }, ref) => {
+export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, selectionLimit?: number, isEdit?: boolean }>(({ enableToolbar = true, selectionLimit = 1, isEdit = false }, ref) => {
     // const videoPlayerRef = useRef<typeof VideoPlayer | null>(null);
     const [contentHeight, setContentHeight] = useState(0);
     const [media, setMedia] = useState<Asset[]>([]);
@@ -74,7 +75,9 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
     }), [media?.length, mediaType]);
 
     const handleMediaDelete = (mediaObj: Asset) => {
-        if (mediaObj.fileName) return setMedia((prevMedia) => prevMedia.filter((media) => media.fileName !== mediaObj.fileName))
+        if (mediaObj.fileName || mediaObj.uri) return setMedia((prevMedia) => prevMedia.filter((media) => media.fileName !== mediaObj.fileName || media.uri !== mediaObj.uri));
+
+        if (!isEdit) return
         setDeletedMedia((prevItems) => isImage(mediaObj.uri!) ? {
             ...prevItems,
             ['images']: [...prevItems['images'], mediaObj.uri!]
@@ -148,7 +151,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
                                 if (isImage(media.fileName! || media.uri!)) {
                                     return <View key={`${media.fileName || media.uri}_${index}`} style={{ height: vh * 26.32 }}>
                                         <ImageBox image={media} _imageStyle={{ height: '100%', width: '100%', resizeMode: 'cover', borderRadius: 8 }} />
-                                        <TouchableOpacity onPress={handleMediaDelete} style={{
+                                        <TouchableOpacity onPress={() => handleMediaDelete(media)} style={{
                                             position: 'absolute',
                                             display: 'flex',
                                             flexDirection: 'row',
@@ -169,24 +172,27 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
                                     </View>
                                 }
                                 else if (isVideo(media.fileName! || media.uri!)) {
-                                    return <VideoPlayer
-                                        key={`${media.fileName}_${index}`}
-                                        useAnimations={useAnimations}
-                                        disableBack
-                                        paused={true}
-                                        poster={media.uri}
-                                        source={{
-                                            uri: media?.uri,
-                                        }}
-                                        resizeMode='contain'
-                                        containerStyle={{
-                                            borderRadius: 10
-                                        }}
-                                        style={{
-                                            height: vh * 26.32,
-                                            width: '100%'
-                                        }}
-                                    />
+                                    return <View key={`${media.fileName || media.uri}_${index}`}>
+                                        <AppVideoPlayer index={index} media={media.uri!} isNewlyPicked={!!media.originalPath} />
+                                        <TouchableOpacity onPress={() => handleMediaDelete(media)} style={{
+                                            position: 'absolute',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            gap: 5,
+                                            top: -3,
+                                            right: -4,
+                                            padding: 5,
+                                            backgroundColor: colors.theme.white,
+                                            borderRadius: 200
+                                        }}>
+                                            <VIcon
+                                                type="AntDesign"
+                                                name={"close"}
+                                                size={15}
+                                                color={colors.theme.darkRed}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 } else {
                                     return <></>
                                 }

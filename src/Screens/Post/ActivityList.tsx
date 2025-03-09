@@ -14,8 +14,8 @@ import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
 import { NotFound } from '../../Components/NotFound';
 import { ImageBox } from '../../Components/UploadImage';
 import { asyncGetAllActivities } from '../../Stores/actions/post.action';
-import { useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
-import { selectActivities } from '../../Stores/slices/post.slice';
+import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
+import { selectActivities, setActivity } from '../../Stores/slices/post.slice';
 import { colors } from '../../Theme/colors';
 import {
   EPostStack,
@@ -24,11 +24,14 @@ import {
 import { Activity } from '../../Types/Post';
 import { vh, vw } from '../../Utils/units';
 import { selectAppLoader } from '../../Stores/slices/common.slice';
+import { socket } from '../../Utils/socket';
 
 type Props = StackScreenProps<PostStackParams, 'activityList'>;
 
 const ActivityList = ({ navigation }: Props) => {
   const [loading, getActivities] = useLoaderDispatch(asyncGetAllActivities);
+
+  const dispatch = useAppDispatch()
 
   const activities = useAppSelector(selectActivities);
   const appLoading = useAppSelector(selectAppLoader)
@@ -37,9 +40,23 @@ const ActivityList = ({ navigation }: Props) => {
     if (!loading || ignoreLoading) getActivities({ isFresh })
   }
 
+  const handleNewActivity = (activity: Activity) => {
+    dispatch(setActivity(activity))
+  }
+
   useEffect(() => {
     loadData(true, true)
   }, [getActivities]);
+
+
+  useEffect(() => {
+    socket.emit('adminUpdatesForPostActivity')
+    socket.on('activityUpdates', handleNewActivity)
+
+    return () => {
+      socket.off('activityUpdates', handleNewActivity)
+    }
+  }, [])
 
   const renderItem = ({
     item,
@@ -94,19 +111,23 @@ const ActivityList = ({ navigation }: Props) => {
           loadMore={loadData}
           loading={!appLoading && loading}
         />
-        : <NotFound text={`No activities available\nPlease add a new activity`} />}
+        : <NotFound text={`No activities available`} />}
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
+    marginVertical: vh * 1.32, // 10
+    marginHorizontal: vw * 2.78, // 10
     backgroundColor: colors.card.card1,
     justifyContent: 'center',
-    alignItems: 'center',
+    position: 'relative',
     height: vh * 15,
     width: vw * 38,
     borderRadius: 10,
+    paddingVertical: vh * 1.97, // 15
+    paddingHorizontal: vw * 4.17, // 15
   },
   featureIcons: {
     width: vw * 13.89, // 50

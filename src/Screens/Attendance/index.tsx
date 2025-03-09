@@ -175,7 +175,7 @@ const Attendance = () => {
           data={monthlyUserHolidays}
           renderItem={({ item }) => <HolidayCard holiday={item} />}
           keyExtractor={item => item._id}
-        /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} _textStyle={{ fontSize: vh * 2.37 }} text={"Currently, there are no holidays available for this month."} />
+        /> : <NotFound _containerStyle={{ marginTop: -15, position: 'relative' }} text={"Currently, there are no holidays available for this month."} />
       ) : (
         <View style={styles.stats}>
           <AttendanceCard

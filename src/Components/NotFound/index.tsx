@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   text: {
-    fontSize: vh * 2.89, // 22
+    fontSize: vh * 2.37,
     textAlign: 'center',
     color: colors.theme.primary
   },

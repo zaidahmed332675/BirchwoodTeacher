@@ -144,7 +144,7 @@ const ChildInfo = ({ route }: Props) => {
             <View style={{ margin: 1 }} />
             {Array.from({ length: 5 }).map((_, indx) => {
               const weekDay = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), indx)
-              const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item?.createdAt ?? "")) || {} as ChildCheckInOutResponse
+              const day = currentWeekAttendance?.find(item => isSameDay(weekDay, item?.checkIn ?? "")) || {} as ChildCheckInOutResponse
               let checkIn = day.checkIn ? format(new Date(day.checkIn), "hh:mm a") : 'N/A'
 
               const childTodayCheckIn = child.todayAttendance?.checkIn ?? ""

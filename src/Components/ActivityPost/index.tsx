@@ -1,12 +1,9 @@
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { useAnimations } from '@react-native-media-console/reanimated';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { formatDistanceToNow } from 'date-fns';
 import lodash from 'lodash';
 import React, { useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import VideoPlayer from 'react-native-media-console';
-import { getImagePath } from '../../Service/axios';
 import { asyncDeletePost, asyncLikePost, asyncLovePost } from '../../Stores/actions/post.action';
 import { useLoaderDispatch } from '../../Stores/hooks';
 import { colors } from '../../Theme/colors';
@@ -20,6 +17,7 @@ import { GrayMediumText } from '../GrayMediumText';
 import { Reaction } from '../Reaction';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
+import { AppVideoPlayer } from './AppVideoPlayer';
 
 export const ActivityPost = ({ userId, item: post }: { userId: string, item: Post }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
@@ -34,14 +32,14 @@ export const ActivityPost = ({ userId, item: post }: { userId: string, item: Pos
 
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (likeLoading) return
-    likePost({ postId: post._id })
+    await likePost({ postId: post._id })
   }
 
-  const handleLove = () => {
+  const handleLove = async () => {
     if (loveLoading) return
-    lovePost({ postId: post._id })
+    await lovePost({ postId: post._id })
   }
 
   const handlePostDelete = () => {
@@ -58,7 +56,10 @@ export const ActivityPost = ({ userId, item: post }: { userId: string, item: Pos
     ]);
   }
 
-  const media = lodash.shuffle([...post.images, ...post.videos]);
+  const media = useMemo(() => {
+    return lodash.shuffle([...post.images, ...post.videos]);
+  }, [])
+
   const snapPoints = useMemo(() => ["75"], []);
 
   return (
@@ -104,34 +105,18 @@ export const ActivityPost = ({ userId, item: post }: { userId: string, item: Pos
         {post.content}
       </Text>
       {media.length ? <View style={{
-        gap: 10
+        gap: 10,
+        flex: 1,
       }}>
         {
           media.map((media, index) => {
             if (isImage(media)) {
               return <ImageBox key={`${media}_${index}`} image={{ uri: media }} _imageStyle={styles.postImage} _containerStyle={{
-                height: 200
+                height: vh * 26.32
               }} />
             }
             else if (isVideo(media)) {
-              return <VideoPlayer
-                key={`${media}_${index}`}
-                useAnimations={useAnimations}
-                disableBack
-                paused={true}
-                poster={getImagePath(media)}
-                source={{
-                  uri: getImagePath(media),
-                }}
-                resizeMode='contain'
-                containerStyle={{
-                  borderRadius: 10
-                }}
-                style={{
-                  height: 250,
-                  width: '100%'
-                }}
-              />
+              return <AppVideoPlayer key={`${media}_${index}`} index={index} media={media} />
             } else {
               return <></>
             }

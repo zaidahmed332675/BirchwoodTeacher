@@ -1,16 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   Bubble,
   Composer,
   GiftedChat,
   IMessage,
-  InputToolbar
+  InputToolbar,
+  Message,
+  MessageText
 } from 'react-native-gifted-chat';
 import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
+import { ImageBox } from '../../Components/UploadImage';
 import { VIcon } from '../../Components/VIcon';
 import { asyncCreateChat, asyncCreateChatRoomMessage, asyncGetMessagesByChatRoomId } from '../../Stores/actions/class.action';
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
@@ -20,9 +23,12 @@ import { colors } from '../../Theme/colors';
 import { ChatStackParams } from '../../Types/NavigationTypes';
 import { socket } from '../../Utils/socket';
 import { vh } from '../../Utils/units';
-import { ImageBox } from '../../Components/UploadImage';
 
 type Props = StackScreenProps<ChatStackParams, 'createChat'>;
+
+interface CustomMessage extends IMessage {
+  temp_msg_id?: string | number;
+}
 
 const CustomChatHeader = ({ title, subTitle, image }: { title: string, subTitle: string, image: any }) => {
   const navigation = useNavigation();
@@ -95,24 +101,24 @@ const CreateChat = ({ route }: Props) => {
   const messages = useAppSelector(selectChatRoomMessages(chatRoomId || child?.chats?._id));
   const messagesPagination = useAppSelector(selectChatRoomPagination(chatRoomId || child?.chats?._id));
 
+  const [localMessages, setLocalMessages] = React.useState<CustomMessage[]>([]);
+  const reduxAndLocalMessages = [...localMessages, ...messages];
+
   const handleNewMessage = (record: any) => {
-    let { sender, reciever, ...data } = record
     dispatch(setChatRoomMessage({
       chatRoomId: record?.chat,
-      message: {
-        sender: sender?._id,
-        ...data
-      }
+      message: record
     }))
   }
 
   useLayoutEffect(() => {
-    if (chatRoomId) {
+    if (child?.chats?._id) {
       setCreateChatLoader(false)
     }
   }, [])
 
   useEffect(() => {
+    if (!child?.chats?._id) return;
     socket.emit('join chat', child?.chats?._id);
     socket.on('message', handleNewMessage)
 
@@ -122,13 +128,28 @@ const CreateChat = ({ route }: Props) => {
   }, [child?.chats?._id])
 
   const onSend = useCallback(async (msg: IMessage[]) => {
+    const temp_msg_id = msg[0]._id;
+    const optimisticMessage = {
+      ...msg[0],
+      sent: false,
+      received: false,
+      pending: true,
+      temp_msg_id,
+    };
+
+    setLocalMessages(previousMessages => GiftedChat.append(previousMessages, [optimisticMessage]));
+
     let res = await createMessage({ chatId: child?.chats?._id, content: msg[0].text, senderType: 'teacher' })
-    if (res.status) {
-      socket.emit('new message', {
-        senderType: 'teacher',
-        reciever: child.parent?._id,
-        ...res.data?.message
-      })
+    if (res.status && res.data?.message?._id) {
+      socket.emit('new message', res.data?.message)
+      setLocalMessages((prev) => prev.filter((msg) => msg.temp_msg_id !== temp_msg_id));
+      dispatch(setChatRoomMessage({ chatRoomId: res.data.message?.chat, message: { ...res.data?.message, sender: profile } }));
+    } else {
+      setLocalMessages((prev) =>
+        prev.map((msg) =>
+          msg.temp_msg_id === temp_msg_id ? { ...msg, pending: false } : msg
+        )
+      );
     }
   }, [child?.chats?._id]);
 
@@ -184,7 +205,7 @@ const CreateChat = ({ route }: Props) => {
         loadEarlier={messagesPagination.page < messagesPagination.pages}
         isLoadingEarlier={!!messages.length && messagesLoader}
         onLoadEarlier={handleLoadEarlierMessages}
-        messages={messages}
+        messages={reduxAndLocalMessages}
         renderInputToolbar={props => (
           <InputToolbar
             {...props}
@@ -198,6 +219,15 @@ const CreateChat = ({ route }: Props) => {
             )}
           />
         )}
+        renderMessage={props => {
+          return (
+            <Message {...props}
+              renderSystemMessage={(textProps) => {
+                return <MessageText {...(textProps as any)} />;
+              }}
+            />
+          )
+        }}
         renderBubble={props => {
           return (
             <Bubble

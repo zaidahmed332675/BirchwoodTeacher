@@ -90,7 +90,7 @@ const CreatePost = ({ navigation, route }: Props) => {
     if (audience === 1) {
       if (students?.length) formData.append('children', JSON.stringify(students))
       else return dispatch(asyncShowError('Please select atleast one child!'))
-    } else formData.append('classroom', isEdit ? post.classroom : profile?.classroom?._id);
+    } else formData.append('classroom', isEdit ? post.classroom?._id : profile?.classroom?._id);
 
     let res = !isEdit ? await createPost(formData) : await updatePost({ postId, data: formData })
     if (res.status) {
@@ -100,7 +100,7 @@ const CreatePost = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     if (isEdit) {
-      if (post.classroom) {
+      if (post.classroom?._id) {
         setAudience(0)
       }
       else {
@@ -116,12 +116,19 @@ const CreatePost = ({ navigation, route }: Props) => {
           name: image
         })
       })
-      textEditorRef.current?.editMedia(images)
+      let videos = post.videos.map((video) => {
+        return ({
+          uri: video,
+          type: `video/${video.split('.').pop()?.toLowerCase()}`,
+          name: video
+        })
+      })
+      textEditorRef.current?.editMedia([...images, ...videos])
     }
   }, [postId])
 
   return (
-    <Layout customHeader={<CustomHeader title="Create Post" />}>
+    <Layout customHeader={<CustomHeader title={isEdit ? "Update Post" : "Create Post"} />}>
       <View style={styles.container}>
         <ImageBox image={{ uri: profile.image }} _imageStyle={styles.profilePic} />
         <View>
@@ -144,7 +151,7 @@ const CreatePost = ({ navigation, route }: Props) => {
           />
         </View>
       </View>
-      <RichTextEditor ref={textEditorRef} selectionLimit={0} />
+      <RichTextEditor ref={textEditorRef} selectionLimit={0} isEdit={isEdit} />
       <AppBottomSheet
         ref={sheetRef}
         isSheetOpen={isSheetOpen}

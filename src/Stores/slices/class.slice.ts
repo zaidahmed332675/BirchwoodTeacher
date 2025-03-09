@@ -94,8 +94,12 @@ const ClassSlice = createSlice({
           text: message.content,
           user: {
             _id: message.sender?._id,
-            name: (message?.sender as User)?.firstName + (message?.sender as User)?.lastName,
+            name:
+              message?.senderType === "teacher"
+                ? `${(message?.sender as User)?.firstName} ${(message?.sender as User)?.lastName}`
+                : `${(message?.sender as Parent)?.motherFirstName} ${(message?.sender as Parent)?.motherLastName}`,
           },
+          
         },
         ...state.chatRooms[chatRoomKey].messages,
       }
@@ -135,7 +139,7 @@ export const selectCurrentWeekAttendance = (_id: string, weekStart: Date) =>
     [(state: RootState) => state.class.attendance],
     attendance => {
       return attendance?.attendance?.map((attendance => {
-        if (isSameWeek(attendance.createdAt, weekStart))
+        if (isSameWeek(attendance.checkIn, weekStart))
           return attendance
       }))
     }

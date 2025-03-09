@@ -54,7 +54,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
 
   const onSubmit = useCallback(
     async (data: CreateTimeTableRecordPayload) => {
-
+      
       data.startTime = format(data.startTime, "hh:mm a")
       data.endTime = format(data.endTime, "hh:mm a")
 
@@ -101,7 +101,7 @@ export default function CreateTimeTable({ navigation, route }: Props) {
   };
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && timeTableRecordById?._id) {
       setValue('classroom', timeTableRecordById.classroom);
       setValue('day', timeTableRecordById.day);
       setValue('meta', timeTableRecordById.meta);
