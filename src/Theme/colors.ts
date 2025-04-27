@@ -5,6 +5,7 @@ const colors = {
     label: '#EBEBEB',
   },
   theme: {
+    background: "#EAEAEA",
     primary: '#035392',
     secondary: '#6688CA',
     lightSecondary: '#D4E2FF',

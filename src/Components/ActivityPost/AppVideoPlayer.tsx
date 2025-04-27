@@ -57,7 +57,7 @@ export const AppVideoPlayer = ({ index, media, isNewlyPicked }: VideoPlayerProps
                 onEnterFullscreen={handleEnterFullscreen}
                 onExitFullscreen={handleExitFullscreen}
                 containerStyle={{
-                    borderRadius: isFullScreen ? 0 : 10,
+                    // borderRadius: isFullScreen ? 0 : 10,
                     width: isFullScreen ? "100%" : "100%",
                     height: isFullScreen ? "100%" : vh * 26.32,
                 }}

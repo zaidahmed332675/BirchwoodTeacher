@@ -75,7 +75,7 @@ export const RichTextEditor = forwardRef<unknown, { enableToolbar?: boolean, sel
     }), [media?.length, mediaType]);
 
     const handleMediaDelete = (mediaObj: Asset) => {
-        if (mediaObj.fileName || mediaObj.uri) return setMedia((prevMedia) => prevMedia.filter((media) => media.fileName !== mediaObj.fileName || media.uri !== mediaObj.uri));
+        if (mediaObj.fileName || mediaObj.uri) setMedia((prevMedia) => prevMedia.filter((media) => media.fileName !== mediaObj.fileName || media.uri !== mediaObj.uri));
 
         if (!isEdit) return
         setDeletedMedia((prevItems) => isImage(mediaObj.uri!) ? {

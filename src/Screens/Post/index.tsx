@@ -1,8 +1,9 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  FlatList,
   StyleSheet,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { ActivityPost } from '../../Components/ActivityPost';
@@ -11,21 +12,24 @@ import { DataLoader } from '../../Components/DataLoader';
 import { Layout } from '../../Components/Layout';
 import { LoadMoreFlatList } from '../../Components/LoadMoreFlatList';
 import { NotFound } from '../../Components/NotFound';
-import { SearchModal } from '../../Components/SearchModal';
-import { CustomSwitch } from '../../Components/Switch';
+// import { SearchModal } from '../../Components/SearchModal';
+// import { CustomSwitch } from '../../Components/Switch';
+import { GrayMediumText } from '../../Components/GrayMediumText';
+import { ImageBox } from '../../Components/UploadImage';
 import { asyncGetAllChildPosts, asyncGetAllClassPosts, asyncGetAllPosts } from '../../Stores/actions/post.action';
 import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/hooks';
 import { selectChildren } from '../../Stores/slices/class.slice';
+import { selectAppLoader } from '../../Stores/slices/common.slice';
 import { selectPosts, setLikeDislike, setLoveUnlove } from '../../Stores/slices/post.slice';
+import { selectUserProfile } from '../../Stores/slices/user.slice';
 import { colors } from '../../Theme/colors';
 import {
   EPostStack,
   PostStackParams,
 } from '../../Types/NavigationTypes';
-import { selectAppLoader } from '../../Stores/slices/common.slice';
-import { vh } from '../../Utils/units';
 import { socket } from '../../Utils/socket';
-import { selectUserProfile } from '../../Stores/slices/user.slice';
+import { vh, vw } from '../../Utils/units';
+import { elevation } from '../../Utils/elevation';
 
 type Props = StackScreenProps<PostStackParams, 'posts'>;
 
@@ -52,16 +56,21 @@ const Post = ({ navigation }: Props) => {
 
   const dispatch = useAppDispatch()
 
-  const onSelectSwitch = (index: number) => {
-    setTabIndex(index);
-    if (index === 2) setSearchModalOpen(true);
-    else setChildId('')
-  };
+  // const onSelectSwitch = (index: number) => {
+  //   setTabIndex(index);
+  //   if (index === 2) setSearchModalOpen(true);
+  //   else setChildId('')
+  // };
+
+  // const loadData = (isFresh = false, ignoreLoading = false) => {
+  //   if (tabIndex === 0 && (ignoreLoading || !loading)) getAllPosts({ isFresh })
+  //   if (tabIndex === 1 && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
+  //   if (tabIndex === 2 && childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
+  // }
 
   const loadData = (isFresh = false, ignoreLoading = false) => {
-    if (tabIndex === 0 && (ignoreLoading || !loading)) getAllPosts({ isFresh })
-    if (tabIndex === 1 && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
-    if (tabIndex === 2 && childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
+    if (!childId && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
+    if (childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
   }
 
   const handlePostInteraction = (record: any) => {
@@ -105,6 +114,11 @@ const Post = ({ navigation }: Props) => {
 
   return (
     <Layout
+      _styleSheetViewContent={{
+        backgroundColor: colors.theme.background,
+        paddingHorizontal: 0,
+        marginHorizontal: 0,
+      }}
       customHeader={
         <CustomHeader
           title="Posts"
@@ -115,7 +129,47 @@ const Post = ({ navigation }: Props) => {
         />
       }>
 
-      <View style={[styles.customSwitch]}>
+      <View style={[styles.childrenCarousal]}>
+        <FlatList
+          data={children}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingVertical: vh * 2.63, // 20
+            paddingHorizontal: vw * 2.78, // 10
+          }}
+          keyExtractor={item => item._id}
+          renderItem={({ item }) => {
+            return (
+              <View key={item?._id} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => { setChildId(prevChildId => item._id === prevChildId ? "" : item._id) }} style={{
+                  justifyContent: 'center',
+                  gap: 10
+                }}>
+                  <ImageBox
+                    image={{ uri: item.image }}
+                    _imageStyle={{
+                      width: vh * 8,
+                      height: vh * 8,
+                    }}
+                    _containerStyle={[
+                      styles.imageContainer,
+                      childId === item?._id && styles.selectedImageContainer,
+                      { ...elevation(10) }
+                    ]}
+                  />
+                </TouchableOpacity>
+                <GrayMediumText text={`${item.firstName} ${item.lastName}`} _style={
+                  styles.childName
+                } />
+              </View>
+            )
+          }}
+        />
+      </View>
+
+      {/* <View style={[styles.customSwitch]}>
         <CustomSwitch
           selectionMode={tabIndex}
           options={['All', 'Class', 'Child']}
@@ -123,9 +177,9 @@ const Post = ({ navigation }: Props) => {
           onSelectSwitch={onSelectSwitch}
           selectionColor={colors.theme.secondary}
         />
-      </View>
+      </View> */}
 
-      <SearchModal
+      {/* <SearchModal
         value={childId ? childId : []}
         onChange={setChildId}
         required={true}
@@ -143,22 +197,47 @@ const Post = ({ navigation }: Props) => {
         _style={{
           display: 'none',
         }}
-      />
+      /> */}
 
-      {posts.length ?
-        <LoadMoreFlatList
-          uuidKey='_id'
-          data={posts}
-          renderItem={({ item }) => <ActivityPost userId={profile?._id} item={item} />}
-          loadMore={loadData}
-          loading={!appLoading && (loading || classloading || childloading)}
-        />
-        : <NotFound text={`No posts available\nPlease add a new post`} />}
+      <View style={{
+        flex: 1,
+        paddingHorizontal: vw * 2.78, // 10
+        marginHorizontal: vw * 2.78, // 10
+      }}>
+        {posts.length ?
+          <LoadMoreFlatList
+            uuidKey='_id'
+            data={posts}
+            renderItem={({ item }) => <ActivityPost userId={profile?._id} postId={item?._id} />}
+            loadMore={loadData}
+            loading={!appLoading && (loading || classloading || childloading)}
+          />
+          : <NotFound text={`No posts available\nPlease add a new post`} />}
+      </View>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  childrenCarousal: {
+    backgroundColor: colors.theme.white,
+  },
+  imageContainer: {
+    marginHorizontal: 5,
+    borderWidth: 3,
+    borderRadius: 50,
+    borderColor: colors.theme.primary, // Change only the color when selected
+    padding: 2,
+  },
+  selectedImageContainer: {
+    borderColor: colors.theme.darkGreen, // Change only the color when selected
+  },
+  childName: {
+    fontSize: vh * 1.58, // 12
+    fontWeight: '600',
+    color: colors.theme.black,
+    marginTop: vh * 1, // 10
+  },
   customSwitch: {
     marginTop: vh * 2.63, // 20
     flexDirection: 'row',

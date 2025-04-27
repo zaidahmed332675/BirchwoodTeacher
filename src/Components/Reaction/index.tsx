@@ -130,7 +130,6 @@ export const Reaction = ({ userId, post, handleLike, handleLove, handleSheetPres
 
 const styles = StyleSheet.create({
   reaction: {
-    marginBottom: 20,
     marginTop: 10,
   },
   reactionActions: {

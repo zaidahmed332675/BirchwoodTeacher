@@ -23,6 +23,7 @@ import TimetableNavigator from './TimetableNavigator';
 import { socket } from '../Utils/socket';
 import { ClassRoom } from '../Types/Class';
 import { vh, vw } from '../Utils/units';
+import useSocket from '../hooks/useSocket';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -31,6 +32,7 @@ const AppNavigator = () => {
   const [skipCheckIn, setSkipCheckIn] = useState(false);
 
   const profile = useAppSelector(selectUserProfile);
+  useSocket(profile);
 
   const dispatch = useAppDispatch()
 
@@ -38,29 +40,29 @@ const AppNavigator = () => {
     dispatch(setUser({ classroom: { _id: record.classroom } as ClassRoom }))
   }
 
-  useEffect(() => {
-    console.log("Connecting Socket!!");
-    socket.on('connect', () => {
-      console.log("Socket Server Connected");
-      socket.emit('setup', { _id: profile._id });
-    });
+  // useEffect(() => {
+  //   console.log("Connecting Socket!!");
+  //   socket.on('connect', () => {
+  //     console.log("Socket Server Connected");
+  //     socket.emit('setup', { _id: profile._id });
+  //   });
 
-    socket.on("connected", () => {
-      console.log("User Socket Connected");
-    });
+  //   socket.on("connected", () => {
+  //     console.log("User Socket Connected");
+  //   });
 
-    socket.on('disconnect', () => {
-      console.log('User Socket Disconnected');
-    });
+  //   socket.on('disconnect', () => {
+  //     console.log('User Socket Disconnected');
+  //   });
 
-    socket.on('connect_error', (error) => {
-      console.error('User Socket Connection failed:', error);
-    });
+  //   socket.on('connect_error', (error) => {
+  //     console.error('User Socket Connection failed:', error);
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [profile?._id]);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [profile?._id]);
 
   useEffect(() => {
     socket.on('classNotice', handleClassAssignByAdmin);
