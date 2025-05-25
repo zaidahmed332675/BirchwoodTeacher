@@ -36,8 +36,8 @@ const ActivityList = ({ navigation }: Props) => {
   const activities = useAppSelector(selectActivities);
   const appLoading = useAppSelector(selectAppLoader)
 
-  const loadData = (isFresh = false, ignoreLoading = false) => {
-    if (!loading || ignoreLoading) getActivities({ isFresh })
+  const loadData = (isFresh = false, isRefreshing = false, ignoreLoading = false) => {
+    if (!loading || ignoreLoading) getActivities({ isFresh, isRefreshing })
   }
 
   const handleNewActivity = (activity: Activity) => {
@@ -45,7 +45,7 @@ const ActivityList = ({ navigation }: Props) => {
   }
 
   useEffect(() => {
-    loadData(true, true)
+    loadData(true, false, true)
   }, [getActivities]);
 
 

@@ -9,7 +9,7 @@ import { asyncShowError, asyncShowSuccess } from './common.action';
 
 export const asyncGetAllActivities = createAsyncThunk(
   'getAllActivities',
-  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
+  async ({ isFresh, isRefreshing }: { isFresh: boolean, isRefreshing: boolean }, { dispatch, getState }) => {
 
     let { page, totalPages } = { ...(getState() as RootState).post?.activitiesPagination }
     page = isFresh ? 0 : page
@@ -21,7 +21,7 @@ export const asyncGetAllActivities = createAsyncThunk(
       }
     }
 
-    if (!page) {
+    if (!page && !isRefreshing) {
       dispatch(setLoading(true));
     }
 
@@ -80,7 +80,7 @@ export const asyncGetAllPosts = createAsyncThunk(
 
 export const asyncGetAllClassPosts = createAsyncThunk(
   'getAllClassPosts',
-  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
+  async ({ isFresh, isRefreshing }: { isFresh: boolean, isRefreshing: boolean }, { dispatch, getState }) => {
 
     const classRoomId = (getState() as RootState).user.user?.classroom?._id
 
@@ -94,7 +94,7 @@ export const asyncGetAllClassPosts = createAsyncThunk(
       }
     }
 
-    if (!page) {
+    if (!page && !isRefreshing) {
       dispatch(setLoading(true));
     }
 
@@ -118,7 +118,7 @@ export const asyncGetAllClassPosts = createAsyncThunk(
 
 export const asyncGetAllChildPosts = createAsyncThunk(
   'getAllChildPosts',
-  async ({ childId, isFresh }: { childId: string, isFresh: boolean }, { dispatch, getState }) => {
+  async ({ childId, isFresh, isRefreshing }: { childId: string, isFresh: boolean, isRefreshing: boolean }, { dispatch, getState }) => {
 
     let { page, totalPages } = { ...(getState() as RootState).post?.pagination }
     page = isFresh ? 0 : page
@@ -130,7 +130,7 @@ export const asyncGetAllChildPosts = createAsyncThunk(
       }
     }
 
-    if (!page) {
+    if (!page && !isRefreshing) {
       dispatch(setLoading(true));
     }
 

@@ -71,7 +71,7 @@ export const ActivityPost = ({ userId, postId }: { userId: string, postId: strin
     return lodash.shuffle([...post?.images, ...post?.videos]);
   }, [post.images, post.videos])
 
-  const snapPoints = useMemo(() => ["75"], []);
+  const snapPoints = useMemo(() => ["84%"], []);
 
   return (
     <View style={styles.container}>

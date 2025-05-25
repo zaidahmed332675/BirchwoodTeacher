@@ -16,6 +16,7 @@ import { LoadIndicator } from '../LoadIndicator';
 import { NotFound } from '../NotFound';
 import { ImageBox } from '../UploadImage';
 import { VIcon } from '../VIcon';
+import { FlatList } from 'react-native-gesture-handler';
 
 interface commentsProps {
   postId: string;
@@ -24,7 +25,7 @@ interface commentsProps {
 
 export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
   const dispatch = useAppDispatch()
-  const bottomSheetFlatListRef = useRef<BottomSheetFlatListMethods>(null)
+  const bottomSheetFlatListRef = useRef<FlatList>(null)
 
   const [commentLoading, getPostComments] = useLoaderDispatch(asyncGetCommentsByPostId);
   const [_, createPostComment] = useLoaderDispatch(asyncCreatePostComment);
@@ -95,7 +96,7 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
       <View style={{
         flexGrow: 1,
       }}>
-        {comments.length ? <BottomSheetFlatList
+        {comments.length ? <FlatList
           ref={bottomSheetFlatListRef}
           data={comments}
           keyExtractor={(item) => item._id.toString()}
@@ -110,34 +111,36 @@ export const Comments = ({ postId, isSheetOpen }: commentsProps) => {
           : <NotFound text={`No comments available`} _textStyle={{ fontSize: 16 }} />
         }
       </View>
-      <Controller
-        name="content"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5 }}>
-            <AppInput
-              label=''
-              placeholder="Write a comment..."
-              value={value}
-              onChange={onChange}
-              _containerStyle={{ marginVertical: 0, flex: 1 }}
-            />
-            <View>
-              <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-                <VIcon
-                  type="MaterialCommunityIcons"
-                  name={"send-circle"}
-                  size={45}
-                  color={colors.theme.primary}
-                  style={{
-                    marginLeft: 5
-                  }}
-                />
-              </TouchableOpacity>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 10, backgroundColor: colors.theme.white }}>
+        <Controller
+          name="content"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5 }}>
+              <AppInput
+                label=''
+                placeholder="Write a comment..."
+                value={value}
+                onChange={onChange}
+                _containerStyle={{ marginVertical: 0, flex: 1 }}
+              />
+              <View>
+                <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+                  <VIcon
+                    type="MaterialCommunityIcons"
+                    name={"send-circle"}
+                    size={45}
+                    color={colors.theme.primary}
+                    style={{
+                      marginLeft: 5
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     </View>
   )
 }

@@ -41,16 +41,16 @@ const Diary = ({ navigation }: Props) => {
     else setChildId('')
   };
 
-  const loadData = (isFresh = false, ignoreLoading = false) => {
-    if (tabIndex === 0 && (ignoreLoading || !loading)) getAllHomeWorks({ isFresh })
-    if (tabIndex === 1 && childId && (ignoreLoading || !childloading)) getAllChildHomeWorks({ childId, isFresh })
+  const loadData = (isFresh = false, isRefreshing = false, ignoreLoading = false) => {
+    if (tabIndex === 0 && (ignoreLoading || !loading)) getAllHomeWorks({ isFresh, isRefreshing })
+    if (tabIndex === 1 && childId && (ignoreLoading || !childloading)) getAllChildHomeWorks({ childId, isFresh, isRefreshing })
   }
 
   useEffect(() => {
     if (!isSearchModalOpen && !childId && tabIndex === 1) {
       return setTabIndex(0)
     }
-    loadData(true, true)
+    loadData(true, false, true)
   }, [tabIndex, childId, isSearchModalOpen]);
 
   if ((loading || childloading) && !homeworks.length) {

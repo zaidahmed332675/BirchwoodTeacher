@@ -44,7 +44,7 @@ const Post = ({ navigation }: Props) => {
   const [isSearchModalOpen, setSearchModalOpen] = useState(false);
   const [childId, setChildId] = useState<string>("");
 
-  const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts, false);
+  // const [loading, getAllPosts] = useLoaderDispatch(asyncGetAllPosts, false);
   const [classloading, getAllClassPosts] = useLoaderDispatch(asyncGetAllClassPosts);
   const [childloading, getAllChildPosts] = useLoaderDispatch(asyncGetAllChildPosts, false);
 
@@ -68,9 +68,9 @@ const Post = ({ navigation }: Props) => {
   //   if (tabIndex === 2 && childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
   // }
 
-  const loadData = (isFresh = false, ignoreLoading = false) => {
-    if (!childId && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh })
-    if (childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh })
+  const loadData = (isFresh = false, isRefreshing = false, ignoreLoading = false) => {
+    if (!childId && (ignoreLoading || !classloading)) getAllClassPosts({ isFresh, isRefreshing })
+    if (childId && (ignoreLoading || !childloading)) getAllChildPosts({ childId, isFresh, isRefreshing })
   }
 
   const handlePostInteraction = (record: any) => {
@@ -105,10 +105,10 @@ const Post = ({ navigation }: Props) => {
     if (!isSearchModalOpen && !childId && tabIndex === 2) {
       return setTabIndex(1)
     }
-    loadData(true, true)
+    loadData(true, false, true)
   }, [tabIndex, childId, isSearchModalOpen]);
 
-  if ((loading || classloading || childloading) && !posts.length) {
+  if ((classloading || childloading) && !posts.length) {
     return <DataLoader />;
   }
 
@@ -210,7 +210,7 @@ const Post = ({ navigation }: Props) => {
             data={posts}
             renderItem={({ item }) => <ActivityPost userId={profile?._id} postId={item?._id} />}
             loadMore={loadData}
-            loading={!appLoading && (loading || classloading || childloading)}
+            loading={!appLoading && (classloading || childloading)}
           />
           : <NotFound text={`No posts available\nPlease add a new post`} />}
       </View>

@@ -9,7 +9,7 @@ import { RootState } from '..';
 
 export const asyncGetAllHomeWorks = createAsyncThunk(
   'getAllHomeWork',
-  async ({ isFresh }: { isFresh: boolean }, { dispatch, getState }) => {
+  async ({ isFresh, isRefreshing }: { isFresh: boolean, isRefreshing: boolean }, { dispatch, getState }) => {
     let { page, totalPages } = { ...(getState() as RootState).diary?.pagination }
     page = isFresh ? 0 : page
 
@@ -20,7 +20,7 @@ export const asyncGetAllHomeWorks = createAsyncThunk(
       }
     }
 
-    if (!page) {
+    if (!page && !isRefreshing) {
       dispatch(setLoading(true));
     }
 
@@ -44,7 +44,7 @@ export const asyncGetAllHomeWorks = createAsyncThunk(
 
 export const asyncGetAllChildHomeWorks = createAsyncThunk(
   'getAllChildHomeWork',
-  async ({ childId, isFresh }: { childId: string, isFresh: boolean }, { dispatch, getState }) => {
+  async ({ childId, isFresh, isRefreshing }: { childId: string, isFresh: boolean, isRefreshing: boolean }, { dispatch, getState }) => {
 
     let { page, totalPages } = { ...(getState() as RootState).diary?.pagination }
     page = isFresh ? 0 : page
@@ -56,7 +56,7 @@ export const asyncGetAllChildHomeWorks = createAsyncThunk(
       }
     }
 
-    if (!page) {
+    if (!page && !isRefreshing) {
       dispatch(setLoading(true));
     }
 
