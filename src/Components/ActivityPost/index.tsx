@@ -22,6 +22,7 @@ import { elevation } from '../../Utils/elevation';
 import { DataLoader } from '../DataLoader';
 import { AppMenu } from '../Menu';
 import { PostMediaGrid } from '../PostImageGrid';
+import { getRelativeTimeFromNow } from '../../Utils/options';
 
 export const ActivityPost = ({ userId, postId }: { userId: string, postId: string }) => {
   const navigation = useNavigation<NavigationProp<PostStackParams>>()
@@ -40,8 +41,6 @@ export const ActivityPost = ({ userId, postId }: { userId: string, postId: strin
       <DataLoader />
     </View>
   }
-
-  const timeAgo = post?.createdAt ? formatDistanceToNow(new Date(post?.createdAt), { addSuffix: true }) : null;
 
   const handleLike = async () => {
     if (likeLoading) return
@@ -87,7 +86,7 @@ export const ActivityPost = ({ userId, postId }: { userId: string, postId: strin
             <GrayMediumText _style={styles.userName} text={`${post.author?.firstName} ${post.author?.lastName}`} />
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 5 }}>
               <VIcon type='Ionicons' name='earth-sharp' color={colors.theme.grey} size={15} />
-              <GrayMediumText _style={styles.timeStamp} text={timeAgo} />
+              <GrayMediumText _style={styles.timeStamp} text={getRelativeTimeFromNow(post?.createdAt)} />
             </View>
           </View>
         </View>

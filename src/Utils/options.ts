@@ -63,27 +63,37 @@ export const isArrayOfObjectsEqual = (
   return _.isEqual(xProps, yProps);
 };
 
-export const formatCommentTime = (createdAt: string) => {
-  const now = new Date();
-  const commentDate = new Date(createdAt)
-  const seconds = differenceInSeconds(now, commentDate);
-  const minutes = differenceInMinutes(now, commentDate);
-  const hours = differenceInHours(now, commentDate);
-  const days = differenceInDays(now, commentDate);
+export const getRelativeTimeFromNow = (createdAt: string): string => {
+  if (!createdAt) return '';
 
-  if (seconds < 60) {
-    return `${seconds}s`;
-  } else if (minutes < 60) {
-    return `${minutes}m`;
-  } else if (hours < 24) {
-    return `${hours}h`;
-  } else if (days < 7) {
-    return `${days}d`;
-  } else {
-    // For dates older than 7 days, you can use formatDistanceToNow or another format
-    return formatDistanceToNow(commentDate, { addSuffix: true });
+  const commentDate = new Date(createdAt);
+  if (isNaN(commentDate.getTime())) return '';
+
+  const now = new Date();
+  const seconds = differenceInSeconds(now, commentDate);
+
+  if (seconds < 0 || seconds < 60) {
+    return 'Just now';
   }
-}
+
+  const minutes = differenceInMinutes(now, commentDate);
+  if (minutes < 60) {
+    return `${minutes}m`;
+  }
+
+  const hours = differenceInHours(now, commentDate);
+  if (hours < 24) {
+    return `${hours}h`;
+  }
+
+  const days = differenceInDays(now, commentDate);
+  if (days < 7) {
+    return `${days}d`;
+  }
+
+  // For comments older than 7 days
+  return formatDistanceToNow(commentDate, { addSuffix: true }); // e.g., "10 days ago"
+};
 
 export const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
 export const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];

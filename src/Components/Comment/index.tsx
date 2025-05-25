@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector, useLoaderDispatch } from '../../Stores/
 import { resetCommentsAndPaginationState, selectPostComments, setComment, setPost } from '../../Stores/slices/post.slice';
 import { colors } from '../../Theme/colors';
 import { Comment as CommentProps } from '../../Types/Post';
-import { formatCommentTime } from '../../Utils/options';
+import { getRelativeTimeFromNow } from '../../Utils/options';
 import { socket } from '../../Utils/socket';
 import { vh, vw } from '../../Utils/units';
 import { AppInput } from '../AppInput';
@@ -161,7 +161,7 @@ export const Comment = ({ comment }: { comment: CommentProps }) => {
         <View style={styles.commentAction}>
           <GrayMediumText _style={{
             fontSize: vh * 1.32, // 10
-          }} text={formatCommentTime(comment.createdAt)} />
+          }} text={getRelativeTimeFromNow(comment.createdAt)} />
         </View>
       </View>
       <VIcon
