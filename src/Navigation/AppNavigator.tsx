@@ -72,8 +72,6 @@ const AppNavigator = () => {
     };
   }, []);
 
-  const monthlyWserAttendance = 0
-
   if (!attendanceEnum[profile?.todayAttendance?.status] && !skipCheckIn) {
     return (
       <View style={styles.container}>

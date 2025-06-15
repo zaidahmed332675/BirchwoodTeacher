@@ -1,11 +1,8 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { addHours, format, isAfter, isBefore, startOfToday } from 'date-fns';
 import React, {
   useCallback,
   useEffect,
-  useMemo,
-  useRef,
-  useState,
+  useState
 } from 'react';
 import {
   GestureResponderEvent,
@@ -13,18 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import * as Progress from 'react-native-progress';
+import LinearGradient from 'react-native-linear-gradient';
+import checkIn from '../../Assets/images/check-in.png';
 import { asyncCheckInUser } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
+import { appShadow, colors } from '../../Theme/colors';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vh, vw } from '../../Utils/units';
-import { appShadow, colors } from '../../Theme/colors';
 import { AppButton } from '../Button';
-import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
 import { ImageBox } from '../UploadImage';
-import checkIn from '../../Assets/images/check-in.png';
-import LinearGradient from 'react-native-linear-gradient';
 interface FormatTextProps {
   onPress: (event: GestureResponderEvent) => void;
 }
