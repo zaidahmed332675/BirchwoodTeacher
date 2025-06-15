@@ -23,6 +23,7 @@ const colors = {
     darkRed: '#E92020',
     lightGreen: '#A9F2A4',
     darkGreen: '#0BAC00',
+    darkGray: '#505050'
   },
   background: {
     primary: '#ffffff',
@@ -49,8 +50,8 @@ const colors = {
   },
 };
 
-const appShadow = (ele = 4) => ({
-  backgroundColor: 'white', // Set your box background color
+const appShadow = (ele = 4, background = 'white') => ({
+  backgroundColor: background, // Set your box background color
   ...Platform.select({
     ios: {
       shadowColor: 'black',

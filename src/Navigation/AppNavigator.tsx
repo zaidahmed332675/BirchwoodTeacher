@@ -2,17 +2,21 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Attendance } from '../Components/Attendance';
+import AttendanceSummary from '../Components/AttendanceSummary';
 import { BottomBackground } from '../Components/BottomBackground';
 import { Header } from '../Components/Header';
 import { LeaveForm } from '../Components/LeaveForm';
 import ChangePassword from '../Screens/ChangePassword';
 import HomeScreen from '../Screens/Home';
 import { useAppDispatch, useAppSelector } from '../Stores/hooks';
-import { setLikeDislike, setLoveUnlove } from '../Stores/slices/post.slice';
 import { selectUserProfile, setUser } from '../Stores/slices/user.slice';
+import { appShadow, colors } from '../Theme/colors';
+import { ClassRoom } from '../Types/Class';
 import { EMainStack, MainStackParams } from '../Types/NavigationTypes';
 import { NavigationOptions, attendanceEnum } from '../Utils/options';
-import { appShadow, colors } from '../Theme/colors';
+import { socket } from '../Utils/socket';
+import { vh, vw } from '../Utils/units';
+import useSocket from '../hooks/useSocket';
 import AttendanceNavigator from './AttendanceNavigator';
 import ChatNavigator from './ChatNavigator';
 import ClassNavigator from './ClassNavigator';
@@ -20,10 +24,6 @@ import DiaryNavigator from './DiaryNavigator';
 import PostNavigator from './PostNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import TimetableNavigator from './TimetableNavigator';
-import { socket } from '../Utils/socket';
-import { ClassRoom } from '../Types/Class';
-import { vh, vw } from '../Utils/units';
-import useSocket from '../hooks/useSocket';
 
 const Stack = createStackNavigator<MainStackParams>();
 
@@ -72,6 +72,8 @@ const AppNavigator = () => {
     };
   }, []);
 
+  const monthlyWserAttendance = 0
+
   if (!attendanceEnum[profile?.todayAttendance?.status] && !skipCheckIn) {
     return (
       <View style={styles.container}>
@@ -82,8 +84,11 @@ const AppNavigator = () => {
               <LeaveForm />
             </View>
           ) : (
-            <View style={[styles.card, { justifyContent: 'center' }]}>
-              <Attendance handleLeave={() => setIsApplyingLeave(true)} handleSkip={() => { setSkipCheckIn(true) }} />
+            <View style={{ flex: 1 }}>
+              <View style={[styles.card, styles.attendanceCard, { justifyContent: 'center' }]}>
+                <Attendance handleLeave={() => setIsApplyingLeave(true)} handleSkip={() => { setSkipCheckIn(true) }} />
+              </View>
+              <AttendanceSummary />
             </View>
           )}
         </View>
@@ -136,6 +141,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: vh * 1.32, // 10
     ...appShadow(4),
+  },
+  attendanceCard: {
+    flex: 1.5,
   },
 });
 

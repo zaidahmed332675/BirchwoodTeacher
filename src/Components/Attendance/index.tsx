@@ -18,14 +18,45 @@ import { asyncCheckInUser } from '../../Stores/actions/user.action';
 import { useAppDispatch } from '../../Stores/hooks';
 import { EMainStack, MainStackParams } from '../../Types/NavigationTypes';
 import { vh, vw } from '../../Utils/units';
-import { colors } from '../../Theme/colors';
+import { appShadow, colors } from '../../Theme/colors';
 import { AppButton } from '../Button';
 import { GlroyBold } from '../GlroyBoldText';
 import { GrayMediumText } from '../GrayMediumText';
-
+import { ImageBox } from '../UploadImage';
+import checkIn from '../../Assets/images/check-in.png';
+import LinearGradient from 'react-native-linear-gradient';
 interface FormatTextProps {
   onPress: (event: GestureResponderEvent) => void;
 }
+
+function formatTime12Hour(date: any) {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  const parts = formatter.formatToParts(date);
+  const hour = parts.find(p => p.type === 'hour')?.value.padStart(2, '0');
+  const minute = parts.find(p => p.type === 'minute')?.value;
+  const dayPeriod = parts.find(p => p.type === 'dayPeriod')?.value;
+
+  return `${hour}:${minute} ${dayPeriod}`;
+}
+
+const formatDate = (date: any) => {
+  const dateOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long'
+  };
+
+  const dateString = date.toLocaleDateString('en-US', dateOptions); // "Wednesday, March 19, 2025"
+
+  const [weekday, rest, year] = dateString.split(', ');
+  return `${rest}, ${year} -  ${weekday}`;
+};
 
 const FormatedText = ({ onPress }: FormatTextProps) => {
   return (
@@ -33,69 +64,51 @@ const FormatedText = ({ onPress }: FormatTextProps) => {
       activeOpacity={0.7}
       onPress={onPress}
       style={{
-        backgroundColor: colors.theme.secondary,
-        width: vw * 60,
-        height: vh * 28.42,
         borderRadius: (vw * 60) / 2,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        ...appShadow(5),
       }}>
-      <GrayMediumText
-        _style={{
-          fontSize: vh * 5.71,
-          textAlign: 'center',
-          color: colors.theme.white,
-        }}
-        text="Check-In"
-      />
-
-      <GlroyBold
-        _style={{
-          fontSize: vh * 2.37,
-          textAlign: 'center',
-          color: colors.theme.white,
-        }}
-        text="Press Here"
-      />
+      <LinearGradient
+        colors={[colors.theme.primary, colors.theme.secondary]}
+        locations={[0, 1]}
+        style={{
+          borderRadius: (vw * 60) / 2,
+          width: vw * 50,
+          height: vh * 23,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <ImageBox image={{ uri: undefined }} imagePlaceholder={checkIn} _imageStyle={{
+          width: 50,
+          height: 50,
+          borderRadius: 0,
+        }} />
+        <GrayMediumText
+          _style={{
+            fontSize: vh * 3,
+            textAlign: 'center',
+            color: colors.theme.white,
+          }}
+          text="CHECK IN"
+        />
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => void, handleSkip: () => void }) => {
-  const totalSeconds = useRef(0);
-  const checkInTime = useMemo(() => addHours(startOfToday(), 8), []);
-  const [progress] = useState(100);
-  const [seconds, setSeconds] = useState(0);
-
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MainStackParams>>();
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   useEffect(() => {
-    const currentTime = new Date();
-    if (isAfter(currentTime, checkInTime)) {
-      setSeconds(0);
-    } else if (isBefore(currentTime, checkInTime)) {
-      const remainingSeconds = Math.floor(
-        (checkInTime.getTime() - currentTime.getTime()) / 1000
-      );
-      totalSeconds.current = remainingSeconds;
-      setSeconds(remainingSeconds);
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
-      const interval = setInterval(() => {
-        setSeconds(prevSeconds => {
-          if (prevSeconds <= 0) {
-            clearInterval(interval);
-            return 0;
-          } else {
-            return prevSeconds - 1;
-          }
-        });
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [checkInTime]);
+    return () => clearInterval(interval);
+  }, []);
 
   const onSubmit = useCallback(async () => {
     const date = new Date();
@@ -110,50 +123,29 @@ export const Attendance = ({ handleLeave, handleSkip }: { handleLeave: () => voi
   }, [navigation, dispatch]);
 
   return (
-    <View style={styles.container}>
-      <AppButton
-        title="Apply for leave"
-        btnStyle={styles.btnLeave}
-        onPress={handleLeave}
-      />
-      <GrayMediumText
-        _style={styles.title}
-        text={
-          !seconds
-            ? 'Please ensure to check in on time'
-            : "Please record today's check-in"
-        }
-      />
-      <GrayMediumText
-        _style={styles.desc}
-        text={
-          'Reminder: If you have not yet checked in, please do so to avoid being marked absent'
-        }
-      />
-      <View
-        style={styles.dateLabel}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.container}>
         <GrayMediumText
-          _style={styles.dateLabelText}
-          text={format(new Date(), 'LLLL dd yyyy')}
+          _style={styles.titleTime}
+          text={formatTime12Hour(currentTime)}
         />
+        <GrayMediumText
+          _style={styles.titleDate}
+          text={formatDate(currentTime)}
+        />
+        <FormatedText onPress={onSubmit} />
+        <AppButton
+          title="Apply for leave"
+          btnStyle={styles.btnLeave}
+          onPress={handleLeave}
+        />
+        {/* <TouchableOpacity onPress={handleSkip}>
+          <GrayMediumText
+            _style={styles.skipText}
+            text={`Want to skip this \n check-in and continue?`}
+          />
+        </TouchableOpacity> */}
       </View>
-      <Progress.Circle
-        size={vw * 80}
-        thickness={25}
-        showsText={true}
-        color={colors.theme.primary}
-        unfilledColor={colors.theme.secondary}
-        borderWidth={0}
-        progress={(progress || 1) / 100}
-        formatText={() => FormatedText({ onPress: onSubmit })}
-        strokeCap="round"
-      />
-      <TouchableOpacity onPress={handleSkip}>
-        <GrayMediumText
-          _style={styles.skipText}
-          text={`Want to skip this \n check-in and continue?`}
-        />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -165,40 +157,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: vw * 2.78, // 10
   },
   btnLeave: {
-    paddingHorizontal: vw * 5.56, // 20
-    paddingVertical: vh * 0.79, // 6
-    backgroundColor: colors.theme.darkRed,
-    borderColor: colors.theme.darkRed,
-    marginBottom: vh * 2.63, // 20
+    paddingHorizontal: vw * 7, // 20
+    paddingVertical: vh * 1.2, // 6
+    borderColor: colors.theme.darkGray,
+    marginTop: vh * 3, // 20
+    ...appShadow(5, colors.theme.darkGray),
   },
-  title: {
-    color: colors.theme.primary,
-    fontSize: vh * 2.37,
+  titleTime: {
+    color: colors.theme.black,
+    fontSize: vh * 5,
+    fontWeight: '800',
     textAlign: 'center',
-    marginBottom: vh * 1.32, // 10
   },
-  desc: {
-    color: colors.theme.primary,
-    fontSize: vh * 1.42,
+  titleDate: {
+    color: colors.theme.greyAlt2,
+    fontSize: vh * 2,
+    fontWeight: '500',
     textAlign: 'center',
-    fontWeight: 'normal',
-  },
-  dateLabel: {
-    backgroundColor: colors.theme.primary,
-    paddingVertical: vh * 1.05, // 8
-    width: vw * 70,
-    borderRadius: 50,
-    marginVertical: vh * 2.63, // 20
-  },
-  dateLabelText: {
-    color: colors.theme.white,
-    textAlign: 'center',
-    fontSize: vh * 2.84,
+    marginBottom: vh * 3, // 20
   },
   skipText: {
     color: colors.theme.primary,
     fontSize: vh * 1.89,
     textAlign: 'center',
-    marginTop: vh * 6.58, // 50
   }
 });
